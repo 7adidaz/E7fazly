@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model bookmark {
+  id           Int            @id @default(autoincrement())
+  link         String
+  owner_id     Int
+  directory_id Int
+  type         bookmark_type
+  favorite     Boolean
+  directory    directory      @relation(fields: [directory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         user           @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookmark_tag bookmark_tag[]
+}
+
+model bookmark_tag {
+  bookmark_id Int
+  tag_id      Int
+  bookmark    bookmark @relation(fields: [bookmark_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tag         tag      @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([bookmark_id, tag_id])
+}
+
+model directory {
+  id                    Int                     @id @default(autoincrement())
+  parent_id             Int?
+  name                  String                  @db.VarChar(255)
+  icon                  String
+  owner_id              Int
+  bookmark              bookmark[]
+  user                  user                    @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  directory             directory?              @relation("directoryTodirectory", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_directory       directory[]             @relation("directoryTodirectory")
+  user_directory_access user_directory_access[]
+}
+
+model tag {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  owner_id     Int
+  bookmark_tag bookmark_tag[]
+  user         user           @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "owner_id")
+}
+
+model user {
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @db.VarChar(255)
+  email                 String                  @db.VarChar(255)
+  password              String                  @db.VarChar(255)
+  bookmark              bookmark[]
+  directory             directory[]
+  tag                   tag[]
+  user_directory_access user_directory_access[]
+}
+
+model user_directory_access {
+  directory_id Int
+  user_id      Int
+  user_rights  access_rights
+  directory    directory     @relation(fields: [directory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         user          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, directory_id])
+}
+
+enum access_rights {
+  edit
+  view
+}
+
+enum bookmark_type {
+  link
+  img
+  etc
+}
