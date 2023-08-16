@@ -1,0 +1,26 @@
+{
+  "name": "e7fazly",
+  "version": "1.0.0",
+  "description": "e7fazly is a project which helps you maintain and keep track of your bookmarks",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "e7fazly"
+  },
+  "author": "Abdallah el7adad",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "prisma": "^5.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2",
+    "supertest": "^6.3.3"
+  }
+}
