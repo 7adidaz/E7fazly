@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "e7fazly is a project which helps you maintain and keep track of your bookmarks",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -13,9 +15,13 @@
   "author": "Abdallah el7adad",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.1.1",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "joi": "^17.9.2",
     "morgan": "^1.10.0",
     "prisma": "^5.1.1"
   },

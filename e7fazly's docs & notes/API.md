@@ -33,7 +33,7 @@
 - GET dir/content:/prntdir_id -> get parent dir' info and it's content. 
 - GET dir/all 
 - PATCH dir:/id -> changing icon, name. 
-- DELETE dir:/id -- should propagate to its content (bkmrk & tags).
+~~- DELETE dir:/id ~~ -- should propagate to its content (bkmrk & tags). (this should be compined with the below)
 - DELETE dir:/ids -- same as above.
 
 ---
@@ -57,7 +57,7 @@
 - GET bkmrk/all 
 - GET bkmrk_\tag:/tag_id → get bkmrks for a specific tag.
 - PATCH bkmrk:/id → update to fav, update title, tags, etc. 
-- DELETE bkmrk:/id -- should propagate to its content (tags). 
+- ~~DELETE bkmrk:/id ~~-- should propagate to its content (tags). lower is sufficient. 
 - DELETE bkmrk:/ids -- same as above.
 
 ---
@@ -73,6 +73,15 @@
 
 - POST tag/create → it has to be linked to a bookmark. 
 - GET \tag/bkmrk:/bkmrk_id → get tags for specific bookmark.
-- GET \tag/all:/id → this is typically for a specific user. 
+- GET \tag/all → this is typically for a specific user. 
 - PATCH \tag:/id → enables renaming a tag through tags' menu.
 - DELETE \tag:/id -> through tags' menu also. 
+- DELETE \tag/:tag_id/:bkmrk_id -> delete a tag from a post edit or smth
+
+
+--- 
+- access rights 
+- POST access/create // should send an array of users to add the access to!
+- GET access/:id // propably not needed! 
+- PATCH access/:id
+- DELETE access/:id
