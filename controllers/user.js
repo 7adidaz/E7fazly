@@ -28,7 +28,6 @@ export async function createUser(req, reply, next) {
     }
     
     return reply.json({
-        found.id
     });
 }
 

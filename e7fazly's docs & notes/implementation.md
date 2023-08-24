@@ -19,3 +19,8 @@
 --- 
  for user, 
     -  i think we need to enable search by email. -> probably not a good idea
+
+--- 
+- verification
+    - when user sign up, there is a code to be send to verify the email. 
+    - a table needed to verify the email.
