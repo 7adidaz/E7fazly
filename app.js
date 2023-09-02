@@ -1,5 +1,4 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import morgan from 'morgan';
 
@@ -11,7 +10,6 @@ import tagRoutes from './routes/tag.js';
 import accessRoutes from './routes/access.js';
 
 const app = express()
-const prisma = new PrismaClient()
 
 app.use(express.json())
 app.use(cors())
