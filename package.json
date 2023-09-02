@@ -15,7 +15,7 @@
   "author": "Abdallah el7adad",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "^5.2.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -23,7 +23,7 @@
     "express-validator": "^7.0.1",
     "joi": "^17.9.2",
     "morgan": "^1.10.0",
-    "prisma": "^5.1.1"
+    "nodemon": "^3.0.1"
   },
   "devDependencies": {
     "jest": "^29.6.2",

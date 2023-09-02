@@ -4,7 +4,7 @@ const router = Router();
 
 
 router.post('/create', createUser);
-router.get('/:id')
+router.get('/me')
 router.patch('/:id');
 router.delete('/:id');
 
