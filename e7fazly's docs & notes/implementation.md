@@ -21,6 +21,16 @@
     -  i think we need to enable search by email. -> probably not a good idea
 
 --- 
-- verification
+- email verification
     - when user sign up, there is a code to be send to verify the email. 
     - a table needed to verify the email.
+
+- for directories, directories that at level zero gonna have thier parent as "0" instead of null!. 
+
+--- 
+##### requests
+
+NOtE for PATCH, the resource id should be in the params.
+
+--- 
+NOTE: some id's are equal to zero, which may not pass the `if (!id)`! 

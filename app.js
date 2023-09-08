@@ -15,11 +15,29 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 
+/**
+ * TODO: 
+ * all of the GET operations extract 
+ * the user from params or some form of 
+ * data in the body, this is WRONG! 
+ * 
+ * the user's id or sensitive data
+ * should be in the authZ header! 
+ * 
+ * i will leave it like this for now 
+ * until the auth middleware is finished. 
+ */
 app.use('/access', accessRoutes)
 app.use('/user', userRoutes)
 app.use('/dir', dirRoutes)
 app.use('/bkmrk', bkmrkRoutes)
 app.use('/tag', tagRoutes)
 
+app.use((err, req, reply, next) => {
+    console.log(err)
+    console.log("error:", err.name, err.errorObject.description);
+
+    reply.json(err)
+})
 
 app.listen(3000);
