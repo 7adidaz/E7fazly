@@ -1,18 +1,19 @@
 import bcrypt from 'bcrypt';
 import prisma from '../util/prismaclient.js'
 import { emailValidation, userDataValidation } from '../validators/user.js';
+import { ValidationError, APIError, ConflictError, HTTPStatusCode, ErrorObject, isNumber } from '../util/error.js';
 
 //TODO: hash the passwords
 
 export async function createUser(req, reply, next) {
     try {
-        const validationResult = userDataValidation.validate(req.body, { abortEarly: false })
-        if (validationResult) {
-            const error = new ValidationError({
-                description: "the data provided don't pass the validation requirement",
-                data: validationResult.error.details.map(err => err.message)
-            })
-            throw error;
+        const { error, value } = userDataValidation.validate(req.body, { abortEarly: false })
+        if (error) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "the data provided don't pass the validation requirement",
+                    error.details.map(err => err.message)
+                ).toObject());
         }
 
         const name = req.body.name;
@@ -26,17 +27,34 @@ export async function createUser(req, reply, next) {
         });
 
         if (found) {
-            const error = new ConflictError({
-                description: "Email already used",
-                data: {}
-            })
-            throw error;
+            throw new ConflictError(
+                new ErrorObject(
+                    "Email already used",
+                    {}
+                ).toObject())
         }
 
         /**
+         * //TODO: 
          * Email verification 
          * then redirection the /login
          */
+
+        const newUser = await prisma.user.create({
+            data: {
+                name: name,
+                email: email,
+                password: password
+            }
+        });
+
+        if (!newUser) {
+            throw new APIError(
+                new ErrorObject(
+                    "Somthing went wrong saving the user to the database",
+                    {}
+                ).toObject())
+        }
 
         return reply.redirect('/login')
     } catch (err) {
@@ -47,14 +65,14 @@ export async function createUser(req, reply, next) {
 //TODO: this should be authN 
 export async function getUser(req, reply, next) {
     try {
-        const id = req.body.id;
+        const id = req.user.id;
 
-        if (!id && typeof (id) === typeof (0)) {
-            const error = new ValidationError({
-                description: "Request must contain an ID as a number",
-                data: validationResult.error.details.map(err => err.message)
-            })
-            throw error;
+        if (!isNumber(id)) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "Request must contain an ID as a number",
+                    {}
+                ).toObject())
         }
 
         const user = await prisma.user.findFirst({
@@ -64,11 +82,11 @@ export async function getUser(req, reply, next) {
         });
 
         if (!user) {
-            const error = new ValidationError({
-                description: "ID Not found in the DB",
-                data: {}
-            })
-            throw error;
+            throw new ValidationError(
+                new ErrorObject(
+                    "ID Not found in the DB",
+                    {}
+                ).toObject())
         }
 
         return reply.json({
@@ -82,15 +100,15 @@ export async function getUser(req, reply, next) {
 //TODO: this should be authN 
 export async function getByEmail(req, reply, next) {
     try {
-        const email = req.body.email;
+        const email = req.params.email;
 
-        const validationResult = emailValidation.validate(email);
-        if (validationResult) {
-            const error = new ValidationError({
-                description: "Request must contain a valid email",
-                data: validationResult.error.details.map(err => err.message)
-            })
-            throw error;
+        const { error, value } = emailValidation.validate(email);
+        if (error) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "Request must contain a valid email",
+                    error.details.map(err => err.message)
+                ).toObject())
         }
 
         const user = await prisma.user.findFirst({
@@ -100,11 +118,11 @@ export async function getByEmail(req, reply, next) {
         });
 
         if (!user) {
-            const error = new ValidationError({
-                description: "Email Not found in the DB",
-                data: {}
-            })
-            throw error;
+            throw new ValidationError(
+                new ErrorObject(
+                    "Email Not found in the DB",
+                    {}
+                ).toObject())
         }
 
         return reply.json({
@@ -118,21 +136,22 @@ export async function getByEmail(req, reply, next) {
 //TODO: this should be authN 
 export async function updateUser(req, reply, next) {
     try {
-        const validationResult = userDataValidation.validate(req.body, { abortEarly: false })
-        if (validationResult) {
-            const error = new ValidationError({
-                description: "the data provided don't pass the validation requirement",
-                data: validationResult.error.details.map(err => err.message)
-            })
-            throw error;
+        const { error, value } = userDataValidation.validate(req.body, { abortEarly: false })
+        if (error) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "the data provided don't pass the validation requirement",
+                    error.details.map(err => err.message)
+                ).toObject())
         }
 
-        if (!id && typeof (id) === typeof (0)) {
-            const error = new ValidationError({
-                description: "Request must contain an ID as a number",
-                data: validationResult.error.details.map(err => err.message)
-            })
-            throw error;
+        const id = req.body.id;
+        if (!isNumber(id)) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "Request must contain an ID as a number",
+                    {}
+                ).toObject())
         }
 
         const user = await prisma.user.findFirst({
@@ -141,20 +160,31 @@ export async function updateUser(req, reply, next) {
             }
         });
 
-        const id = req.body.id;
+        if (!user) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "ID Not found in the DB",
+                    {}
+                ).toObject())
+        }
+
         const name = req.body.name;
         const email = req.body.email;
         const password = req.body.password;
 
-        if (!user) {
-            throw new ValidationError({
-                description: "ID Not found in the DB",
-                data: {}
-            })
-        }
+        const emailChecker = await prisma.user.findFirst({
+            where: {
+                email: email
+            }
+        });
 
-        //TODO, make sure if's an email change that 
-        // it's not used already! 
+        if (!emailChecker) {
+            throw new ConflictError(
+                new ErrorObject(
+                    "Email already used",
+                    {}
+                ).toObject())
+        }
 
         const newUser = await prisma.user.update({
             where: {
@@ -168,19 +198,61 @@ export async function updateUser(req, reply, next) {
         });
 
         if (!newUser) {
-            //TODO: Make every error like this! 
-            throw new APIError({
-                description: "Somthing went wrong saving the use to the database",
-                data: {}
-            })
+            throw new APIError(
+                new ErrorObject(
+                    "Somthing went wrong saving the use to the database",
+                    {}
+                ).toObject())
         }
 
-        return reply.status(HTTPStatusCode.OK);
+        return reply.status(HTTPStatusCode.OK); //TODO: update all of the statusCode to the correct ones. 
     } catch (err) {
         return next(err)
     }
 }
 
+//TODO: this should be authZ
 export async function deleteUser(req, reply, next) {
-    const id = req.body.id;
+    try {
+        const id = req.body.id;
+        if (!isNumber(id)) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "Request must contain an ID as a number",
+                    validationResult.error.details.map(err => err.message)
+                ).toObject())
+        }
+
+        const user = await prisma.user.findFirst({
+            where: {
+                id: id
+            }
+        });
+
+        if (!user) {
+            throw new ValidationError(
+                new ErrorObject(
+                    "ID Not found in the DB",
+                    {}
+                ).toObject())
+        }
+
+        const userDeletionResult = await prisma.user.delete({ // this will cascade to the dir, bkmrk, tags, access_rights,, EVERYTHING! 
+            where: {
+                id: id
+            }
+        });
+
+        if (!userDeletionResult) {
+            throw new APIError(
+                new ErrorObject(
+                    "Somthing went wrong deleting the user!",
+                    {}
+                ).toObject())
+        }
+
+        return reply.redirect('/signup');
+    } catch (err) {
+        return next(err);
+    }
 }
