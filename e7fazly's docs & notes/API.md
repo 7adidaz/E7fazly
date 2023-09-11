@@ -57,7 +57,7 @@
 - GET bkmrk/all 
 - GET bkmrk_\tag:/tag_id → get bkmrks for a specific tag.
 - PATCH bkmrk:/id → update to fav, update title, tags, etc. 
-- ~~DELETE bkmrk:/id ~~-- should propagate to its content (tags). lower is sufficient. 
+- ~~DELETE bkmrk:/id~~-- should propagate to its content (tags). lower is sufficient. 
 - DELETE bkmrk:/ids -- same as above.
 
 ---

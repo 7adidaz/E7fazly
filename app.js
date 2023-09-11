@@ -16,7 +16,7 @@ app.use(cors())
 app.use(morgan('dev'))
 
 /**
- * TODO: 
+ * //TODO: 
  * all of the GET operations extract 
  * the user from params or some form of 
  * data in the body, this is WRONG! 
@@ -27,6 +27,7 @@ app.use(morgan('dev'))
  * i will leave it like this for now 
  * until the auth middleware is finished. 
  */
+
 app.use('/access', accessRoutes)
 app.use('/user', userRoutes)
 app.use('/dir', dirRoutes)
@@ -41,3 +42,5 @@ app.use((err, req, reply, next) => {
 })
 
 app.listen(3000);
+
+export default app;
