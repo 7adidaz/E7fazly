@@ -16,6 +16,7 @@ export async function createUser(req, reply, next) {
                 ).toObject());
         }
 
+        //TODO: must extract the data from the 'value' returned by the validation step 
         const name = req.body.name;
         const email = req.body.email;
         const password = req.body.password;
@@ -56,7 +57,7 @@ export async function createUser(req, reply, next) {
                 ).toObject())
         }
 
-        return reply.redirect('/login')
+        return reply.redirect('/login');
     } catch (err) {
         return next(err);
     }
@@ -65,7 +66,7 @@ export async function createUser(req, reply, next) {
 //TODO: this should be authN 
 export async function getUser(req, reply, next) {
     try {
-        const id = req.user.id;
+        const id = req.body.id;
 
         if (!isNumber(id)) {
             throw new ValidationError(
@@ -178,7 +179,7 @@ export async function updateUser(req, reply, next) {
             }
         });
 
-        if (!emailChecker) {
+        if (emailChecker && emailChecker.id !== id) {
             throw new ConflictError(
                 new ErrorObject(
                     "Email already used",
@@ -200,12 +201,16 @@ export async function updateUser(req, reply, next) {
         if (!newUser) {
             throw new APIError(
                 new ErrorObject(
-                    "Somthing went wrong saving the use to the database",
+                    "Somthing went wrong saving the user to the database",
                     {}
                 ).toObject())
         }
 
-        return reply.status(HTTPStatusCode.OK); //TODO: update all of the statusCode to the correct ones. 
+        return reply
+        .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+        .json({
+            user: newUser
+        });  
     } catch (err) {
         return next(err)
     }

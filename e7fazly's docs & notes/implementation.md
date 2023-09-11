@@ -33,4 +33,4 @@
 NOtE for PATCH, the resource id should be in the params.
 
 --- 
-NOTE: some id's are equal to zero, which may not pass the `if (!id)`! 
+NOTE: some id's are equal to zero, which may not pass the `if (!id)`!  FIXED by isNumber Method
