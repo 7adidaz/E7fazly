@@ -19,8 +19,8 @@ class BaseError extends Error {
 }
 
 export class APIError extends BaseError {
-    constructor(errorObject) {
-        super("API ERROR", HTTPStatusCode.INTERNAL_SERVER, errorObject, true)
+    constructor() {
+        super("API ERROR", HTTPStatusCode.INTERNAL_SERVER, {}, true)
     }
 }
 
@@ -30,21 +30,21 @@ export class ValidationError extends BaseError {
     }
 }
 export class ConflictError extends BaseError {
-    constructor(errorObject) {
-        super("Data conflict ERROR", HTTPStatusCode.CONFLICT, errorObject, true)
+    constructor() {
+        super("Data conflict ERROR", HTTPStatusCode.CONFLICT, {}, true)
     }
 }
 
 export class NotFoundError extends BaseError {
-    constructor(errorObject) {
-        super("Record/s Not Found", HTTPStatusCode.NOT_FOUND, errorObject, true)
+    constructor() {
+        super("Record/s Not Found", HTTPStatusCode.NOT_FOUND, {}, true)
     }
 }
 
 export class AuthorizationError extends BaseError {
-    constructor(errorObject) {
+    constructor() {
         //TODO: better status code
-        super("AuthZ Error", HTTPStatusCode.NOT_FOUND, errorObject, true)
+        super("AuthZ Error", HTTPStatusCode.NOT_FOUND, {}, true)
     }
 }
 
@@ -71,8 +71,8 @@ export class ErrorObject {
     }
 }
 
-export function isNumber (x){
-    if(x == null|| typeof(x) !== typeof(0) || isNaN(x)){
+export function isNumber(x) {
+    if (x == null || typeof (x) !== typeof (0) || isNaN(x)) {
         return false;
     }
     return true;

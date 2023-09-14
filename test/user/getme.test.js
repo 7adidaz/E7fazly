@@ -1,40 +1,64 @@
 import { getUser } from "../../controllers/user"
+import prisma from "../../util/prismaclient.js";
 
 describe('get me', () => {
 
+    let user;
+    beforeAll(async () => {
+        user = await prisma.user.create({
+            data: { //TODO: update this after update.
+                name: "abdo",
+                email: "admin@admin.com",
+                password: "12345",
+            }
+        })
+    })
 
-    test('Creating a user with a unique Email', async () => {
+    test('Get an email', async () => {
 
         /**
          * the user's object/data should be 
-         * extracted from a authorization 
+         * extracted from the authorization 
          * middleware, which then can be used. 
          * 
          * here i'm assumming i already authorized the user.
          */
 
-        const email = "admin@admin.com";
         const request = {
             body: {
-                name: "abdallah elhdad",
-                email: email,
-                password: "12345"
+                value: {
+                    id: user.id //TODO: look how to pass arg here. 
+                }
             }
         }
 
-        let resRoute;
+        let resRoute, resJSON, error;
         const response = {
             redirect: (route) => {
                 resRoute = route;
+            },
+            json: (route) => {
+                resJSON = route;
             }
         };
         function next(err) {
+            error = err;
             console.log('next is called with err: ', err);
         }
 
 
         await getUser(request, response, next);
 
-        //TODO: complete this test
+        expect(resJSON).toHaveProperty('user')
+        expect(resJSON.user).toHaveProperty('name', 'abdo')
+        expect(error).toBeUndefined();
+    })
+
+    afterAll(async () => {
+        await prisma.user.delete({
+            where: {
+                id: user.id
+            }
+        })
     })
 })
