@@ -9,10 +9,10 @@
     "start": "nodemon app.js"
   },
   "jest": {
-  "transform": {
-    "^.+\\.[t|j]sx?$": "babel-jest"
-  }
-},
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "e7fazly"
@@ -34,7 +34,13 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.15",
     "babel-jest": "^29.6.4",
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.6.4",
+    "prettier": "^3.0.3",
     "supertest": "^6.3.3"
   }
 }

@@ -20,7 +20,7 @@ const idValidation = Joi.number().required();
 
 export function createDirectoryDataValidator(req, reply, next) {
     try {
-        const value= objectValidator(createDirectoryDataValidation, req.body);
+        const value = objectValidator(createDirectoryDataValidation, req.body);
 
         req.body.value = value;
         next()
@@ -46,7 +46,7 @@ export async function userIdValidator(req, reply, next) {
         const id = req.params.userId; //TODO: update this when auth
         const value = singleValidator(idValidation, id)
 
-        req.body.value.userId= value;
+        req.body.value.userId = value;
         next()
     } catch (err) {
         return next(err)

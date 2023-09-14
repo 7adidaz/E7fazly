@@ -85,7 +85,7 @@ async function random_tags(count) {
 
     for (let i = 0; i < count; i++) {
         const bookmark_id = Math.floor(Math.random() * bookmarkCount);
-        const tagWord = faker.lorem.word({length: { max: 7, min: 2}});
+        const tagWord = faker.lorem.word({ length: { max: 7, min: 2 } });
 
         const tag = await prisma.tag.create({
             data: {
