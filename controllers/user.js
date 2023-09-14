@@ -29,16 +29,44 @@ export async function createUser(req, reply, next) {
          * maybe a new middleware. 
          */
 
-        const newUser = await prisma.user.create({
-            data: {
-                name: name,
-                email: email,
-                password: password
-            }
-        });
-        //TODO: use a transaction to create user & base_directory_id 
+        const userCreationTransaction =
+            await prisma.$transaction(async (tx) => {
+                const newUser = await tx.user.create({
+                    data: {
+                        name: name,
+                        email: email,
+                        password: password,
+                        is_verified: false,
+                        verification_code: 0,
+                        base_directory_id: null
+                    }
+                });
+                if(!newUser) throw new APIError();
 
-        if (!newUser) throw new APIError();
+                const base_directory = await tx.directory.create({
+                    data: {
+                        parent_id: null,
+                        name: "ROOT",
+                        icon: "DEFAULT",
+                        owner_id: newUser.id,
+                    }
+                });
+                if(!base_directory) throw new APIError();
+
+                const updatedUser = await tx.user.update({
+                    where: {
+                        id: newUser.id
+                    },
+                    data: {
+                        base_directory_id: base_directory.id
+                    }
+                });
+                if(!updatedUser) throw new APIError();
+                
+                return true;
+            });
+
+        if (!userCreationTransaction) throw new APIError();
 
         return reply.redirect('/login');
     } catch (err) {
@@ -128,7 +156,7 @@ export async function updateUser(req, reply, next) {
         if (!newUser) throw new APIError();
 
         return reply
-            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
                 user: newUser
             });

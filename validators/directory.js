@@ -1,6 +1,5 @@
 import Joi from 'joi';
 import { objectValidator, singleValidator } from './basic_validators';
-import e from 'express';
 
 const createDirectoryDataValidation = Joi.object({
     name: Joi.string().max(255).required(),

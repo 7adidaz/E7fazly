@@ -1,21 +1,24 @@
-import { getUser } from "../../controllers/user"
+import { getByEmail, getUser } from "../../controllers/user"
 import prisma from "../../util/prismaclient.js";
 
-describe('get me', () => {
+describe('get\'s users', () => {
 
     let user;
+    const email = "aaaa@aa.com";
     beforeAll(async () => {
         user = await prisma.user.create({
-            data: { //TODO: update this after update.
+            data: {
                 name: "abdo",
-                email: "admin@admin.com",
+                email: email,
                 password: "12345",
+                is_verified: false,
+                verification_code: 0,
+                base_directory_id: null
             }
         })
     })
 
-    test('Get an email', async () => {
-
+    test('Get by id', async () => {
         /**
          * the user's object/data should be 
          * extracted from the authorization 
@@ -54,11 +57,46 @@ describe('get me', () => {
         expect(error).toBeUndefined();
     })
 
+    test('Get by Email', async () => {
+        const request = {
+            body: {
+                value: {
+                    id: user.id //TODO: look how to pass arg here. 
+                }
+            }
+        }
+
+        let resRoute, resJSON, error;
+        const response = {
+            redirect: (route) => {
+                resRoute = route;
+            },
+            json: (route) => {
+                resJSON = route;
+            }
+        };
+        function next(err) {
+            error = err;
+            console.log('next is called with err: ', err);
+        }
+
+        await getByEmail(request, response, next);
+
+        expect(resJSON).toHaveProperty('user')
+        expect(resJSON.user).toHaveProperty('name', 'abdo')
+        expect(error).toBeUndefined();
+    })
+
+
     afterAll(async () => {
-        await prisma.user.delete({
+        await prisma.user.deleteMany({
             where: {
-                id: user.id
+                id: {
+                    in:
+                        [user.id]
+                }
             }
         })
     })
+
 })

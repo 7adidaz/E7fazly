@@ -53,11 +53,23 @@ describe('create user', () => {
 
         expect(isUserinDB).not.toBeNull();
         expect(isUserinDB).not.toBeUndefined();
+        expect(isUserinDB.base_directory_id).not.toBeNull();
         expect(resRoute).toEqual('/login');
         expect(error).toBeUndefined();
 
+        const directory = await prismaclient.directory.findFirst({
+            where: {
+                id: isUserinDB.base_directory_id
+            }
+        })
+
+        expect(directory).not.toBeNull();
+        expect(directory.owner_id).toEqual(isUserinDB.id);
+
         deleteEmail()
-    })
+    });
+
+    
 
     afterAll(async () => {
         deleteEmail()

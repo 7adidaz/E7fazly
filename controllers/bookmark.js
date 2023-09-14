@@ -1,6 +1,7 @@
 import { isNumber } from "../util/error.js";
 import prismaclient from "../util/prismaclient.js";
 import { bookmarkValidation } from "../validators/bookmark.js";
+import { validAccess } from "../util/valid_access.js";
 //TODO: status codes for all of this. 
 /** 
 model bookmark {
@@ -16,72 +17,17 @@ model bookmark {
 }
  */
 
-async function validAccess(userId, directoryId) {
-    /**
-     * for a bookmark to be inserted, one of these cases 
-     *     - it's the user's directory 
-     *     - the user have access_right = "edit" to the directory 
-     *     - user has access to upper directory 
-     */
-
-    // first i check for the existance of the user and Directory
-    try {
-        const user = await prismaclient.user.findFirst({
-            where: {
-                id: userId
-            }
-        });
-
-        const directory = await prismaclient.directory.findFirst({
-            where: {
-                id: directoryId
-            }
-        });
-
-        if (!user || !directory) {
-            return false;
-        }
-
-        if (directory.owner_id === user.id) {
-            return true;
-        }
-
-        // does it has the right access rights? 
-        const accessRight = await prismaclient.user_directory_access.findFirst({
-            where: {
-                //TODO: this is gonna fail somehow. MAKE IT WORK
-                user_id: userId,
-                directory_id: directoryId
-            }
-        });
-
-        if (!accessRight || accessRight.user_rights !== "edit") {
-            return false;
-        }
-
-        return true;
-    } catch (err) {
-        return false;
-    }
-}
-
 //AuthN
 export async function createBookmark(req, reply, next) {
     try {
-        const { error, value } = bookmarkValidation.validate(req.body, { abortEarly: false })
-        if (error) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "the data provided don't pass the validation requirement",
-                    error.details.map(err => err.message)
-                ).toObject());
-        }
 
-        const link = req.body.link;
-        const owner_id = req.body.owner_id;
-        const directory_id = req.body.directory_id;
-        const type = req.body.type;
-        const favorite = req.body.favorite;
+        const value = req.body.value;
+
+        const link = value.link;
+        const owner_id = value.owner_id;
+        const directory_id = value.directory_id;
+        const type = value.type;
+        const favorite = value.favorite;
 
 
         if (validAccess(owner_id, directory_id)) {
@@ -95,21 +41,10 @@ export async function createBookmark(req, reply, next) {
                 }
             })
 
-            if (!bookmark) {
-                throw new APIError(
-                    new ErrorObject(
-                        "Somthing went wrong saving the bookmark to the database",
-                        {}
-                    ).toObject());
-            }
-
+            if (!bookmark) throw new APIError();
 
         } else {
-            throw new AuthorizationError(
-                new ErrorObject(
-                    "unauthorized access to resource",
-                    {}
-                ).toObject());
+            throw new AuthorizationError();
         }
         return reply
             .status(HTTPStatusCode.CREATED)
@@ -117,36 +52,22 @@ export async function createBookmark(req, reply, next) {
                 message: "SUCCESS"
             });
     } catch (err) {
-        return next(err); // so many things can go wrong at this point, need to handle non-operational errors.
+        return next(err);
     }
 }
 
 //AuthZ
 export async function getBookmarkById(req, reply, next) {
     try {
-        const id = Number(req.params.id);
-
-        if (!isNumber(id)) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain an ID as a number",
-                    {}
-                ).toObject())
-        }
+        const value = req.body.value;
+        const id = value.id;
 
         const bookmark = await prismaclient.bookmark.findFirst({
             where: {
                 id: id
             }
         });
-
-        if (!bookmark) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong getting the bookmark or it's not present!",
-                    {}
-                ).toObject());
-        }
+        if (!bookmark) throw new APIError();
 
         return reply.json(bookmark);
     } catch (err) {
@@ -158,29 +79,15 @@ export async function getBookmarkById(req, reply, next) {
 export async function getAllBookmarks(req, reply, next) {
     // this "I THINK" should NOT include the one user's have access to thier folders. 
     try {
-        const userId = req.user.id;
-
-        if (!userId) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain an ID as a number",
-                    {}
-                ).toObject())
-        };
+        const value = req.body.value;
+        const userId = value.id;
 
         const bookmarks = await prismaclient.bookmark.findMany({
             where: {
                 owner_id: userId
             }
         });
-
-        if (!bookmarks) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong getting the bookmark or it's not present!",
-                    {}
-                ).toObject());
-        }
+        if (!bookmarks) throw new APIError();
 
         return reply.json(bookmarks);
     } catch (err) {
@@ -195,15 +102,8 @@ export async function getBookmarksByTag(req, reply, next) {
          * aaaaaaaaaaaaaa, i think i should make sure 
          * that the requester is requesting tags that is HIS, not other's. 
          */
-        const tagId = Number(req.params.tag_id);
-
-        if (!tagId) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain an ID as a number",
-                    {}
-                ).toObject())
-        };
+        const value = req.body.value;
+        const tagId = value.tagId;
 
         const bookmarks = await prismaclient.bookmark_tag.findMany({
             where: {
@@ -211,13 +111,8 @@ export async function getBookmarksByTag(req, reply, next) {
             }
         })
 
-        if (!bookmarks) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong getting the tag or it's not present!",
-                    {}
-                ).toObject());
-        }
+        if (!bookmarks) throw new APIError();
+        
 
         return reply.json(bookmarks);
     } catch (err) {
@@ -228,50 +123,30 @@ export async function getBookmarksByTag(req, reply, next) {
 
 export async function updateBookmarks(req, reply, next) {
     try {
-        // an array of id's and data
-        const updateList = req.body.update_list;
-        updateList.forEach(element => {
-            const { error, value } = bookmarkValidation.validate(element, { abortEarly: false })
-            if (error) {
-                throw new ValidationError(
-                    new ErrorObject(
-                        "some of the data provided don't pass the validation requirement",
-                        error.details.map(err => err.message)
-                    ).toObject());
-            }
-        });
+        const value = req.body.value;
+        const updateList = value.list;
 
         // does the user has the right of update this? 
-        // does this should be transactional?! 
+        // TODO: does this should be transactional?! 
 
         await updateList.forEach(async element => {
-            if (validAccess(element.owner_id, element.directory_id)) { //TODO: optimize this. 
+            if (validAccess(element.owner_id, element.directory_id)) { 
                 const updatedBookmark = await prismaclient.bookmark.update({
                     where: {
                         id: element.id
                     },
                     data: {
                         link: element.link,
-                        owner_id: element.owner_id,
                         directory_id: element.directory_id,
                         favorite: element.favorite,
-                        //TODO: should type stay the same? 
+                        //TODO: should type stay the same?  - i think yes
                     }
                 })
 
-                if (!updateBookmarks) {
-                    throw new APIError(
-                        new ErrorObject(
-                            "Somthing went wrong saving the bookmark to the database",
-                            {}
-                        ).toObject());
-                }
+                if (!updateBookmarks) throw new APIError();
+
             } else {
-                throw new AuthorizationError(
-                    new ErrorObject(
-                        "unauthorized access to resource",
-                        {}
-                    ).toObject());
+                throw new AuthorizationError();
             }
         })
 
