@@ -21,6 +21,7 @@ async function validAccess(userId, directoryId) {
      * for a bookmark to be inserted, one of these cases 
      *     - it's the user's directory 
      *     - the user have access_right = "edit" to the directory 
+     *     - user has access to upper directory 
      */
 
     // first i check for the existance of the user and Directory

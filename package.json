@@ -9,10 +9,10 @@
     "start": "nodemon app.js"
   },
   "jest": {
-    "transform": {
-      " ^.+\\.(js|jsx)$": "babel-jest"
-    }
-  },
+  "transform": {
+    "^.+\\.[t|j]sx?$": "babel-jest"
+  }
+},
   "repository": {
     "type": "git",
     "url": "e7fazly"

@@ -1,21 +1,14 @@
 import { directoryDataValidation } from "../validators/directory.js"
 import prisma from '../util/prismaclient.js'
-import { AuthorizationError, ErrorObject, ValidationError,  HTTPStatusCode, NotFoundError, isNumber } from "../util/error.js";
+import { AuthorizationError, ErrorObject, ValidationError, HTTPStatusCode, NotFoundError, isNumber } from "../util/error.js";
 
 //TODO:  make sure that controllers match the API from postman.
+//TODO: authN and authZ
 
-//TODO: authz
 export async function createDirectory(req, reply, next) {
     try {
-        const { error, value } = directoryDataValidation.validate(req.body, { abortEarly: false });
-        if (error) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "the data provided don't pass the validation requirement",
-                    error.details.map(err => err.message)
-                )
-            );
-        }
+
+        const value = req.body.value;
 
         const userId = value.ownerId;
         const directoryName = value.name;
@@ -28,61 +21,35 @@ export async function createDirectory(req, reply, next) {
             }
         });
 
-        if (!user) { // user is not in DB 
-
-            //TODO: i think this should be handled 
-            // more carefully! 
-            // iirc this if the user try to create 
-            // a folder for a user not in the system.
-
-            throw new AuthorizationError(
-                new ErrorObject(
-                    "unauthorized access to resource",
-                    {}
-                ).toObject()
-            )
-        }
+        if (!user) throw new ValidationError()
 
         const newDirectory = await prisma.directory.create({
             data: {
-                parent_id: directoryParentId, 
+                parent_id: directoryParentId,
                 name: directoryName,
                 icon: icon,
                 owner_id: userId
             }
         });
 
-        if (!newDirectory) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong creating directory in database",
-                    {}
-                ).toObject());
-        }
+        if (!newDirectory) throw new APIError();
+
 
         return reply
-        .status(HTTPStatusCode.CREATED)
-        .json({
-            message: "SUCCESS"
-        });
+            .status(HTTPStatusCode.CREATED)
+            .json({
+                message: "SUCCESS"
+            });
     } catch (err) {
         return next(err);
     }
 }
 
-//TODO: AuthZ 
 export async function contentByParent(req, reply, next) {
     try {
-        const parentId = Number(req.params.parent_id);
 
-        console.log(parentId, typeof(parentId))
-        if (!isNumber(parentId)) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain a parent_id as a number",
-                    {}
-                ).toObject());
-        }
+        const value = req.body.value;
+        const parentId = value.id;
 
         let parent_dir = await prisma.directory.findFirst({
             where: {
@@ -90,14 +57,8 @@ export async function contentByParent(req, reply, next) {
             }
         });
 
-        if (!parent_dir) {
-            throw new NotFoundError(
-                new ErrorObject(
-                    "Trying to get the content of a non-valid directory",
-                    {}
-                )
-            )
-        }
+        if (!parent_dir) throw new NotFoundError()
+
 
         const response = {
             // directories: [],
@@ -125,32 +86,19 @@ export async function contentByParent(req, reply, next) {
     }
 }
 
-//TODO: AuthZ
 export async function getAllDirectories(req, reply, next) {
     try {
-        const userId = Number(req.params.userId)
+        const value = req.body.value;
+        const userId = value.id;
 
-        if (!isNumber(userId)) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain a userId as a number",
-                    {}
-                ).toObject());
-        }
         const user = await prisma.user.findFirst({
             where: {
                 id: userId
             }
         });
 
-        if (!user) {
-            throw new AuthorizationError(
-                new ErrorObject(
-                    "unauthorized access to resource",
-                    {}
-                ).toObject()
-            )
-        }
+        if (!user) throw new AuthorizationError()
+
 
         const directories = await prisma.directory.findMany({
             where: {
@@ -167,30 +115,14 @@ export async function getAllDirectories(req, reply, next) {
     }
 }
 
-//TODO: AuthZ
 export async function updateDirectory(req, reply, next) {
     try {
-        const { error, value } = directoryDataValidation.validate(req.body, { abortEarly: false });
-        if (error) {
-            throw new ValidationError({
-                description: "the data provided don't pass the validation requirement",
-                data: error.details.map(err => err.message)
-            });
-        }
+        const value = req.body.value;
 
-        const id = Number(req.params.id);
-        const directoryName = req.body.name;
-        const owner_id= req.body.ownerId;
-        const parentId = req.body.parentId;
-        const icon= req.body.icon;
-
-        if (!isNumber(id)) {
-            throw new ValidationError(
-                new ErrorObject(
-                    "Request must contain a id as a number",
-                    {}
-                ).toObject());
-        }
+        const id = value.id;
+        const directoryName = value.name;
+        const parentId = value.parentId;
+        const icon = value.icon;
 
         const updated = await prisma.directory.update({
             where: {
@@ -198,43 +130,27 @@ export async function updateDirectory(req, reply, next) {
             },
             data: {
                 name: directoryName,
-                parent_id: parentId, 
+                parent_id: parentId,
                 icon: icon
             }
         });
 
-        if (!updated) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong updating the directory in the database",
-                    {}
-                ).toObject());
-        }
+        if (!updated) throw new APIError()
+
 
         return reply
-        .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
-        .json({
-            message: "UPDATE SUCCESS"
-        });
+            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            .json({
+                message: "UPDATE SUCCESS"
+            });
     } catch (err) {
         return next(err);
-    } }
+    }
+}
 
-//TODO: AuthZ
 export async function deleteDirectoriesByIds(req, reply, next) {
     try {
-
-        const idList = [];
-
-        req.query.ids
-        .split('')
-        .forEach(id => {
-            console.log('id: ', id)
-            if(isNumber(Number(id))){
-                idList.push(Number(id));
-            }
-        })
-        console.log('ids: ', idList);
+        const idList = req.body.value.idList;
 
         const deleteResult = await prisma.directory.deleteMany({
             where: {
@@ -244,19 +160,14 @@ export async function deleteDirectoriesByIds(req, reply, next) {
             }
         })
 
-        if (!deleteResult) {
-            throw new APIError(
-                new ErrorObject(
-                    "Somthing went wrong deleting the directory from the database",
-                    {}
-                ).toObject());
-        }
+        if (!deleteResult) throw new APIError()
+
 
         return reply
-        .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
-        .json({
-            message: "Directories DELETED"
-        })
+            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            .json({
+                message: "Directories DELETED"
+            })
     } catch (err) {
         return next(err);
     }

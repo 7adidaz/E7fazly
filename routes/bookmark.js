@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createBookmark, getAllBookmarks, getBookmarkById, getBookmarksByTag, updateBookmarks } from '../controllers/bookmark.js';
+import { createBookmark, getAllBookmarks, getBookmarkById, getBookmarksByTag, updateBookmarks, deleteBookmarks } from '../controllers/bookmark.js';
 const router = Router();
 
 router.post('create', createBookmark);
