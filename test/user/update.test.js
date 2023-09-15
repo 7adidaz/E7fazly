@@ -1,10 +1,17 @@
 import { updateUser } from "../../controllers/user"
 import prisma from "../../util/prismaclient.js";
 
-describe('get\'s users', () => {
+describe('update user', () => {
 
     let user;
     const email = "aaaa@aa.com";
+    const response = {
+        redirect: jest.fn(),
+        json: jest.fn()
+    };
+    const next = jest.fn()
+
+
     beforeAll(async () => {
         user = await prisma.user.create({
             data: {
@@ -18,10 +25,9 @@ describe('get\'s users', () => {
         })
     })
 
-    test('Get by id', async () => {
+    test('update user basic information', async () => {
         const request = {
             body: {
-
                 value: {
                     id: user.id,
                     name: "updated",
@@ -31,40 +37,25 @@ describe('get\'s users', () => {
             }
         }
 
-        let resRoute, resJSON, error;
-        const response = {
-            redirect: (route) => {
-                resRoute = route;
-            },
-            json: (route) => {
-                resJSON = route;
-            }
-        };
-
-        function next(err) {
-            error = err;
-            console.log('next is called with err: ', err);
-        }
-
         await updateUser(request, response, next);
 
-        expect(resJSON).toHaveProperty('user');
-
-        const updatedUser = resJSON.user;
-
-        expect(updatedUser).toHaveProperty('name', 'updated')
-        expect(updatedUser).toHaveProperty('password', 'updated')
-        expect(updatedUser).toHaveProperty('email', 'updated@updated.com')
+        expect(response.json)
+            .toBeCalledWith(expect.objectContaining({
+                user: expect.objectContaining({
+                    id: user.id,
+                    name: "updated",
+                    email: "updated@updated.com",
+                    password: "updated",
+                    is_verified: false,
+                    verification_code: 0,
+                    base_directory_id: null,
+                })
+            }));
     })
 
     afterAll(async () => {
         await prisma.user.deleteMany({
-            where: {
-                id: {
-                    in:
-                        [user.id]
-                }
-            }
+            where: { id: { in: [user.id] } }
         })
     })
 })

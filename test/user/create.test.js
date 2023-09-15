@@ -17,33 +17,18 @@ describe('create user', () => {
     });
 
     test('Creating a user with a unique Email', async () => {
-        const request = {
-            body: {
-                value: {
-                    name: "abdallah elhdad",
-                    email: email,
-                    password: "12345"
-                }
-            }
-        }
-
-        let resRoute, resJSON, error;
+        const request = { body: { value: { name: "abdallah elhdad", email: email, password: "12345" } } }
 
         const response = {
-            redirect: (route) => {
-                resRoute = route;
-            },
-            json: (route) => {
-                resJSON = route;
-            }
+            redirect: jest.fn(),
+            json: jest.fn()
         };
 
-        function next(err) {
-            console.log('err: ', err)
-            error = err;
-        }
-
+        const next = jest.fn();
         await createUser(request, response, next);
+
+        expect(response.redirect).toBeCalledWith('/login');
+        expect(next).not.toBeCalled();
 
         const isUserinDB = await prismaclient.user.findFirst({
             where: {
@@ -54,22 +39,14 @@ describe('create user', () => {
         expect(isUserinDB).not.toBeNull();
         expect(isUserinDB).not.toBeUndefined();
         expect(isUserinDB.base_directory_id).not.toBeNull();
-        expect(resRoute).toEqual('/login');
-        expect(error).toBeUndefined();
 
         const directory = await prismaclient.directory.findFirst({
-            where: {
-                id: isUserinDB.base_directory_id
-            }
+            where: { id: isUserinDB.base_directory_id }
         })
 
         expect(directory).not.toBeNull();
         expect(directory.owner_id).toEqual(isUserinDB.id);
-
-        deleteEmail()
     });
-
-    
 
     afterAll(async () => {
         deleteEmail()

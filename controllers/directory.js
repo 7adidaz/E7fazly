@@ -35,10 +35,10 @@ export async function createDirectory(req, reply, next) {
         if (!newDirectory) throw new APIError();
 
 
-        return reply
-            .status(HTTPStatusCode.CREATED)
+        return reply // .status(HTTPStatusCode.CREATED)
             .json({
-                message: "SUCCESS"
+                message: "SUCCESS", 
+                directory: newDirectory
             });
     } catch (err) {
         return next(err);
@@ -74,7 +74,7 @@ export async function contentByParent(req, reply, next) {
 
         const bookmarks = await prisma.bookmark.findMany({
             where: {
-                owner_id: parentId
+                directory_id: parentId
             }
         });
 
@@ -139,9 +139,10 @@ export async function updateDirectory(req, reply, next) {
 
 
         return reply
-            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
-                message: "UPDATE SUCCESS"
+                message: "UPDATE SUCCESS",
+                directory: updated
             });
     } catch (err) {
         return next(err);
