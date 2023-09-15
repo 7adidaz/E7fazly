@@ -33,9 +33,11 @@ model directory {
   parent_id                              Int?
   name                                   String                  @db.VarChar(255)
   icon                                   String
-  owner_id                               Int?
+  owner_id                               Int
   bookmark                               bookmark[]
-  user                                   user?                   @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user                                   user                    @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  directory                              directory?              @relation("directoryTodirectory", fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  other_directory                        directory[]             @relation("directoryTodirectory")
   user_user_base_directory_idTodirectory user[]                  @relation("user_base_directory_idTodirectory")
   user_directory_access                  user_directory_access[]
 }

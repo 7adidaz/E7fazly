@@ -18,11 +18,17 @@
 
 
 --- 
- for user, 
+- for user, 
     -  i think we need to enable search by email. -> probably not a good idea
+    - if a user trying to get his account and is not verifed now, should be redirected to /verify or smth. 
 
 --- 
 - email verification
     - when user sign up, there is a code to be send to verify the email. 
     - either with a column in the table's user. 
     - or using a database table. 
+
+---
+- directories 
+    - should /dir/all get the directories at level 0 ??? 
+    - if a user tried to update his base_directory, it should fail //TODO

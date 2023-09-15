@@ -1,10 +1,16 @@
 import { deleteUser, updateUser } from "../../controllers/user"
 import prisma from "../../util/prismaclient.js";
 
-describe('get\'s users', () => {
+describe('delete user', () => {
 
     let user;
     const email = "aaaa@aa.com";
+    const response = {
+        redirect: jest.fn(),
+        json: jest.fn()
+    };
+    const next = jest.fn()
+
     beforeAll(async () => {
         user = await prisma.user.create({
             data: {
@@ -18,31 +24,12 @@ describe('get\'s users', () => {
         })
     })
 
-    test('Get by id', async () => {
-        const request = {
-            body: {
-                value: {
-                    id: user.id,
-                }
-            }
-        }
-
-        let resRoute, resJSON, error;
-        const response = {
-            redirect: (route) => {
-                resRoute = route;
-            },
-            json: (route) => {
-                resJSON = route;
-            }
-        };
-
-        function next(err) {
-            error = err;
-            console.log('next is called with err: ', err);
-        }
+    test('delete user', async () => {
+        const request = { body: { value: { id: user.id, } } }
 
         await deleteUser(request, response, next);
+
+        expect(response.redirect).toBeCalledWith('/signup');
 
         const userInDB = await prisma.user.findFirst({
             where: {
@@ -58,20 +45,11 @@ describe('get\'s users', () => {
 
         expect(userInDB).toBeNull();
         expect(baseDirectory).toBeNull();
-
-
-        expect(resJSON).toBeUndefined();
-        expect(resRoute).toEqual('/signup');
     })
 
     afterAll(async () => {
         await prisma.user.deleteMany({
-            where: {
-                id: {
-                    in:
-                        [user.id]
-                }
-            }
+            where: { id: { in: [user.id] } }
         })
     })
 })

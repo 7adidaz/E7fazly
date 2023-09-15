@@ -12,3 +12,6 @@
 ##### 14 sep
 - [x] generete the new database schema from  & update the user's creation model 
 - [x] make sure to transactionally create the user and it's base directory. 
+
+##### 15 sep
+- [ ] write test cases for directory module.
