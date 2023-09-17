@@ -1,6 +1,5 @@
-import { directoryDataValidation } from "../validators/directory.js"
 import prisma from '../util/prismaclient.js'
-import { AuthorizationError, ErrorObject, ValidationError, HTTPStatusCode, NotFoundError, isNumber } from "../util/error.js";
+import { AuthorizationError, ErrorObject, ValidationError, HTTPStatusCode, NotFoundError, isNumber, APIError } from "../util/error.js";
 
 //TODO:  make sure that controllers match the API from postman.
 //TODO: authN and authZ
@@ -37,7 +36,7 @@ export async function createDirectory(req, reply, next) {
 
         return reply // .status(HTTPStatusCode.CREATED)
             .json({
-                message: "SUCCESS", 
+                message: "SUCCESS",
                 directory: newDirectory
             });
     } catch (err) {
@@ -58,7 +57,6 @@ export async function contentByParent(req, reply, next) {
         });
 
         if (!parent_dir) throw new NotFoundError()
-
 
         const response = {
             // directories: [],
@@ -99,7 +97,6 @@ export async function getAllDirectories(req, reply, next) {
 
         if (!user) throw new AuthorizationError()
 
-
         const directories = await prisma.directory.findMany({
             where: {
                 owner_id: userId
@@ -117,32 +114,43 @@ export async function getAllDirectories(req, reply, next) {
 
 export async function updateDirectory(req, reply, next) {
     try {
-        const value = req.body.value;
+        const value = req.body.value; // a collection of objects
+        const updatedDirectories = [];
 
-        const id = value.id;
-        const directoryName = value.name;
-        const parentId = value.parentId;
-        const icon = value.icon;
+        value.changes.forEach(async change => {
+            const id = change.id;
+            const directoryName = change.name
+            const parentId = change.parentId
+            const icon = change.icon;
 
-        const updated = await prisma.directory.update({
-            where: {
-                id: id
-            },
-            data: {
-                name: directoryName,
-                parent_id: parentId,
-                icon: icon
-            }
-        });
+            const tx = prisma.directory.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    name: directoryName,
+                    parent_id: parentId,
+                    icon: icon
+                }
+            });
 
-        if (!updated) throw new APIError()
+            updatedDirectories.push(tx);
+        })
 
+        const updatedDirectoriesTransaction = //update all or nothing
+            await prisma.$transaction(updatedDirectories)
+
+        if (!updatedDirectoriesTransaction) throw new APIError()
+        updatedDirectoriesTransaction.forEach(e => {
+            e.parentId = e.parent_id
+            delete e.parent_id
+        })
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
                 message: "UPDATE SUCCESS",
-                directory: updated
+                directories: updatedDirectoriesTransaction 
             });
     } catch (err) {
         return next(err);
@@ -151,23 +159,25 @@ export async function updateDirectory(req, reply, next) {
 
 export async function deleteDirectoriesByIds(req, reply, next) {
     try {
-        const idList = req.body.value.idList;
+        const idList = req.body.value.ids;
+        const deleteList  = [];
 
-        const deleteResult = await prisma.directory.deleteMany({
-            where: {
-                id: {
-                    in: idList
+        idList.forEach(id => {
+            const tx = prisma.directory.delete({
+                where: {
+                    id: id
                 }
-            }
+            })
+            deleteList.push(tx);
         })
 
-        if (!deleteResult) throw new APIError()
-
+        const result = await prisma.$transaction(deleteList);
+        if(!result) throw new APIError();
 
         return reply
-            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
-                message: "Directories DELETED"
+                message: "DELETED"
             })
     } catch (err) {
         return next(err);

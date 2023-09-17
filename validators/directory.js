@@ -54,9 +54,15 @@ export async function userIdValidator(req, reply, next) {
 
 export async function updateDirectoryDataValidator(req, reply, next) {
     try {
-        const value = objectValidator(updateDirectoryDataValidation, req.body);
 
-        req.body.value = value;
+        const changeslist = req.params.ids;
+
+        changeslist.forEach(change => {
+            objectValidator(updateDirectoryDataValidation, change);
+        })
+
+
+        req.body.value.changes = changeslist;
         next()
     } catch (err) {
         return next(err);

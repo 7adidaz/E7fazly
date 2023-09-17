@@ -1,9 +1,9 @@
 import { updateDirectory } from "../../controllers/directory.js";
 import prisma from "../../util/prismaclient.js";
 
-describe('directory getters', () => {
+describe('directory update', () => {
 
-    let user, firstId, secondId, lastdId;
+    let user, firstId, secondId, thirdId, lastdId;
     const email = "aaaa@aa.com";
     const response = {
         redirect: jest.fn(),
@@ -24,7 +24,7 @@ describe('directory getters', () => {
             }
         })
 
-        // dir with 2 dir nested inside of them + a bookmark
+        // dir with 3 dir nested inside of them + a bookmark
 
         const zero = await prisma.directory.create({
             data: {
@@ -34,7 +34,6 @@ describe('directory getters', () => {
                 owner_id: user.id
             }
         });
-
         firstId = zero.id;
 
         const one1 = await prisma.directory.create({
@@ -55,7 +54,17 @@ describe('directory getters', () => {
                 owner_id: user.id
             }
         });
-        lastdId = one2.id;
+        thirdId = one2.id;
+
+        const one3 = await prisma.directory.create({
+            data: {
+                parent_id: zero.id,
+                name: '0',
+                icon: 'default',
+                owner_id: user.id
+            }
+        });
+        lastdId = one3.id;
 
         const bookmark1 = await prisma.bookmark.create({
             data: {
@@ -68,40 +77,56 @@ describe('directory getters', () => {
         })
     })
 
-    test('move one directory inside another', async () => {
+    test('move directories inside another', async () => {
+        const expected = [
+            {
+                id: secondId,
+                name: 'updated',
+                parentId: firstId,
+                icon: 'updated',
+                // owner_id: expect.any(Number),
+            },
+            {
+                id: thirdId,
+                name: 'updated',
+                parentId: secondId,
+                icon: 'updated'
+            },
+            {
+                id: lastdId,
+                name: 'updated',
+                parentId: thirdId,
+                icon: 'updated'
+            }
+        ];
         const request = {
             body: {
                 value: {
-                    id: lastdId,
-                    name: 'updated',
-                    parentId: secondId,
-                    icon: 'updated'
+                    changes: expected
                 }
             }
         }
-
         await updateDirectory(request, response, next);
 
-        expect(next).not.toBeCalled()
+        expect(next).not.toBeCalled();
+
+        const expectedArray = expected.map((i) => ({
+            ...i, 
+            owner_id: user.id,
+        }))
+
         expect(response.json).toBeCalledWith(expect.objectContaining({
             message: "UPDATE SUCCESS",
-            directory: expect.objectContaining({
-                icon: "updated",
-                id: expect.any(Number),
-                name: "updated",
-                owner_id: expect.any(Number),
-                parent_id: secondId,
-            })
-        }));
+            directories : expect.arrayContaining(expectedArray)
+        }))
 
-        for (let i = firstId; i < firstId + 2; i++) {
-            const rootDir = await prisma.directory.findMany({
+        for(let i = firstId; i <= lastdId; i ++){
+            const dir = await prisma.directory.findMany({
                 where: {
-                    parent_id: i
+                    id: i
                 }
             })
-
-            expect(rootDir.length).toEqual(1);
+            expect(dir.length).toEqual(1);
         }
     })
 
