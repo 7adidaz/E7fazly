@@ -32,3 +32,4 @@
 - directories 
     - should /dir/all get the directories at level 0 ??? 
     - if a user tried to update his base_directory, it should fail //TODO
+    - since dragable items are allowed, one should allow to the update of multiple 
