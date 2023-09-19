@@ -112,7 +112,7 @@ export async function getAllDirectories(req, reply, next) {
     }
 }
 
-export async function updateDirectory(req, reply, next) {
+export async function updateDirectoriesByIds(req, reply, next) {
     try {
         const value = req.body.value; // a collection of objects
         const updatedDirectories = [];

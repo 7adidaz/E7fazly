@@ -1,5 +1,4 @@
 import { createUser } from '../../controllers/user.js'
-import server from '../../app.js'
 import prismaclient from '../../util/prismaclient.js'
 
 const email = 'abdallah_elhdad@gmail.com';

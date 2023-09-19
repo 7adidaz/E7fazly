@@ -1,4 +1,4 @@
-import { deleteUser, updateUser } from "../../controllers/user"
+import { deleteUser } from "../../controllers/user"
 import prisma from "../../util/prismaclient.js";
 
 describe('delete user', () => {

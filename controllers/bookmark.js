@@ -1,5 +1,4 @@
 import prismaclient from "../util/prismaclient.js";
-import { validAccess } from "../util/valid_access.js";
 //TODO: status codes for all of this. 
 /** 
 model bookmark {
@@ -22,32 +21,28 @@ export async function createBookmark(req, reply, next) {
         const value = req.body.value;
 
         const link = value.link;
-        const owner_id = value.owner_id;
-        const directory_id = value.directory_id;
+        const ownerId = value.owner_id;
+        const directoryId = value.directory_id;
         const type = value.type;
         const favorite = value.favorite;
 
 
-        if (validAccess(owner_id, directory_id)) {
-            const bookmark = await prismaclient.bookmark.create({
-                data: {
-                    link: link,
-                    owner_id: owner_id,
-                    directory_id: directory_id,
-                    type: type,
-                    favorite: favorite
-                }
-            })
+        const bookmark = await prismaclient.bookmark.create({
+            data: {
+                link: link,
+                owner_id: ownerId,
+                directory_id: directoryId,
+                type: type,
+                favorite: favorite
+            }
+        })
 
-            if (!bookmark) throw new APIError();
-
-        } else {
-            throw new AuthorizationError();
-        }
+        if (!bookmark) throw new APIError();
         return reply
-            .status(HTTPStatusCode.CREATED)
+            // .status(HTTPStatusCode.CREATED)
             .json({
-                message: "SUCCESS"
+                message: "SUCCESS",
+                bookmark: bookmark
             });
     } catch (err) {
         return next(err);
@@ -103,14 +98,17 @@ export async function getBookmarksByTag(req, reply, next) {
         const value = req.body.value;
         const tagId = value.tagId;
 
-        const bookmarks = await prismaclient.bookmark_tag.findMany({
+        const bookmarks = await prismaclient.bookmark.findMany({
             where: {
-                tag_id: tagId
+                bookmark_tag: {
+                    some: {
+                        tag_id: tagId
+                    }
+                }
             }
         })
 
         if (!bookmarks) throw new APIError();
-        
 
         return reply.json(bookmarks);
     } catch (err) {
@@ -122,36 +120,31 @@ export async function getBookmarksByTag(req, reply, next) {
 export async function updateBookmarks(req, reply, next) {
     try {
         const value = req.body.value;
-        const updateList = value.list;
+        const updateList = [];
 
-        // does the user has the right of update this? 
-        // TODO: does this should be transactional?! 
+        value.list.forEach(async element => {
+            const tx = prismaclient.bookmark.update({
+                where: {
+                    id: element.id
+                },
+                data: {
+                    link: element.link,
+                    directory_id: element.directory_id,
+                    favorite: element.favorite
+                }
+            })
 
-        await updateList.forEach(async element => {
-            if (validAccess(element.owner_id, element.directory_id)) { 
-                const updatedBookmark = await prismaclient.bookmark.update({
-                    where: {
-                        id: element.id
-                    },
-                    data: {
-                        link: element.link,
-                        directory_id: element.directory_id,
-                        favorite: element.favorite,
-                        //TODO: should type stay the same?  - i think yes
-                    }
-                })
-
-                if (!updateBookmarks) throw new APIError();
-
-            } else {
-                throw new AuthorizationError();
-            }
+            updateList.push(tx);
         })
 
+        const updateTransation = await prismaclient.$transaction(updateList);
+        if (!updateTransation) throw new APIError()
+
         return reply
-            .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
-                message: "Directories DELETED"
+                message: "UPDATED",
+                bookmarks: updateTransation
             })
     } catch (err) {
         return next(err);
@@ -159,5 +152,25 @@ export async function updateBookmarks(req, reply, next) {
 }
 
 export async function deleteBookmarks(req, reply, next) {
-    //TODO
+    try {
+        const value = req.body.value;
+        const deleteList = [];
+
+        value.list.forEach(async id => {
+            const tx = prismaclient.bookmark.delete({
+                where: { id: id }
+            })
+            deleteList.push(tx);
+        })
+        const deleteTransation = await prismaclient.$transaction(deleteList);
+        if (!deleteTransation) throw new APIError()
+
+        return reply
+            // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
+            .json({
+                message: "DELETED",
+            })
+    } catch (err) {
+        return next(err);
+    }
 }

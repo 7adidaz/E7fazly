@@ -1,9 +1,8 @@
-import { deleteDirectoriesByIds} from "../../controllers/directory.js";
+import { deleteBookmarks } from "../../controllers/bookmark.js";
 import prisma from "../../util/prismaclient.js";
 
-describe('directory delete', () => {
-
-    let user, firstId , secondId;
+describe('delete bookmark', () => {
+    let user, dir, anotherDir, bkmrk1, bkmrk2;
     const email = "aaaa@aa.com";
     const response = {
         redirect: jest.fn(),
@@ -31,75 +30,62 @@ describe('directory delete', () => {
                 owner_id: user.id
             }
         });
+        dir = zero;
 
-        const one1 = await prisma.directory.create({
+        const another = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parent_id: null,
                 name: '0',
-                icon: 'default',
+                icon: 'default 1',
                 owner_id: user.id
             }
         });
-        firstId = one1.id;
-        const one2 = await prisma.directory.create({
-            data: {
-                parent_id: zero.id,
-                name: '0',
-                icon: 'default',
-                owner_id: user.id
-            }
-        });
-        secondId = one2.id;
+        anotherDir = another;
 
-        await prisma.bookmark.create({
+        bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
                 owner_id: user.id,
-                directory_id: one2.id,
+                directory_id: dir.id,
                 type: 'link',
                 favorite: true
             }
         })
-        await prisma.bookmark.create({
+        bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
                 owner_id: user.id,
-                directory_id: one1.id,
+                directory_id: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
         })
+        response.json.mockClear()
+        response.redirect.mockClear()
     })
-    test('delete a list of directories',async  () => {
 
-        const request =  {
+    test('delete bookmarks', async () => {
+        const request = {
             body: {
                 value: {
-                    ids: [firstId, secondId]
+                    list: [bkmrk1.id]
                 }
             }
-        };
+        }
 
-        await deleteDirectoriesByIds(request, response, next);
+        await deleteBookmarks(request, response, next);
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
             message: "DELETED"
         }))
 
-        const dir = await prisma.directory.findMany({
-            where: {
-                owner_id: user.id
-            }
+        const items = await prisma.bookmark.findMany({
+            where: { owner_id: user.id }
         })
-        expect(dir.length).toEqual(1); // rootone 
-        
-        const bookmarks = await prisma.bookmark.findMany({
-            where: {
-                owner_id: user.id
-            }
-        })
-        expect(bookmarks.length).toEqual(0);
+
+        expect(items.length).toEqual(1);
+        expect(items[0].id).toEqual(bkmrk2.id);
     })
 
     afterEach(async () => {

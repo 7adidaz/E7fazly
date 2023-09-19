@@ -1,4 +1,3 @@
-import { json } from "express";
 import { getByEmail, getUser } from "../../controllers/user"
 import prisma from "../../util/prismaclient.js";
 
