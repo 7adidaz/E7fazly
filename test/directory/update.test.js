@@ -1,4 +1,4 @@
-import { updateDirectory } from "../../controllers/directory.js";
+import { updateDirectoriesByIds } from "../../controllers/directory.js";
 import prisma from "../../util/prismaclient.js";
 
 describe('directory update', () => {
@@ -106,7 +106,7 @@ describe('directory update', () => {
                 }
             }
         }
-        await updateDirectory(request, response, next);
+        await updateDirectoriesByIds(request, response, next);
 
         expect(next).not.toBeCalled();
 
