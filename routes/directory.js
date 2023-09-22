@@ -5,11 +5,10 @@ const router = Router();
 
 router.post('/create', createDirectoryDataValidator, createDirectory);
 
-router.get('/:id') //TODO: Do i really need this? 
+router.get('/:id') //Do i really need this? 
 router.get('/content/:parentId', parentIdValidator, contentByParent);
-router.get('/all/:userId', userIdValidator, getAllDirectories); //TODO: fix this, the id should be extracted from auth
+router.get('/all/:userId', userIdValidator, getAllDirectories); 
 
-//TODO: maybe should changed to handle a list of ids.
 router.patch('/:ids', updateDirectoryDataValidator, updateDirectoriesByIds); 
 router.delete('/:ids', deleteIdsValidator, deleteDirectoriesByIds);
 

@@ -60,6 +60,11 @@ describe('grant access to a user', () => {
         });
     })
 
-    //TODO: Complete this. 
+    test('revoke an access')
 
+    afterEach(async () => {
+        await prisma.user.deleteMany({
+            where: { id: { in: [priv.id, norm.id] } }
+        })
+    })
 })
