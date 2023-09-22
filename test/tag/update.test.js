@@ -90,7 +90,7 @@ describe('update a tag', () => {
         const request = {
             body: {
                 value: {
-                    tag_id: tag.id,
+                    tagId: tag.id,
                     name: 'newName' //TODO: add regex when implementing validator
                 }
             }

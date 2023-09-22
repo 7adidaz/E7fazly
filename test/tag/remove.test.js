@@ -90,8 +90,8 @@ describe('remove a tag', () => {
         const request = {
             body: {
                 value: {
-                    tag_id: tag.id,
-                    bookmark_id: bkmrk1.id
+                    tagId: tag.id,
+                    bookmarkId: bkmrk1.id
                 }
             }
         }
@@ -112,7 +112,7 @@ describe('remove a tag', () => {
 
         const tagEntry = await prisma.tag.findFirst({
             where: {
-                id: user.id
+                owner_id: user.id
             }
         })
         expect(tagEntry).not.toBeNull();
@@ -128,9 +128,12 @@ describe('remove a tag', () => {
             }
         }
 
-        await prisma.bookmark_tag.delete({
+        await prisma.bookmark_tag.deleteMany({
             where: {
-                bookmark_id: bkmrk2.id
+                AND: [
+                    { bookmark_id: bkmrk2.id },
+                    {tag_id: tag.id}
+                ]
             }
         })
 

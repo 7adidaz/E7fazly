@@ -58,8 +58,80 @@ describe('grant access to a user', () => {
                 owner_id: norm.id
             }
         });
+
+        await prisma.user_directory_access.create({
+            data: {
+                user_id: priv.id,
+                directory_id: dir.id,
+                user_rights: 'edit'
+            }
+        })
+        await prisma.user_directory_access.create({
+            data: {
+                user_id: priv.id,
+                directory_id: anotherDir.id,
+                user_rights: 'edit'
+            }
+        })
     })
 
-    //TODO: Complete this. 
+    test('revoke access rights from a dir without recursive', async () => {
+        const request = {
+            body: {
+                value: {
+                    userId: priv.id,
+                    directoryId: dir.id,
+                    recursive: false
+                }
+            }
+        }
 
+        await revokeAccess(request, response, next);
+        expect(next).not.toBeCalled()
+
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "REVOKED"
+        }))
+
+        const accessRights = await prisma.user_directory_access.findMany({
+            where: {
+                user_id: priv.id
+            }
+        })
+
+        expect(accessRights.length).toEqual(1);
+    })
+
+    test('revoke access rights from a dir with recursive', async () => {
+        const request = {
+            body: {
+                value: {
+                    userId: priv.id,
+                    directoryId: dir.id,
+                    recursive: true
+                }
+            }
+        }
+
+        await revokeAccess(request, response, next);
+        expect(next).not.toBeCalled()
+
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "REVOKED"
+        }))
+
+        const accessRights = await prisma.user_directory_access.findMany({
+            where: {
+                user_id: priv.id
+            }
+        })
+
+        expect(accessRights.length).toEqual(0);
+    })
+
+    afterEach(async () => {
+        await prisma.user.deleteMany({
+            where: { id: { in: [priv.id, norm.id] } }
+        })
+    })
 })

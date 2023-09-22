@@ -1,5 +1,5 @@
 import prisma from '../util/prismaclient.js'
-import { AuthorizationError, ErrorObject, ValidationError, HTTPStatusCode, NotFoundError, isNumber, APIError } from "../util/error.js";
+import { AuthorizationError, ValidationError, NotFoundError, APIError } from "../util/error.js";
 
 //TODO:  make sure that controllers match the API from postman.
 //TODO: authN and authZ
@@ -150,7 +150,7 @@ export async function updateDirectoriesByIds(req, reply, next) {
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
                 message: "UPDATE SUCCESS",
-                directories: updatedDirectoriesTransaction 
+                directories: updatedDirectoriesTransaction
             });
     } catch (err) {
         return next(err);
@@ -160,7 +160,7 @@ export async function updateDirectoriesByIds(req, reply, next) {
 export async function deleteDirectoriesByIds(req, reply, next) {
     try {
         const idList = req.body.value.ids;
-        const deleteList  = [];
+        const deleteList = [];
 
         idList.forEach(id => {
             const tx = prisma.directory.delete({
@@ -172,7 +172,7 @@ export async function deleteDirectoriesByIds(req, reply, next) {
         })
 
         const result = await prisma.$transaction(deleteList);
-        if(!result) throw new APIError();
+        if (!result) throw new APIError();
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
