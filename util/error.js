@@ -44,7 +44,7 @@ export class NotFoundError extends BaseError {
 export class AuthorizationError extends BaseError {
     constructor() {
         //TODO: better status code
-        super("AuthZ Error", HTTPStatusCode.NOT_FOUND, {}, true)
+        super("AuthZ Error", HTTPStatusCode.UNAUTHORIZED, {}, true)
     }
 }
 
@@ -54,7 +54,8 @@ export const HTTPStatusCode = {
     INTERNAL_SERVER: 500,
     NOT_FOUND: 404,
     VALIDATION: 422,
-    CONFLICT: 409
+    CONFLICT: 409,
+    UNAUTHORIZED: 401
 }
 
 export class ErrorObject {

@@ -1,9 +1,6 @@
 import prisma from '../util/prismaclient.js'
 import { AuthorizationError, ValidationError, NotFoundError, APIError } from "../util/error.js";
 
-//TODO:  make sure that controllers match the API from postman.
-//TODO: authN and authZ
-
 export async function createDirectory(req, reply, next) {
     try {
 

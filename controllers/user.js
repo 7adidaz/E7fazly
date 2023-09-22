@@ -4,7 +4,6 @@ import prisma from '../util/prismaclient.js'
 import { ValidationError, APIError, ConflictError, HTTPStatusCode, ErrorObject, isNumber } from '../util/error.js';
 
 //TODO: hash the passwords
-//TODO: authenticate & authorize stuff here. 
 
 export async function createUser(req, reply, next) {
     try {
