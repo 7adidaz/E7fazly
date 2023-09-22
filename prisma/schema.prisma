@@ -57,7 +57,7 @@ model user {
   password                                    String                  @db.VarChar(255)
   base_directory_id                           Int?
   is_verified                                 Boolean
-  verification_code                           Int?
+  verification_code                           Int
   bookmark                                    bookmark[]
   directory                                   directory[]
   tag                                         tag[]

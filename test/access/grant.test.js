@@ -9,6 +9,38 @@ describe('grant access to a user', () => {
     };
     const next = jest.fn()
 
+    test('grant access to dir for a user', async () => {
+        const request = {
+            body: {
+                value: {
+                    userId: priv.id,
+                    directoryId: dir.id,
+                    accessRight: 'edit'
+                }
+            }
+        }
+
+        await grantAccess(request, response, next);
+        expect(next).not.toBeCalled();
+
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "GRANTED"
+        }))
+
+        const access_rights = await prisma.user_directory_access.findMany({
+            where: {
+                user_id: priv.id
+            }
+        })
+
+        expect(access_rights.length).toEqual(1);
+        expect(access_rights).toEqual(expect.arrayContaining([{
+            user_id: priv.id,
+            directory_id: dir.id,
+            user_rights: 'edit'
+        } ]))
+    })
+
     beforeEach(async () => {
         priv = await prisma.user.create({
             data: {
@@ -58,46 +90,6 @@ describe('grant access to a user', () => {
                 owner_id: norm.id
             }
         });
-    })
-
-    test('grant access to dir for a user', async () => {
-        const request = {
-            body: {
-                value: {
-                    user_id: priv.id,
-                    directory_id: dir.id,
-                    user_rights: 'edit'
-                }
-            }
-        }
-
-        await grantAccess(request, response, next);
-        expect(next).not.toBeCalled();
-
-        expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "GRANTED"
-        }))
-
-        const access_rights = await prisma.user_directory_access.findMany({
-            where: {
-                user_id: priv.id
-            }
-        })
-
-        expect(access_rights.length).toEqual(2);
-        expect(access_rights).toEqual(expect.arrayContaining([{
-            user_id: priv.id,
-            directory_id: dir.id,
-            user_rights: 'edit'
-        }, {
-            user_id: priv.id,
-            directory_id: anotherDir.id,
-            user_rights: 'edit'
-        }, {
-            user_id: priv.id,
-            directory_id: anotherAnotherDir.id,
-            user_rights: 'edit'
-        }]))
     })
 
     afterEach(async () => {

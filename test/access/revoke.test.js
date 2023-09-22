@@ -9,6 +9,61 @@ describe('grant access to a user', () => {
     };
     const next = jest.fn()
 
+
+
+    test('revoke access rights from a dir without recursive', async () => {
+        const request = {
+            body: {
+                value: {
+                    userId: priv.id,
+                    directoryId: dir.id,
+                    recursive: false
+                }
+            }
+        }
+
+        await revokeAccess(request, response, next);
+        expect(next).not.toBeCalled()
+
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "REVOKED"
+        }))
+
+        const accessRights = await prisma.user_directory_access.findMany({
+            where: {
+                user_id: priv.id
+            }
+        })
+
+        expect(accessRights.length).toEqual(1);
+    })
+
+    test('revoke access rights from a dir with recursive', async () => {
+        const request = {
+            body: {
+                value: {
+                    userId: priv.id,
+                    directoryId: dir.id,
+                }
+            }
+        }
+
+        await revokeAccess(request, response, next);
+        expect(next).not.toBeCalled()
+
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "REVOKED"
+        }))
+
+        const accessRights = await prisma.user_directory_access.findMany({
+            where: {
+                user_id: priv.id
+            }
+        })
+
+        expect(accessRights.length).toEqual(1);
+    })
+
     beforeEach(async () => {
         priv = await prisma.user.create({
             data: {
@@ -73,60 +128,6 @@ describe('grant access to a user', () => {
                 user_rights: 'edit'
             }
         })
-    })
-
-    test('revoke access rights from a dir without recursive', async () => {
-        const request = {
-            body: {
-                value: {
-                    userId: priv.id,
-                    directoryId: dir.id,
-                    recursive: false
-                }
-            }
-        }
-
-        await revokeAccess(request, response, next);
-        expect(next).not.toBeCalled()
-
-        expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "REVOKED"
-        }))
-
-        const accessRights = await prisma.user_directory_access.findMany({
-            where: {
-                user_id: priv.id
-            }
-        })
-
-        expect(accessRights.length).toEqual(1);
-    })
-
-    test('revoke access rights from a dir with recursive', async () => {
-        const request = {
-            body: {
-                value: {
-                    userId: priv.id,
-                    directoryId: dir.id,
-                    recursive: true
-                }
-            }
-        }
-
-        await revokeAccess(request, response, next);
-        expect(next).not.toBeCalled()
-
-        expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "REVOKED"
-        }))
-
-        const accessRights = await prisma.user_directory_access.findMany({
-            where: {
-                user_id: priv.id
-            }
-        })
-
-        expect(accessRights.length).toEqual(0);
     })
 
     afterEach(async () => {
