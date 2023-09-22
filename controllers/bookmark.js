@@ -1,4 +1,5 @@
 import prismaclient from "../util/prismaclient.js";
+import { APIError } from "../util/error.js";
 //TODO: status codes for all of this. 
 /** 
 model bookmark {
