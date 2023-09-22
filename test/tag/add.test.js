@@ -74,7 +74,7 @@ describe('add a tag', () => {
         // add the tag to the first dir
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
+                bookmark_id: bkmrk2.id,
                 tag_id: tag.id
             }
         });
@@ -88,8 +88,8 @@ describe('add a tag', () => {
             body: {
                 value: {
                     name: 'notCS',
-                    owner_id: user.id,
-                    bookmark_id: bkmrk1.id
+                    ownerId: user.id,
+                    bookmarkId: bkmrk1.id
                 }
             }
         }
@@ -99,7 +99,11 @@ describe('add a tag', () => {
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
             message: "ADDED",
-            tagId: expect.any(Number)
+            tag: expect.objectContaining({
+                id: expect.any(Number),
+                name: 'notcs',
+                owner_id: user.id
+            })
         }))
 
         const tagCount = await prisma.tag.findMany({
@@ -109,11 +113,7 @@ describe('add a tag', () => {
         })
         expect(tagCount.length).toEqual(2);
 
-        const bookmarkTagEntry = await prisma.bookmark_tag.findMany({
-            where: {
-                bookmark_id: bkmrk1.id
-            }
-        })
+        const bookmarkTagEntry = await prisma.bookmark_tag.findMany();
         expect(bookmarkTagEntry.length).toEqual(2);
     })
 
@@ -122,8 +122,8 @@ describe('add a tag', () => {
             body: {
                 value: {
                     name: 'CS',
-                    owner_id: user.id,
-                    bookmark_id: bkmrk1.id
+                    ownerId: user.id,
+                    bookmarkId: bkmrk1.id
                 }
             }
         }
@@ -133,7 +133,11 @@ describe('add a tag', () => {
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
             message: "ADDED",
-            tagId: expect.any(Number)
+            tag: expect.objectContaining({
+                id: expect.any(Number),
+                name: 'cs',
+                owner_id: user.id
+            })
         }))
 
         const tagCount = await prisma.tag.findMany({
@@ -143,11 +147,7 @@ describe('add a tag', () => {
         })
         expect(tagCount.length).toEqual(1);
 
-        const bookmarkTagEntry = await prisma.bookmark_tag.findMany({
-            where: {
-                bookmark_id: bkmrk1.id
-            }
-        })
+        const bookmarkTagEntry = await prisma.bookmark_tag.findMany();
         expect(bookmarkTagEntry.length).toEqual(2);
     })
 
