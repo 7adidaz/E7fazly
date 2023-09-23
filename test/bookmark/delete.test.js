@@ -1,5 +1,5 @@
 import { deleteBookmarks } from "../../controllers/bookmark.js";
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 
 describe('delete bookmark', () => {
     let user, dir, anotherDir, bkmrk1, bkmrk2;

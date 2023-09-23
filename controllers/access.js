@@ -1,5 +1,5 @@
 import { APIError } from "../util/error.js";
-import prismaclient from "../util/prismaclient.js";
+import prisma from "../util/prisma.js";
 
 export async function grantAccess(req, reply, next) {
     try {
@@ -9,7 +9,7 @@ export async function grantAccess(req, reply, next) {
         const userToHaveAccess = value.userId;
         const accessRight = value.accessRight;
 
-        const givenAccess = await prismaclient.user_directory_access.upsert({
+        const givenAccess = await prisma.user_directory_access.upsert({
             where: {
                 user_id_directory_id: {
                     directory_id: directoryId,
@@ -43,7 +43,7 @@ export async function revokeAccess(req, reply, next) {
         const directoryId = value.directoryId;
         const userId = value.userId;
 
-        await prismaclient.user_directory_access.delete({
+        await prisma.user_directory_access.delete({
             where: {
                 user_id_directory_id: {
                     directory_id: directoryId,

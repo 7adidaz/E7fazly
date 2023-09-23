@@ -1,4 +1,4 @@
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 import { removeTagFromBookmark } from "../../controllers/tag.js";
 
 describe('remove a tag', () => {

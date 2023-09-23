@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { createUser, getUser, getByEmail, updateUser, deleteUser } from '../controllers/user.js';
-import { createUserDataValidator, emailValidator, idValidator, updateUserDataValidator } from '../validators/user.js';
+import { getUser, getByEmail, updateUser, deleteUser } from '../controllers/user.js';
+import { emailValidator, idValidator, updateUserDataValidator } from '../validators/user.js';
 const router = Router();
 
 
-router.post('/create', createUserDataValidator, createUser);
 router.get('/me', idValidator, getUser);
 router.get('/find/:email', emailValidator, getByEmail)
 router.patch('/:id', updateUserDataValidator, updateUser);

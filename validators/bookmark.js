@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { objectValidator, singleValidator } from "./basic_validators";
+import { objectValidator, singleValidator } from "./basic_validators.js";
 
 const createBookmarkValidation = Joi.object({
     link: Joi.string().uri().required(), //TODO: is URI is like URL? 

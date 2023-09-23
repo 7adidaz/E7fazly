@@ -1,5 +1,5 @@
 import { createBookmark } from "../../controllers/bookmark.js";
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 
 describe('creating a bookmark', () => {
 

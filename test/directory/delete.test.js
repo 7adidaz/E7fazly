@@ -1,5 +1,5 @@
 import { deleteDirectoriesByIds} from "../../controllers/directory.js";
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 
 describe('directory delete', () => {
 

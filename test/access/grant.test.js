@@ -1,4 +1,4 @@
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 import { grantAccess } from "../../controllers/access.js";
 
 describe('grant access to a user', () => {

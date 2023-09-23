@@ -1,5 +1,5 @@
 import { getByEmail, getUser } from "../../controllers/user"
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 
 describe('user getters', () => {
 

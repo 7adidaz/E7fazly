@@ -1,4 +1,4 @@
-import prisma from '../util/prismaclient.js'
+import prisma from '../util/prisma.js'
 import { AuthorizationError, ValidationError, NotFoundError, APIError } from "../util/error.js";
 
 export async function createDirectory(req, reply, next) {

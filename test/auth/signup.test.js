@@ -1,9 +1,9 @@
-import { createUser } from '../../controllers/user.js'
-import prismaclient from '../../util/prismaclient.js'
+import { signup } from '../../controllers/auth.js'
+import prisma from '../../util/prisma.js'
 
 const email = 'abdallah_elhdad@gmail.com';
 async function deleteEmail() {
-    await prismaclient.user.deleteMany({
+    await prisma.user.deleteMany({
         where: {
             email: email
         }
@@ -24,12 +24,12 @@ describe('create user', () => {
         };
 
         const next = jest.fn();
-        await createUser(request, response, next);
+        await signup(request, response, next);
 
         expect(response.redirect).toBeCalledWith('/login');
         expect(next).not.toBeCalled();
 
-        const isUserinDB = await prismaclient.user.findFirst({
+        const isUserinDB = await prisma.user.findFirst({
             where: {
                 email: email
             }
@@ -39,7 +39,7 @@ describe('create user', () => {
         expect(isUserinDB).not.toBeUndefined();
         expect(isUserinDB.base_directory_id).not.toBeNull();
 
-        const directory = await prismaclient.directory.findFirst({
+        const directory = await prisma.directory.findFirst({
             where: { id: isUserinDB.base_directory_id }
         })
 

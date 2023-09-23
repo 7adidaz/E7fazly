@@ -1,5 +1,5 @@
 import { getAllBookmarks, getBookmarkById, getBookmarksByTag } from "../../controllers/bookmark.js";
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 
 describe('bookmark getters', () => {
     let user, dir, anotherDir, bkmrk1, bkmrk2, tag;

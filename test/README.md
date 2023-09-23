@@ -1,7 +1,7 @@
 This is the document for the unit testing for controllers 
 
 #### USER 
-- createUser (create.test.js)
+- signup (create.test.js)
     - [x] create a user with a unique email
 
 - getByEmail (get.test.js)

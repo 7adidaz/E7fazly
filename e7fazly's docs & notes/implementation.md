@@ -16,6 +16,19 @@
     - [ ] make sure users cannot grant access to other's base_dir, nor edit it.
 
 
-----
-Questions: 
+--- 
 
+for a request it should have two parts: 
+    - a issuer of the request id 
+    - the data of the request 
+
+
+    - request recived
+    - who's the sender? (authn).
+    - does he have the right to do this? (authz).
+    - process the request. 
+
+any token should have something like this: 
+{
+    issuerId: 'some id'
+}

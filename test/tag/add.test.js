@@ -1,4 +1,4 @@
-import prisma from "../../util/prismaclient.js";
+import prisma from "../../util/prisma.js";
 import { addTagForBookmark } from "../../controllers/tag.js";
 
 /**

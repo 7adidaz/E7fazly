@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { objectValidator, singleValidator } from './basic_validators';
+import { objectValidator, singleValidator } from './basic_validators.js';
 
 const createDirectoryDataValidation = Joi.object({
     name: Joi.string().max(255).required(),
