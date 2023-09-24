@@ -1,5 +1,5 @@
 import { APIError } from "../util/error.js";
-import prismaclient from "../util/prismaclient.js";
+import prisma from "../util/prisma.js";
 
 export async function grantAccess(req, reply, next) {
     try {
@@ -9,7 +9,7 @@ export async function grantAccess(req, reply, next) {
         const userToHaveAccess = value.userId;
         const accessRight = value.accessRight;
 
-        const givenAccess = await prismaclient.user_directory_access.upsert({
+        const givenAccess = await prisma.user_directory_access.upsert({
             where: {
                 user_id_directory_id: {
                     directory_id: directoryId,
@@ -35,7 +35,6 @@ export async function grantAccess(req, reply, next) {
     }
 }
 
-
 export async function revokeAccess(req, reply, next) {
     try {
         const value = req.body.value;
@@ -43,7 +42,7 @@ export async function revokeAccess(req, reply, next) {
         const directoryId = value.directoryId;
         const userId = value.userId;
 
-        await prismaclient.user_directory_access.delete({
+        await prisma.user_directory_access.delete({
             where: {
                 user_id_directory_id: {
                     directory_id: directoryId,
@@ -55,6 +54,36 @@ export async function revokeAccess(req, reply, next) {
 
         return reply.json({
             message: "REVOKED"
+        })
+    } catch (err) {
+        return next(err)
+    }
+}
+
+export async function getUsersWithAccess(req, reply, next) { //TODO: test this.
+    try {
+        const value = req.body.value;
+        const directoryId = value.directoryId;
+
+        const users = await prisma.user_directory_access.findMany({
+            where: {
+                directory_id: directoryId
+            },
+            select: {
+                user_rights: true,
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                    }
+                }
+            }
+        })
+        if (!users) throw new APIError();
+
+        return reply.json({
+            message: "OK",
+            users: users
         })
     } catch (err) {
         return next(err)

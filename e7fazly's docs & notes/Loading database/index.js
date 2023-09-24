@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
-const prisma = new PrismaClient()
+const prisma = new prisma()
 
 async function random_users_data(count) {
     for (let i = 0; i < count; i++) {

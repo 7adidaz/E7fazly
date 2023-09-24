@@ -1,4 +1,4 @@
-import prismaclient from "../util/prismaclient.js";
+import prisma from "../util/prisma.js";
 import { APIError } from "../util/error.js";
 //TODO: status codes for all of this. 
 /** 
@@ -28,7 +28,7 @@ export async function createBookmark(req, reply, next) {
         const favorite = value.favorite;
 
 
-        const bookmark = await prismaclient.bookmark.create({
+        const bookmark = await prisma.bookmark.create({
             data: {
                 link: link,
                 owner_id: ownerId,
@@ -54,9 +54,9 @@ export async function createBookmark(req, reply, next) {
 export async function getBookmarkById(req, reply, next) {
     try {
         const value = req.body.value;
-        const id = value.id;
+        const id = value.bookmarkId;
 
-        const bookmark = await prismaclient.bookmark.findFirst({
+        const bookmark = await prisma.bookmark.findFirst({
             where: {
                 id: id
             }
@@ -73,10 +73,9 @@ export async function getBookmarkById(req, reply, next) {
 export async function getAllBookmarks(req, reply, next) {
     // this "I THINK" should NOT include the one user's have access to thier folders. 
     try {
-        const value = req.body.value;
-        const userId = value.id;
+        const userId= req.user.id;
 
-        const bookmarks = await prismaclient.bookmark.findMany({
+        const bookmarks = await prisma.bookmark.findMany({
             where: {
                 owner_id: userId
             }
@@ -92,14 +91,10 @@ export async function getAllBookmarks(req, reply, next) {
 //AuthZ
 export async function getBookmarksByTag(req, reply, next) {
     try {
-        /**
-         * aaaaaaaaaaaaaa, i think i should make sure 
-         * that the requester is requesting tags that is HIS, not other's. 
-         */
         const value = req.body.value;
         const tagId = value.tagId;
 
-        const bookmarks = await prismaclient.bookmark.findMany({
+        const bookmarks = await prisma.bookmark.findMany({
             where: {
                 bookmark_tag: {
                     some: {
@@ -123,8 +118,8 @@ export async function updateBookmarks(req, reply, next) {
         const value = req.body.value;
         const updateList = [];
 
-        value.list.forEach(async element => {
-            const tx = prismaclient.bookmark.update({
+        value.changes.forEach(async element => {
+            const tx = prisma.bookmark.update({
                 where: {
                     id: element.id
                 },
@@ -138,7 +133,7 @@ export async function updateBookmarks(req, reply, next) {
             updateList.push(tx);
         })
 
-        const updateTransation = await prismaclient.$transaction(updateList);
+        const updateTransation = await prisma.$transaction(updateList);
         if (!updateTransation) throw new APIError()
 
         return reply
@@ -157,13 +152,13 @@ export async function deleteBookmarks(req, reply, next) {
         const value = req.body.value;
         const deleteList = [];
 
-        value.list.forEach(async id => {
-            const tx = prismaclient.bookmark.delete({
+        value.ids.forEach(async id => {
+            const tx = prisma.bookmark.delete({
                 where: { id: id }
             })
             deleteList.push(tx);
         })
-        const deleteTransation = await prismaclient.$transaction(deleteList);
+        const deleteTransation = await prisma.$transaction(deleteList);
         if (!deleteTransation) throw new APIError()
 
         return reply

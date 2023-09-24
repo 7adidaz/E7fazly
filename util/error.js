@@ -20,18 +20,18 @@ class BaseError extends Error {
 
 export class APIError extends BaseError {
     constructor() {
-        super("API ERROR", HTTPStatusCode.INTERNAL_SERVER, {}, true)
+        super("API error", HTTPStatusCode.INTERNAL_SERVER, {}, true)
     }
 }
 
 export class ValidationError extends BaseError {
     constructor(errorObject) {
-        super("Validation ERROR", HTTPStatusCode.VALIDATION, errorObject, true)
+        super("Validation error", HTTPStatusCode.VALIDATION, errorObject, true)
     }
 }
 export class ConflictError extends BaseError {
     constructor() {
-        super("Data conflict ERROR", HTTPStatusCode.CONFLICT, {}, true)
+        super("Data conflict error", HTTPStatusCode.CONFLICT, {}, true)
     }
 }
 

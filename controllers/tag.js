@@ -1,4 +1,4 @@
-import prismaclient from "../util/prismaclient.js";
+import prisma from "../util/prisma.js";
 import { APIError } from "../util/error.js";
 
 export async function addTagForBookmark(req, reply, next) {
@@ -9,7 +9,7 @@ export async function addTagForBookmark(req, reply, next) {
         const bookmarkId = value.bookmarkId;
         const ownerId = value.ownerId; //TODO: may fix this to extract the id from the user.
 
-        let tagInstance = await prismaclient.tag.findFirst({
+        let tagInstance = await prisma.tag.findFirst({
             where: {
                 AND: [
                     { name: tagName },
@@ -19,7 +19,7 @@ export async function addTagForBookmark(req, reply, next) {
         });
 
         if (!tagInstance) {
-            tagInstance = await prismaclient.tag.create({
+            tagInstance = await prisma.tag.create({
                 data: {
                     name: tagName,
                     owner_id: ownerId
@@ -28,7 +28,7 @@ export async function addTagForBookmark(req, reply, next) {
             if (!tagInstance) throw new APIError();
         }
 
-        const link = await prismaclient.bookmark_tag.create({
+        const link = await prisma.bookmark_tag.create({
             data: {
                 bookmark_id: bookmarkId,
                 tag_id: tagInstance.id
@@ -52,7 +52,7 @@ export async function removeTagFromBookmark(req, reply, next) {
         const bookmarkId = value.bookmarkId;
         const tagId = value.tagId;
 
-        const tagInstanceCount = await prismaclient.bookmark_tag.findMany({
+        const tagInstanceCount = await prisma.bookmark_tag.findMany({
             where: {
                 tag_id: tagId
             }
@@ -60,14 +60,14 @@ export async function removeTagFromBookmark(req, reply, next) {
         if (!tagInstanceCount) throw APIError()
 
         if (tagInstanceCount.length === 1) {
-            const deleted = await prismaclient.tag.deleteMany({
+            const deleted = await prisma.tag.deleteMany({
                 where: {
                     id: tagId
                 }
             })
             if (!deleted) throw APIError();
         } else {
-            const deleted = await prismaclient.bookmark_tag.deleteMany({
+            const deleted = await prisma.bookmark_tag.deleteMany({
                 where: {
                     AND: [
                         { tag_id: tagId },
@@ -90,7 +90,7 @@ export async function updateTagName(req, reply, next) {
         const newName = value.name;
         const tagId = value.tagId;
 
-        const updated = await prismaclient.tag.update({
+        const updated = await prisma.tag.update({
             where: {
                 id: tagId
             },
@@ -102,6 +102,51 @@ export async function updateTagName(req, reply, next) {
 
         return reply.json({
             message: "UPDATED"
+        })
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export async function getTagsForBookmark(req, reply, next) {
+    try {
+        const value = req.body.value;
+        const bookmarkId = value.bookmarkId;
+
+        const tags = await prisma.tag.findMany({
+            where: {
+                bookmark_tag: {
+                    some: {
+                        bookmark_id: bookmarkId
+                    }
+                }
+            }
+        })
+        if (!tags) throw new APIError();
+
+        return reply.json({
+            message: "OK",
+            tags: tags
+        })
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export async function getTagsForUser(req, reply, next) {
+    try {
+        const userId = req.user.id;
+
+        const tags = await prisma.tag.findMany({
+            where: {
+                owner_id: userId
+            }
+        })
+        if (!tags) throw new APIError();
+
+        return reply.json({
+            message: "OK",
+            tags: tags
         })
     } catch (err) {
         return next(err);

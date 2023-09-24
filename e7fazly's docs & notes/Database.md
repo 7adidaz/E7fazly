@@ -1,5 +1,5 @@
 ### What is the idea of the project?
-- Allow users to store different types of bookmarks, where he can organize these bookmarks into folders/directories. A bookmark can only belong to one directory.
+- Allow users to store different types of bookmarks, where he can organize these bookmarks into folders/directories. A bookmark can only belogin to one directory.
 - Every bookmark can be tagged with multiple tags. 
 - A user can share a folder/directory to another user, who can either view or edit the content of this folder. 
 

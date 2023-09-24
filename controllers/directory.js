@@ -1,4 +1,4 @@
-import prisma from '../util/prismaclient.js'
+import prisma from '../util/prisma.js'
 import { AuthorizationError, ValidationError, NotFoundError, APIError } from "../util/error.js";
 
 export async function createDirectory(req, reply, next) {
@@ -45,7 +45,7 @@ export async function contentByParent(req, reply, next) {
     try {
 
         const value = req.body.value;
-        const parentId = value.id;
+        const parentId = value.parentId;
 
         let parent_dir = await prisma.directory.findFirst({
             where: {
@@ -83,8 +83,7 @@ export async function contentByParent(req, reply, next) {
 
 export async function getAllDirectories(req, reply, next) {
     try {
-        const value = req.body.value;
-        const userId = value.id;
+        const userId = req.user.id;
 
         const user = await prisma.user.findFirst({
             where: {

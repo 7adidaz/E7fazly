@@ -8,6 +8,8 @@ import dirRoutes from './routes/directory.js';
 import bkmrkRoutes from './routes/bookmark.js';
 import tagRoutes from './routes/tag.js';
 import accessRoutes from './routes/access.js';
+import authRoutes from './routes/auth.js';
+import authenticateToken from './util/auth.js';
 
 const app = express()
 
@@ -28,6 +30,9 @@ app.use(morgan('dev'))
  * until the auth middleware is finished. 
  */
 
+app.use(authRoutes);
+
+app.use(authenticateToken)
 app.use('/access', accessRoutes)
 app.use('/user', userRoutes)
 app.use('/dir', dirRoutes)
