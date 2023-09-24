@@ -1,15 +1,16 @@
 import { Router } from 'express';
+import { addTagForBookmark, getTagsForBookmark, getTagsForUser, removeTagFromBookmark, updateTagName } from '../controllers/tag';
+import { addTagValidator, bookmarkIdValidator, removeTagValidator, updateTagNameValidator } from '../validators/tag';
+
 const router = Router();
 
-router.post('create');
+router.post('', addTagValidator, addTagForBookmark);
 
-router.get('/:id');
-router.get('/bkmrk/:id'); // tags for a specific bkmrk.
-router.get('/all/:user_id'); // tags for a specific user.
+router.get('/bkmrk/:bookmarkId', bookmarkIdValidator, getTagsForBookmark); // tags for a specific bkmrk.
+router.get('/all', getTagsForUser); // tags for a specific user.
 
-router.patch('/:id');
-router.delete('/:id');
+router.patch('', updateTagNameValidator, updateTagName);
+router.delete('', removeTagValidator, removeTagFromBookmark);
 
 
 export default router;
-

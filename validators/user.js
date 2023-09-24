@@ -1,17 +1,6 @@
 import Joi from 'joi';
 import { objectValidator, singleValidator } from './basic_validators.js';
 
-const signupDataValidation = Joi.object({
-    email: Joi.string().trim().email().required(),
-    password: Joi.string().min(5).max(20).required(),
-    name: Joi.string().pattern(/^[a-zA-Z\s]+$/).required()
-})
-
-const loginDataValidation = Joi.object({
-    email: Joi.string().trim().email().required(),
-    password: Joi.string().min(5).max(20).required(),
-})
-
 const updateUserDataValidation = Joi.object({
     id: Joi.number().required(),
     email: Joi.string().trim().email().required(),
@@ -21,28 +10,6 @@ const updateUserDataValidation = Joi.object({
 
 const emailValidation = Joi.string().trim().email().required();
 const idValidation = Joi.number().required();
-
-export async function signupDataValidator(req, reply, next) {
-    try {
-        const value = objectValidator(signupDataValidation, req.body);
-
-        req.body.value = value;
-        next()
-    } catch (err) {
-        return next(err)
-    }
-}
-
-export async function loginDataValidator(req, reply, next) {
-    try {
-        const value = objectValidator(loginDataValidation, req.body);
-
-        req.body.value = value;
-        next()
-    } catch (err) {
-        return next(err)
-    }
-}
 
 export async function updateUserDataValidator(req, reply, next) {
     try {
@@ -54,13 +21,12 @@ export async function updateUserDataValidator(req, reply, next) {
         return next(err)
     }
 }
-// after the extraction of the id from JWT. 
+
 export async function idValidator(req, reply, next) {
     try {
-        const id = req.params.id; //TODO: update this when auth
-        const value = singleValidator(idValidation, id);
+        const value = singleValidator(idValidation, req.user.id);
 
-        req.body.value = value;
+        req.body = { value: { id: value } }
         next()
     } catch (err) {
         return next(err)
@@ -69,10 +35,9 @@ export async function idValidator(req, reply, next) {
 
 export async function emailValidator(req, reply, next) {
     try {
-        const email = req.params.email; //TODO: update this when auth
-        const value = singleValidator(emailValidation, email);
+        const value = singleValidator(emailValidation, req.params.email);
 
-        req.body.value = value;
+        req.body = { value: { email: value } }
         next()
     } catch (err) {
         return next(err)

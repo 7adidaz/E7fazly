@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { objectValidator, singleValidator } from './basic_validators.js';
+import { ValidationError } from '../util/error.js';
 
 const createDirectoryDataValidation = Joi.object({
     name: Joi.string().max(255).required(),
@@ -21,7 +22,7 @@ export function createDirectoryDataValidator(req, reply, next) {
     try {
         const value = objectValidator(createDirectoryDataValidation, req.body);
 
-        req.body.value = value;
+        req.body = { value: value }
         next()
     } catch (err) {
         return next(err);
@@ -30,22 +31,10 @@ export function createDirectoryDataValidator(req, reply, next) {
 
 export async function parentIdValidator(req, reply, next) {
     try {
-        const id = req.params.parentId; //TODO: update this when auth
+        const id = req.params.parentId;
         const value = singleValidator(idValidation, id)
 
-        req.body.value.parentId = value;
-        next()
-    } catch (err) {
-        return next(err)
-    }
-}
-
-export async function userIdValidator(req, reply, next) {
-    try {
-        const id = req.params.userId; //TODO: update this when auth
-        const value = singleValidator(idValidation, id)
-
-        req.body.value.userId = value;
+        req.body = { value: { parentId: value } }
         next()
     } catch (err) {
         return next(err)
@@ -54,35 +43,35 @@ export async function userIdValidator(req, reply, next) {
 
 export async function updateDirectoryDataValidator(req, reply, next) {
     try {
+        const changeslist = req.body.changes;
+        if (!changeslist) throw new ValidationError();
 
-        const changeslist = req.params.ids;
 
         changeslist.forEach(change => {
             objectValidator(updateDirectoryDataValidation, change);
         })
 
-
-        req.body.value.changes = changeslist;
+        req.body = { value: { changes: changeslist } }
         next()
     } catch (err) {
         return next(err);
     }
 }
 
-export async function deleteIdsValidator(req, reply, next) {
+export async function deleteDirectoryDataValidator(req, reply, next) {
     try {
-        const initalIdsList = req.query.ids;
+        const updateList = req.query.ids;
+        if (!updateList) throw new ValidationError();
 
         const idList = [];
-        initalIdsList
-            .split('')
+        updateList
             .forEach(id => {
                 const value = singleValidator(idValidation, id);
-
                 idList.push(value);
             })
 
-        req.body.value.idList = idList;
+        req.body = { value: { ids: idList } }
+        next()
     } catch (err) {
         return next(err);
     }

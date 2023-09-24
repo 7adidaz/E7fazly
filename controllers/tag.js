@@ -107,3 +107,48 @@ export async function updateTagName(req, reply, next) {
         return next(err);
     }
 }
+
+export async function getTagsForBookmark(req, reply, next) {
+    try {
+        const value = req.body.value;
+        const bookmarkId = value.bookmarkId;
+
+        const tags = await prisma.tag.findMany({
+            where: {
+                bookmark_tag: {
+                    some: {
+                        bookmark_id: bookmarkId
+                    }
+                }
+            }
+        })
+        if (!tags) throw new APIError();
+
+        return reply.json({
+            message: "OK",
+            tags: tags
+        })
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export async function getTagsForUser(req, reply, next) {
+    try {
+        const userId = req.user.id;
+
+        const tags = await prisma.tag.findMany({
+            where: {
+                owner_id: userId
+            }
+        })
+        if (!tags) throw new APIError();
+
+        return reply.json({
+            message: "OK",
+            tags: tags
+        })
+    } catch (err) {
+        return next(err);
+    }
+}

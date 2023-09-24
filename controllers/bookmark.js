@@ -54,7 +54,7 @@ export async function createBookmark(req, reply, next) {
 export async function getBookmarkById(req, reply, next) {
     try {
         const value = req.body.value;
-        const id = value.id;
+        const id = value.bookmarkId;
 
         const bookmark = await prisma.bookmark.findFirst({
             where: {
@@ -73,8 +73,7 @@ export async function getBookmarkById(req, reply, next) {
 export async function getAllBookmarks(req, reply, next) {
     // this "I THINK" should NOT include the one user's have access to thier folders. 
     try {
-        const value = req.body.value;
-        const userId = value.id;
+        const userId= req.user.id;
 
         const bookmarks = await prisma.bookmark.findMany({
             where: {
@@ -92,10 +91,6 @@ export async function getAllBookmarks(req, reply, next) {
 //AuthZ
 export async function getBookmarksByTag(req, reply, next) {
     try {
-        /**
-         * aaaaaaaaaaaaaa, i think i should make sure 
-         * that the requester is requesting tags that is HIS, not other's. 
-         */
         const value = req.body.value;
         const tagId = value.tagId;
 
@@ -123,7 +118,7 @@ export async function updateBookmarks(req, reply, next) {
         const value = req.body.value;
         const updateList = [];
 
-        value.list.forEach(async element => {
+        value.changes.forEach(async element => {
             const tx = prisma.bookmark.update({
                 where: {
                     id: element.id
@@ -157,7 +152,7 @@ export async function deleteBookmarks(req, reply, next) {
         const value = req.body.value;
         const deleteList = [];
 
-        value.list.forEach(async id => {
+        value.ids.forEach(async id => {
             const tx = prisma.bookmark.delete({
                 where: { id: id }
             })

@@ -7,12 +7,11 @@ const router = Router();
 router.post('create', createBookmarkDataValidator, createBookmark);
 
 router.get('/:id', bookmarkIdValidator, getBookmarkById)
-router.get('/all', userIdValidator, getAllBookmarks)
+router.get('/all',  getAllBookmarks)
 router.get('/tag/:tagId', tagIdValidator, getBookmarksByTag) // gets bkmrks under a specific tag. 
 
-router.patch('/:ids', updateBookmarkDataValidator, updateBookmarks);
+router.patch('', updateBookmarkDataValidator, updateBookmarks);
 
-router.delete('/:ids', deleteBookmarkDataValidator, deleteBookmarks);
-
+router.delete('', deleteBookmarkDataValidator, deleteBookmarks);
 
 export default router;
