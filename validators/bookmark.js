@@ -4,7 +4,7 @@ import { ValidationError } from "../util/error.js";
 
 const createBookmarkValidation = Joi.object({
     link: Joi.string().required().custom(validateUrl, 'url validation'),
-    ownerId: Joi.number().required(),
+    // ownerId: Joi.number().required(),
     directoryId: Joi.number().required(),
     type: Joi.string().valid('img', 'link', 'etc').required(),
     favorite: Joi.boolean().required()
@@ -18,7 +18,7 @@ const updateBookmarkValidation = Joi.object({
     favorite: Joi.boolean().required()
 })
 
-function validateUrl  (value, helpers) {
+function validateUrl(value, helpers) {
     try {
         new URL(value); // Attempt to create a URL object
         return value;    // URL is valid
@@ -82,14 +82,17 @@ export function updateBookmarkDataValidator(req, reply, next) {
 
 export function deleteBookmarkDataValidator(req, reply, next) {
     try {
-        const updateList = req.query.ids;
+        let updateList = req.query.ids;
         if (!updateList) throw new ValidationError();
+
+        updateList = JSON.parse(updateList);
+        if (!Array.isArray(updateList)) throw new ValidationError();
 
         const idList = [];
         updateList.forEach(id => {
             const value = singleValidator(idValidation, id);
             idList.push(value);
-        });
+        })
 
         req.body = { value: { ids: idList } }
         next()

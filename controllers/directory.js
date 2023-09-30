@@ -1,35 +1,29 @@
 import prisma from '../util/prisma.js'
-import { AuthorizationError, ValidationError, NotFoundError, APIError } from "../util/error.js";
+import { AuthorizationError, NotFoundError, APIError } from "../util/error.js";
 
 export async function createDirectory(req, reply, next) {
     try {
-
         const value = req.body.value;
 
-        const userId = value.ownerId;
         const directoryName = value.name;
         const directoryParentId = value.parentId;
-        const icon = "default";
 
-        const user = await prisma.user.findFirst({
+        const parentDirectory = await prisma.directory.findFirst({
             where: {
-                id: userId
+                id: directoryParentId,
             }
         });
-
-        if (!user) throw new ValidationError()
+        if (!parentDirectory) throw new NotFoundError();
 
         const newDirectory = await prisma.directory.create({
             data: {
                 parent_id: directoryParentId,
                 name: directoryName,
-                icon: icon,
-                owner_id: userId
+                icon: "default",
+                owner_id: parentDirectory.owner_id
             }
         });
-
         if (!newDirectory) throw new APIError();
-
 
         return reply // .status(HTTPStatusCode.CREATED)
             .json({
@@ -43,7 +37,6 @@ export async function createDirectory(req, reply, next) {
 
 export async function contentByParent(req, reply, next) {
     try {
-
         const value = req.body.value;
         const parentId = value.parentId;
 
@@ -52,7 +45,6 @@ export async function contentByParent(req, reply, next) {
                 id: parentId
             }
         });
-
         if (!parent_dir) throw new NotFoundError()
 
         const response = {
@@ -90,7 +82,6 @@ export async function getAllDirectories(req, reply, next) {
                 id: userId
             }
         });
-
         if (!user) throw new AuthorizationError()
 
         const directories = await prisma.directory.findMany({
@@ -156,19 +147,11 @@ export async function updateDirectoriesByIds(req, reply, next) {
 export async function deleteDirectoriesByIds(req, reply, next) {
     try {
         const idList = req.body.value.ids;
-        const deleteList = [];
 
-        idList.forEach(id => {
-            const tx = prisma.directory.delete({
-                where: {
-                    id: id
-                }
-            })
-            deleteList.push(tx);
+        const deleted = await prisma.directory.deleteMany({
+            where: { id: { in: idList } }
         })
-
-        const result = await prisma.$transaction(deleteList);
-        if (!result) throw new APIError();
+        if (!deleted) throw new APIError();
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)

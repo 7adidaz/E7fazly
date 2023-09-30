@@ -5,7 +5,7 @@ import { ValidationError } from '../util/error.js';
 const createDirectoryDataValidation = Joi.object({
     name: Joi.string().max(255).required(),
     parentId: Joi.number().required(),
-    ownerId: Joi.number().required()
+    // ownerId: Joi.number().required()
 })
 
 const updateDirectoryDataValidation = Joi.object({
@@ -60,15 +60,17 @@ export async function updateDirectoryDataValidator(req, reply, next) {
 
 export async function deleteDirectoryDataValidator(req, reply, next) {
     try {
-        const updateList = req.query.ids;
+        let updateList = req.query.ids;
         if (!updateList) throw new ValidationError();
 
+        updateList = JSON.parse(updateList);
+        if (!Array.isArray(updateList)) throw new ValidationError();
+
         const idList = [];
-        updateList
-            .forEach(id => {
-                const value = singleValidator(idValidation, id);
-                idList.push(value);
-            })
+        updateList.forEach(id => {
+            const value = singleValidator(idValidation, id);
+            idList.push(value);
+        })
 
         req.body = { value: { ids: idList } }
         next()

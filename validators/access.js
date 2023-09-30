@@ -16,8 +16,10 @@ const idValidation = Joi.number().required();
 
 export function grantAccessValidator(req, reply, next) {
     try {
-        const value = objectValidator.call(grantAccessValidation, req.body);
-        req.body.value = value;
+        const value = objectValidator(grantAccessValidation, req.body);
+        req.body = {
+            value: value
+        }
         next();
     } catch (err) {
         next(err);
@@ -38,7 +40,7 @@ export function revokeAccessValidator(req, reply, next) {
 
 export function getAccessValidator(req, reply, next) {
     try {
-        const value = singleValidator(idValidation, req.params.directoryid);
+        const value = singleValidator(idValidation, req.params.directoryId);
         req.body = {
             value: {
                 directoryId: value

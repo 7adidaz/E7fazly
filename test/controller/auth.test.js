@@ -53,7 +53,7 @@ describe('signup', () => {
 })
 
 describe('login', () => {
-    let user, dir, anotherDir, bkmrk1, bkmrk2, tag;
+    let user;
     const email = "aaaa@aa.com";
     const response = {
         redirect: jest.fn(),
@@ -67,7 +67,7 @@ describe('login', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
+                is_verified: true,
                 verification_code: 0,
                 base_directory_id: null
             }

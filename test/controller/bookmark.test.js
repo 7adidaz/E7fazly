@@ -48,8 +48,8 @@ describe('creating a bookmark', () => {
             body: {
                 value: {
                     link: 'someLink.com',
-                    owner_id: user.id,
-                    directory_id: dirId,
+                    // owner_id: user.id,
+                    directoryId: dirId,
                     type: 'img',
                     favorite: true
                 }
@@ -63,7 +63,11 @@ describe('creating a bookmark', () => {
             message: "SUCCESS",
             bookmark: {
                 id: expect.any(Number),
-                ...request.body.value
+                link: 'someLink.com',
+                directory_id: dirId,
+                type: 'img',
+                favorite: true,
+                owner_id: user.id,
             }
         }))
     })
@@ -74,8 +78,8 @@ describe('creating a bookmark', () => {
                 body: {
                     value: {
                         link: 'someLink.com',
-                        owner_id: user.id,
-                        directory_id: i % 2 === 0 ? dirId : anotherDirId,
+                        // owner_id: user.id,
+                        directoryId: i % 2 === 0 ? dirId : anotherDirId,
                         type: 'img',
                         favorite: true
                     }
@@ -282,7 +286,7 @@ describe('bookmark getters', () => {
     })
 
     test('get a bookmark by ID', async () => {
-        const request = { body: { value: { id: bkmrk1.id } } }
+        const request = { body: { value: { bookmarkId: bkmrk1.id } } }
 
         await getBookmarkById(request, response, next);
         expect(next).not.toBeCalled()

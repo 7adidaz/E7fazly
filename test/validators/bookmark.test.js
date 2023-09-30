@@ -11,11 +11,11 @@ import { ValidationError } from '../../util/error';
 
 describe('createBookmarkDataValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { body: { link: 'https://www.google.com', ownerId: 1, directoryId: 1, type: 'img', favorite: true } };
+        const req = { body: { link: 'https://www.google.com', directoryId: 1, type: 'img', favorite: true } };
         const reply = {};
         const next = jest.fn();
 
-        const value = { link: 'https://www.google.com', ownerId: 1, directoryId: 1, type: 'img', favorite: true };
+        const value = { link: 'https://www.google.com', directoryId: 1, type: 'img', favorite: true };
         jest.spyOn(objectValidator, 'call').mockReturnValue(value);
 
         createBookmarkDataValidator(req, reply, next);
@@ -135,7 +135,7 @@ describe('updateBookmarkDataValidator', () => {
 
 describe('deleteBookmarkDataValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { query: { ids: [1,2,3] } };
+        const req = { query: { ids: '[1,2,3]' } };
         const reply = {};
         const next = jest.fn();
 

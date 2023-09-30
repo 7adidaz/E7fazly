@@ -26,9 +26,9 @@ export async function getUser(req, reply, next) {
 export async function getByEmail(req, reply, next) {
     try {
         const value = req.body.value; // from the validation middleware 
-        const email = value.email;
+        const email = value.email.toLowerCase();
 
-        const user = await prisma.user.findFirst({
+        const user = await prisma.user.findMany({
             where: {
                 email: email
             }
@@ -37,7 +37,7 @@ export async function getByEmail(req, reply, next) {
         if (!user) throw new ValidationError()
 
         return reply.json({
-            user: user
+            user: user[0]
         });
     } catch (err) {
         next(err)
@@ -47,15 +47,7 @@ export async function getByEmail(req, reply, next) {
 export async function updateUser(req, reply, next) {
     try {
         const value = req.body.value;
-        const id = value.id;
-
-        const user = await prisma.user.findFirst({
-            where: {
-                id: id
-            }
-        });
-
-        if (!user) throw new ValidationError()
+        const id = req.user.id;
 
         const name = value.name;
         const email = value.email;
@@ -94,19 +86,8 @@ export async function updateUser(req, reply, next) {
 
 export async function deleteUser(req, reply, next) {
     try {
-        const value = req.body.value;
-        const id = value.id;
-
-        const user = await prisma.user.findFirst({
-            where: {
-                id: id
-            }
-        });
-
-        if (!user) throw new ValidationError();
-
-
-        const userDeletionResult = await prisma.user.delete({ // this will cascade to the dir, bkmrk, tags, access_rights,, EVERYTHING! 
+        const id = req.user.id;
+        const userDeletionResult = await prisma.user.delete({ 
             where: {
                 id: id
             }

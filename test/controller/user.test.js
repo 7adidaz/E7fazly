@@ -45,7 +45,7 @@ describe('user getters', () => {
     })
 
     test('Get by Email', async () => {
-        const request = { body: { value: { id: user.id } } };
+        const request = { body: { value: { email: email} } };
 
         await getByEmail(request, response, next);
 
@@ -86,7 +86,7 @@ describe('delete user', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
+                is_verified: true,
                 verification_code: 0,
                 base_directory_id: null
             }
@@ -94,7 +94,7 @@ describe('delete user', () => {
     })
 
     test('delete user', async () => {
-        const request = { body: { value: { id: user.id, } } }
+        const request = { user: { id: user.id } }
 
         await deleteUser(request, response, next);
 
@@ -150,12 +150,12 @@ describe('update user', () => {
         const request = {
             body: {
                 value: {
-                    id: user.id,
                     name: "updated",
                     email: "updated@updated.com",
                     password: "updated"
                 }
-            }
+            },
+            user: { id: user.id }
         }
 
         await updateUser(request, response, next);

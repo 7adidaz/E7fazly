@@ -518,7 +518,7 @@ describe('update a tag', () => {
         })
         tag = await prisma.tag.create({
             data: {
-                name: 'cs',
+                name: 'xxxxxx_12345',
                 owner_id: user.id,
             }
         });
@@ -547,7 +547,7 @@ describe('update a tag', () => {
             body: {
                 value: {
                     tagId: tag.id,
-                    name: 'newName' //TODO: add regex when implementing validator
+                    newName: 'newName' //TODO: add regex when implementing validator
                 }
             }
         }

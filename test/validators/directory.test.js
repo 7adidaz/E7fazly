@@ -11,11 +11,11 @@ import { ValidationError } from '../../util/error.js';
 
 describe('createDirectoryDataValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { body: { name: 'Test Directory', parentId: 1, ownerId: 1 } };
+        const req = { body: { name: 'Test Directory', parentId: 1} };
         const reply = {};
         const next = jest.fn();
 
-        const value = { name: 'Test Directory', parentId: 1, ownerId: 1 };
+        const value = { name: 'Test Directory', parentId: 1 };
         jest.spyOn(objectValidator, 'call').mockReturnValue(value);
 
         createDirectoryDataValidator(req, reply, next);
@@ -104,7 +104,7 @@ describe('updateDirectoryDataValidator', () => {
 
 describe('deleteDirectoryDataValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { query: { ids: [1, 2, 3] } };
+        const req = { query: { ids: '[1, 2, 3]' } };
         const reply = {};
         const next = jest.fn();
 
