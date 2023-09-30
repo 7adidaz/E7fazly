@@ -1,4 +1,4 @@
-import { ValidationError, ErrorObject } from "../util/error";
+import { ValidationError, ErrorObject } from "../util/error.js";
 
 export function singleValidator(validator, variable) {
     const { error, value } = validator.validate(variable);

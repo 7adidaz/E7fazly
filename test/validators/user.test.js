@@ -1,15 +1,14 @@
-import Joi from 'joi';
 import { updateUserDataValidator, idValidator, emailValidator } from '../../validators/user.js';
 import { objectValidator, singleValidator } from '../../validators/basic_validators.js';
 import { ValidationError } from '../../util/error.js';
 
 describe('updateUserDataValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { body: { id: 1, email: 'test@example.com', password: 'password', name: 'John Doe' } };
+        const req = { body: { email: 'test@example.com', password: 'password', name: 'John Doe' } };
         const reply = {};
         const next = jest.fn();
 
-        const value = { id: 1, email: 'test@example.com', password: 'password', name: 'John Doe' };
+        const value = { email: 'test@example.com', password: 'password', name: 'John Doe' };
         jest.spyOn(objectValidator, 'call').mockReturnValue(value);
 
         updateUserDataValidator(req, reply, next);

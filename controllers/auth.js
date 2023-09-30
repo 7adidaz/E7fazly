@@ -7,7 +7,7 @@ export async function signup(req, reply, next) {
         const value = req.body.value; // from the validation middleware 
 
         const name = value.name;
-        const email = value.email;
+        const email = value.email.toLowerCase();
         const password = value.password;
 
         const found = await prisma.user.findFirst({
@@ -64,43 +64,48 @@ export async function signup(req, reply, next) {
 
         if (!userCreationTransaction) throw new APIError();
 
-        return reply.redirect('/login');
+        reply.redirect('/login');
     } catch (err) {
         return next(err);
     }
 }
 
 export async function login(req, reply, next) {
-    const value = req.body.value;
+    try {
+        const value = req.body.value;
 
-    const email = value.email;
-    const password = value.password;
+        const email = value.email.toLowerCase();
+        const password = value.password;
 
-    const user = await prisma.user.findFirst({
-        where: {
-            email: email
-        }
-    })
-
-    if (!user)
-        return reply.json({
-            message: "FAILED",
-            info: "Email is not in database."
+        const user = await prisma.user.findFirst({
+            where: {
+                email: email
+            }
         })
 
-    if (user.password !== password)
+        if (!user)
+            return reply.json({
+                message: "FAILED",
+                info: "Email is not in database."
+            })
+
+        if (user.password !== password)
+            return reply.json({
+                message: "FAILED",
+                info: "Email or Password is not valid."
+            })
+
+        if (!user.is_verified) return reply.redirect('/verify')
+
+        const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
+
         return reply.json({
-            message: "FAILED",
-            info: "Email or Password is not valid."
+            message: "SUCCESS",
+            token: token
         })
-
-    if (!user.is_verified) reply.redirect('/verify')
-
-    const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
-    return reply.json({
-        message: "SUCCESS",
-        token: token
-    })
+    } catch (err) {
+        return next(err)
+    }
 }
 
 export async function verify(req, reply, next) {

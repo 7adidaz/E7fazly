@@ -7,7 +7,11 @@ export async function addTagForBookmark(req, reply, next) {
 
         const tagName = value.name.toLowerCase();
         const bookmarkId = value.bookmarkId;
-        const ownerId = value.ownerId; //TODO: may fix this to extract the id from the user.
+
+        const bookmarkInstance = await prisma.bookmark.findFirst({ where: { id: bookmarkId } });
+        if (!bookmarkInstance) throw new APIError();
+
+        const ownerId = bookmarkInstance.owner_id;
 
         let tagInstance = await prisma.tag.findFirst({
             where: {
@@ -87,7 +91,7 @@ export async function updateTagName(req, reply, next) {
     try {
         const value = req.body.value;
 
-        const newName = value.name;
+        const newName = value.newName;
         const tagId = value.tagId;
 
         const updated = await prisma.tag.update({
@@ -122,7 +126,6 @@ export async function getTagsForBookmark(req, reply, next) {
                 }
             }
         })
-        if (!tags) throw new APIError();
 
         return reply.json({
             message: "OK",

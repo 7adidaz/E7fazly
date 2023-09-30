@@ -1,32 +1,19 @@
 import prisma from "../util/prisma.js";
 import { APIError } from "../util/error.js";
-//TODO: status codes for all of this. 
-/** 
-model bookmark {
-    id           Int            @id @default(autoincrement()) 
-    link         String
-    owner_id     Int
-    directory_id Int
-    type         bookmark_type
-    favorite     Boolean
-    directory    directory      @relation(fields: [directory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    user         user           @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    bookmark_tag bookmark_tag[] 
-}
- */
 
-//AuthN
 export async function createBookmark(req, reply, next) {
     try {
-
         const value = req.body.value;
 
         const link = value.link;
-        const ownerId = value.owner_id;
-        const directoryId = value.directory_id;
+        const directoryId = value.directoryId;
         const type = value.type;
         const favorite = value.favorite;
 
+        const directory = await prisma.directory.findFirst({ where: { id: directoryId, } });
+        if (!directory) throw new APIError();
+
+        const ownerId = directory.owner_id;
 
         const bookmark = await prisma.bookmark.create({
             data: {
@@ -37,8 +24,8 @@ export async function createBookmark(req, reply, next) {
                 favorite: favorite
             }
         })
-
         if (!bookmark) throw new APIError();
+
         return reply
             // .status(HTTPStatusCode.CREATED)
             .json({
@@ -50,17 +37,12 @@ export async function createBookmark(req, reply, next) {
     }
 }
 
-//AuthZ
 export async function getBookmarkById(req, reply, next) {
     try {
         const value = req.body.value;
         const id = value.bookmarkId;
 
-        const bookmark = await prisma.bookmark.findFirst({
-            where: {
-                id: id
-            }
-        });
+        const bookmark = await prisma.bookmark.findFirst({ where: { id: id } });
         if (!bookmark) throw new APIError();
 
         return reply.json(bookmark);
@@ -69,17 +51,10 @@ export async function getBookmarkById(req, reply, next) {
     }
 }
 
-//AuthZ
 export async function getAllBookmarks(req, reply, next) {
-    // this "I THINK" should NOT include the one user's have access to thier folders. 
     try {
-        const userId= req.user.id;
-
-        const bookmarks = await prisma.bookmark.findMany({
-            where: {
-                owner_id: userId
-            }
-        });
+        const userId = req.user.id;
+        const bookmarks = await prisma.bookmark.findMany({ where: { owner_id: userId } });
         if (!bookmarks) throw new APIError();
 
         return reply.json(bookmarks);
@@ -88,22 +63,14 @@ export async function getAllBookmarks(req, reply, next) {
     }
 }
 
-//AuthZ
 export async function getBookmarksByTag(req, reply, next) {
     try {
         const value = req.body.value;
         const tagId = value.tagId;
 
         const bookmarks = await prisma.bookmark.findMany({
-            where: {
-                bookmark_tag: {
-                    some: {
-                        tag_id: tagId
-                    }
-                }
-            }
+            where: { bookmark_tag: { some: { tag_id: tagId } } }
         })
-
         if (!bookmarks) throw new APIError();
 
         return reply.json(bookmarks);
@@ -129,7 +96,6 @@ export async function updateBookmarks(req, reply, next) {
                     favorite: element.favorite
                 }
             })
-
             updateList.push(tx);
         })
 
@@ -150,16 +116,9 @@ export async function updateBookmarks(req, reply, next) {
 export async function deleteBookmarks(req, reply, next) {
     try {
         const value = req.body.value;
-        const deleteList = [];
 
-        value.ids.forEach(async id => {
-            const tx = prisma.bookmark.delete({
-                where: { id: id }
-            })
-            deleteList.push(tx);
-        })
-        const deleteTransation = await prisma.$transaction(deleteList);
-        if (!deleteTransation) throw new APIError()
+        const deleted = await prisma.bookmark.deleteMany({ where: { id: { in: value.ids } } })
+        if (!deleted) throw new APIError()
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)

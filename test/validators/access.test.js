@@ -70,7 +70,7 @@ describe('revokeAccessValidator', () => {
 
 describe('getAccessValidator', () => {
     it('should call next if validation succeeds', () => {
-        const req = { params: { directoryid: 1 } };
+        const req = { params: { directoryId: 1 } };
         const reply = {};
         const next = jest.fn();
 

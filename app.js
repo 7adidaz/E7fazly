@@ -32,16 +32,21 @@ app.use(morgan('dev'))
 
 app.use(authRoutes);
 
-app.use(authenticateToken)
-app.use('/access', accessRoutes)
-app.use('/user', userRoutes)
-app.use('/dir', dirRoutes)
-app.use('/bkmrk', bkmrkRoutes)
-app.use('/tag', tagRoutes)
+
+app.use('/api/v1/access', authenticateToken, accessRoutes)
+app.use('/api/v1/user', authenticateToken, userRoutes)
+app.use('/api/v1/dir', authenticateToken, dirRoutes)
+app.use('/api/v1/bkmrk', authenticateToken, bkmrkRoutes)
+app.use('/api/v1/tag', authenticateToken, tagRoutes)
+
+app.use('/', (req, reply, next) => {
+    console.log('im in the magic middleware');
+    reply.json({ message: "MAGIC BOX" });
+})
 
 app.use((err, req, reply, next) => {
     console.log(err)
-    console.log("error:", err.name, err.errorObject.description);
+    console.log("error:", err.name);
 
     reply.json(err)
 })
