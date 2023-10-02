@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/me', idValidator, getUser);
 router.get('/find/:email', emailValidator, getByEmail)
-router.patch('', updateUserDataValidator, updateUser); //TODO: do i need to validate the id here?
+router.patch('', updateUserDataValidator, updateUser);
 router.delete('', deleteUser);
 
 
