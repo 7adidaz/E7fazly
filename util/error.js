@@ -43,7 +43,6 @@ export class NotFoundError extends BaseError {
 
 export class AuthorizationError extends BaseError {
     constructor() {
-        //TODO: better status code
         super("AuthZ Error", HTTPStatusCode.UNAUTHORIZED, {}, true)
     }
 }

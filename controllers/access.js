@@ -1,6 +1,7 @@
 import { APIError } from "../util/error.js";
 import prisma from "../util/prisma.js";
 
+//TODO: prevent the user from granting access to a directory that he doesn't own or base directory. 
 export async function grantAccess(req, reply, next) {
     try {
         const value = req.body.value;
@@ -48,7 +49,6 @@ export async function revokeAccess(req, reply, next) {
                     directory_id: directoryId,
                     user_id: userId
                 }
-
             }
         })
 
@@ -60,7 +60,7 @@ export async function revokeAccess(req, reply, next) {
     }
 }
 
-export async function getUsersWithAccess(req, reply, next) { //TODO: test this.
+export async function getUsersWithAccess(req, reply, next) { 
     try {
         const value = req.body.value;
         const directoryId = value.directoryId;
