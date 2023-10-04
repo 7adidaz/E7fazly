@@ -10,6 +10,7 @@ import tagRoutes from './routes/tag.js';
 import accessRoutes from './routes/access.js';
 import authRoutes from './routes/auth.js';
 import authenticateToken from './util/auth.js';
+import { BaseError, AuthorizationError, ValidationError, APIError, ConflictError, NotFoundError } from './util/error.js';
 
 const app = express()
 
@@ -18,8 +19,6 @@ app.use(cors())
 app.use(morgan('dev'))
 
 app.use(authRoutes);
-
-
 app.use('/api/v1/access', authenticateToken, accessRoutes)
 app.use('/api/v1/user', authenticateToken, userRoutes)
 app.use('/api/v1/dir', authenticateToken, dirRoutes)
@@ -32,10 +31,42 @@ app.use('/', (req, reply, next) => {
 })
 
 app.use((err, req, reply, next) => {
-    console.log(err)
-    console.log("error:", err.name);
+    if (err instanceof BaseError) {
+        if (err instanceof AuthorizationError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "You are not authorized to perform this action." });
+        }
 
-    reply.json(err)
+        if (err instanceof ValidationError) {
+            return reply
+                .status(err.statusCode)
+                .json({
+                    message: "Error Validating the request data",
+                    error: err.errorObject
+                });
+        }
+
+        if (err instanceof APIError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Something went wrong with the database." });
+        }
+
+        if (err instanceof ConflictError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Data Conflict Error." });
+        }
+
+        if (err instanceof NotFoundError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Record/s Not Found." });
+        }
+    } else {
+        return reply.json({ message: "Something went wrong." });
+    }
 })
 
 app.listen(3000);
