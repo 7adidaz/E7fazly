@@ -1,6 +1,6 @@
-class BaseError extends Error {
+export class BaseError extends Error {
 
-    constructor(name, httpCode, errorObject, isOperational) {
+    constructor(name, statusCode, errorObject, isOperational) {
         /**
          * the error object should be like this: 
          * {
@@ -12,7 +12,7 @@ class BaseError extends Error {
          */
         super(name);
 
-        this.httpCode = httpCode;
+        this.statusCode = statusCode;
         this.errorObject = errorObject;
         this.isOperational = isOperational;
     }
@@ -48,8 +48,10 @@ export class AuthorizationError extends BaseError {
 }
 
 export const HTTPStatusCode = {
+    OK: 200,
     ACCEPTED_UPDATE_DELETED: 202,
     CREATED: 201,
+    REDIRECT: 302,
     INTERNAL_SERVER: 500,
     NOT_FOUND: 404,
     VALIDATION: 422,
@@ -69,11 +71,4 @@ export class ErrorObject {
             data: this.data
         }
     }
-}
-
-export function isNumber(x) {
-    if (x == null || typeof (x) !== typeof (0) || isNaN(x)) {
-        return false;
-    }
-    return true;
 }

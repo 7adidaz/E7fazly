@@ -41,7 +41,7 @@ export async function addTagForBookmark(req, reply, next) {
         if (!link) throw new APIError();
 
         return reply.json({
-            message: "ADDED",
+            message: "SUCCESS",
             tag: tagInstance
         })
     } catch (err) {
@@ -128,7 +128,7 @@ export async function getTagsForBookmark(req, reply, next) {
         })
 
         return reply.json({
-            message: "OK",
+            message: "SUCCESS",
             tags: tags
         })
     } catch (err) {
@@ -148,7 +148,7 @@ export async function getTagsForUser(req, reply, next) {
         if (!tags) throw new APIError();
 
         return reply.json({
-            message: "OK",
+            message: "SUCCESS",
             tags: tags
         })
     } catch (err) {

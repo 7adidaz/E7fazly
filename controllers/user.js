@@ -16,6 +16,7 @@ export async function getUser(req, reply, next) {
         if (!user) throw new ValidationError()
 
         return reply.json({
+            message: "SUCCESS",
             user: user
         });
     } catch (err) {
@@ -37,6 +38,7 @@ export async function getByEmail(req, reply, next) {
         if (!user) throw new ValidationError()
 
         return reply.json({
+            message: "SUCCESS",
             user: user[0]
         });
     } catch (err) {
@@ -77,6 +79,7 @@ export async function updateUser(req, reply, next) {
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
+                message: "SUCCESS",
                 user: newUser
             });
     } catch (err) {
@@ -87,7 +90,7 @@ export async function updateUser(req, reply, next) {
 export async function deleteUser(req, reply, next) {
     try {
         const id = req.user.id;
-        const userDeletionResult = await prisma.user.delete({ 
+        const userDeletionResult = await prisma.user.delete({
             where: {
                 id: id
             }

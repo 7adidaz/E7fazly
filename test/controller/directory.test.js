@@ -494,7 +494,7 @@ describe('directory update', () => {
         }))
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "UPDATE SUCCESS",
+            message: "SUCCESS",
             directories: expect.arrayContaining(expectedArray)
         }))
 

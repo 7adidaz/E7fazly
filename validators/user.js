@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import { objectValidator, singleValidator } from './basic_validators.js';
 
-const updateUserDataValidation = Joi.object({
+const updateUserDataValidation = Joi.object({ //TODO: should this be optional?
     // id: Joi.number().required(),
     email: Joi.string().trim().email().required(),
     password: Joi.string().min(5).max(20).required(),

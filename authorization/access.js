@@ -1,5 +1,5 @@
-import { AuthorizationError } from "../util/error";
-import doesUserHaveAccessToDirectory from "../util/haveTheRights";
+import { AuthorizationError } from "../util/error.js";
+import doesUserHaveAccessToDirectory from "../util/haveTheRights.js";
 
 export async function grantAccessAuthorizor(req, res, next) {
     try {

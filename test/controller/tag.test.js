@@ -94,7 +94,7 @@ describe('add a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "ADDED",
+            message: "SUCCESS",
             tag: expect.objectContaining({
                 id: expect.any(Number),
                 name: 'notcs',
@@ -128,7 +128,7 @@ describe('add a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "ADDED",
+            message: "SUCCESS",
             tag: expect.objectContaining({
                 id: expect.any(Number),
                 name: 'cs',
@@ -258,7 +258,7 @@ describe('remove a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith({
-            message: "OK",
+            message: "SUCCESS",
             tags: expect.arrayContaining([
                 expect.objectContaining({
                     id: tag.id,
@@ -276,7 +276,7 @@ describe('remove a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith({
-            message: "OK",
+            message: "SUCCESS",
             tags: expect.arrayContaining([
                 expect.objectContaining({
                     id: expect.any(Number),

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { APIError, ConflictError, } from '../util/error.js';
+import { APIError, ConflictError } from '../util/error.js';
 import prisma from '../util/prisma.js'
 
 export async function signup(req, reply, next) {
@@ -66,7 +66,8 @@ export async function signup(req, reply, next) {
 
         reply.redirect('/login');
     } catch (err) {
-        return next(err);
+        // console.log('err', err instanceof ConflictError, next)
+        next(err);
     }
 }
 
@@ -118,7 +119,7 @@ export async function verify(req, reply, next) {
         const user = await prisma.user.findFirst({
             where: userId
         })
-        if (!user || user.is_verified) throw new APIError()  
+        if (!user || user.is_verified) throw new APIError()
 
         if (code === user.verification_code) {
             await prisma.user.update({
