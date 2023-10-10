@@ -45,7 +45,10 @@ export async function getBookmarkById(req, reply, next) {
         const bookmark = await prisma.bookmark.findFirst({ where: { id: id } });
         if (!bookmark) throw new APIError();
 
-        return reply.json(bookmark);
+        return reply.json({
+            message: "SUCCESS",
+            bookmark: bookmark
+        });
     } catch (err) {
         return next(err);
     }
@@ -57,7 +60,10 @@ export async function getAllBookmarks(req, reply, next) {
         const bookmarks = await prisma.bookmark.findMany({ where: { owner_id: userId } });
         if (!bookmarks) throw new APIError();
 
-        return reply.json(bookmarks);
+        return reply.json({
+            message: "SUCCESS",
+            bookmarks: bookmarks
+        });
     } catch (err) {
         return next(err);
     }
@@ -73,7 +79,10 @@ export async function getBookmarksByTag(req, reply, next) {
         })
         if (!bookmarks) throw new APIError();
 
-        return reply.json(bookmarks);
+        return reply.json({
+            message: "SUCCESS",
+            bookmarks: bookmarks
+        });
     } catch (err) {
         return next(err)
     }

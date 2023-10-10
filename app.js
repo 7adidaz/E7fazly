@@ -18,6 +18,13 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 
+app.use((req, reply, next) => {
+    console.log('req.body', req.body);
+    console.log('req.params', req.params);
+    console.log('req.query', req.query);
+    next();
+})
+
 app.use(authRoutes);
 app.use('/api/v1/access', authenticateToken, accessRoutes)
 app.use('/api/v1/user', authenticateToken, userRoutes)
@@ -69,6 +76,8 @@ app.use((err, req, reply, next) => {
     }
 })
 
-app.listen(3000);
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(3000);
+}
 
 export default app;

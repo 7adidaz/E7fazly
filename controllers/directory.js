@@ -48,6 +48,7 @@ export async function contentByParent(req, reply, next) {
         if (!parent_dir) throw new NotFoundError()
 
         const response = {
+            messafe: "SUCCESS",
             // directories: [],
             // bookmarks: []
         };
@@ -77,13 +78,6 @@ export async function getAllDirectories(req, reply, next) {
     try {
         const userId = req.user.id;
 
-        const user = await prisma.user.findFirst({
-            where: {
-                id: userId
-            }
-        });
-        if (!user) throw new AuthorizationError()
-
         const directories = await prisma.directory.findMany({
             where: {
                 owner_id: userId
@@ -91,9 +85,14 @@ export async function getAllDirectories(req, reply, next) {
         });
 
         const response = {};
-        response.directories = directories ? directories : [];
 
-        return reply.json(response);
+        response.directories = directories ? directories : [];
+        response.directories = response.directories.filter(dir => dir.parent_id !== req.user.base_directory_id)
+
+        return reply.json({
+            message: "SUCCESS",
+            directories: response.directories
+        });
     } catch (err) {
         return next(err);
     }
@@ -136,7 +135,7 @@ export async function updateDirectoriesByIds(req, reply, next) {
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
-                message: "UPDATE SUCCESS",
+                message: "SUCCESS",
                 directories: updatedDirectoriesTransaction
             });
     } catch (err) {

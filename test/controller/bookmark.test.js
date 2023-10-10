@@ -293,13 +293,17 @@ describe('bookmark getters', () => {
 
         expect(response.json).toBeCalledWith(
             expect.objectContaining({
-                id: bkmrk1.id,
-                owner_id: user.id,
-                link: expect.any(String),
-                favorite: expect.any(Boolean),
-                type: expect.any(String),
-                directory_id: dir.id
-            }));
+                message: "SUCCESS",
+                bookmark: expect.objectContaining({
+                    id: bkmrk1.id,
+                    owner_id: user.id,
+                    link: expect.any(String),
+                    favorite: expect.any(Boolean),
+                    type: expect.any(String),
+                    directory_id: dir.id
+                })
+            })
+        )
     })
 
     test('get all bookmarks', async () => {
@@ -326,7 +330,10 @@ describe('bookmark getters', () => {
             }]
 
         expect(response.json).toBeCalledWith(
-            expect.arrayContaining(expected));
+            expect.objectContaining({
+                message: "SUCCESS",
+                bookmarks: expect.arrayContaining(expected)
+            }))
     })
 
     test('get bookmarks under some tag', async () => {
@@ -335,15 +342,20 @@ describe('bookmark getters', () => {
         await getBookmarksByTag(request, response, next);
         expect(next).not.toBeCalled()
 
-        expect(response.json).toBeCalledWith(expect.arrayContaining([{
-            id: bkmrk1.id,
-            owner_id: user.id,
-            link: expect.any(String),
-            favorite: expect.any(Boolean),
-            type: expect.any(String),
-            directory_id: dir.id
-        }]));
-    })
+        expect(response.json).toBeCalledWith(
+            expect.objectContaining({
+                message: "SUCCESS",
+                bookmarks: expect.arrayContaining([{
+                    id: bkmrk1.id,
+                    owner_id: user.id,
+                    link: expect.any(String),
+                    favorite: expect.any(Boolean),
+                    type: expect.any(String),
+                    directory_id: dir.id
+
+                }])
+            }))
+})
 
     afterEach(async () => {
         await prisma.user.deleteMany({

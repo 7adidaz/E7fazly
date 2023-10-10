@@ -1,4 +1,5 @@
 import request from "supertest"
+import jwt from "jsonwebtoken"
 import app from "../../app.js"
 import prisma from "../../util/prisma.js"
 import { HTTPStatusCode } from "../../util/error.js"
@@ -71,7 +72,6 @@ describe('create a user and login', () => {
                 password: "123456",
             })
 
-        console.log(response.body)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body).toEqual(expect.objectContaining({
             message: "SUCCESS", 
