@@ -4,13 +4,10 @@ import cache from './cache.js'
 /**
  * cacheing strategy: 
  * 
- *      //TOOD: fix the schema 
  * 
- *      database table: {
- *          user_id: {
- *              query1: result1
- *              query2: result2 
- *          }  
+ *      owner_id: {
+ *          model:operation:query_agruments: result1
+ *          model:operation:query_agruments2: result2
  *      }
  */
 
@@ -45,10 +42,8 @@ const prisma = new PrismaClient().$extends({
                 operation === 'delete' ||
                 operation === 'create' ||
                 operation === 'updateMany' ||
-                operation === 'deleteMany'
+                operation === 'deleteMany') {
 
-            ) {
-                // console.log('flush')
                 const level1key = String(args.where ?
                     args.where.owner_id ?
                         args.where.owner_id : ' ' : ' ');
