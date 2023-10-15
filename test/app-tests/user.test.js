@@ -1,7 +1,7 @@
 import request from "supertest"
 import jwt from "jsonwebtoken"
 
-import app from "../../app.js"
+import { server as app, redis as cache } from "../../app.js"
 import prisma from "../../util/prisma.js"
 import { HTTPStatusCode } from "../../util/error.js"
 
@@ -74,6 +74,8 @@ describe('user routes', () => {
 
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         await prisma.user.deleteMany({ where: { email: { in: ["a@gmail.com", "b@gmail.com","c@gmail.com"] } } })
         user = await prisma.user.create({
             data: {
@@ -104,5 +106,6 @@ describe('user routes', () => {
 
     afterEach(async () => {
         await prisma.user.deleteMany({ where: { id: {in: [1,2 ]}} })
+        await cache.disconnect();
     })
 })

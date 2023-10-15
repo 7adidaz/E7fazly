@@ -72,3 +72,44 @@ export class ErrorObject {
         }
     }
 }
+
+
+export function ErrorHandling(err, req, reply, next) {
+    if (err instanceof BaseError) {
+        if (err instanceof AuthorizationError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "You are not authorized to perform this action." });
+        }
+
+        if (err instanceof ValidationError) {
+            return reply
+                .status(err.statusCode)
+                .json({
+                    message: "Error Validating the request data",
+                    error: err.errorObject
+                });
+        }
+
+        if (err instanceof APIError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Something went wrong with the database." });
+        }
+
+        if (err instanceof ConflictError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Data Conflict Error." });
+        }
+
+        if (err instanceof NotFoundError) {
+            return reply
+                .status(err.statusCode)
+                .json({ message: "Record/s Not Found." });
+        }
+    } else {
+        console.log( 'err', err)
+        return reply.json({ message: "Something went wrong." });
+    }
+}

@@ -1,7 +1,6 @@
 import { APIError } from "../util/error.js";
 import prisma from "../util/prisma.js";
 
-//TODO: prevent the user from granting access to a directory that he doesn't own or base directory. 
 export async function grantAccess(req, reply, next) {
     try {
         const value = req.body.value;

@@ -1,5 +1,6 @@
 import prisma from '../../util/prisma.js';
 import doesUserHaveAccessToDirectory from '../../util/haveTheRights.js';
+import { redis as cache } from '../../app.js';
 
 describe('doesUserHaveAccessToDirectory', () => {
     let user1, user2, user3, base, dir1, dir2, dir3, dir1User2, dir2User2;
@@ -54,6 +55,8 @@ describe('doesUserHaveAccessToDirectory', () => {
     })
 
     beforeAll(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user1 = await prisma.user.create({
             data:
             {
@@ -163,13 +166,9 @@ describe('doesUserHaveAccessToDirectory', () => {
     });
 
     afterAll(async () => {
-        await prisma.user.deleteMany({
-            where: {
-                id: {
-                    in: [user1.id, user2.id]
-                }
-            }
-        });
+        await prisma.user.deleteMany({ where: { id: { in: [user1.id, user2.id] } } });
+        await cache.flushAll();
+        await cache.disconnect();
     })
 });
 

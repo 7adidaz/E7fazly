@@ -1,5 +1,6 @@
 import { signup, login } from '../../controllers/auth.js'
 import prisma from '../../util/prisma.js'
+import { redis as cache } from "../../app.js";
 
 const email = 'abdallah_elhdad@gmail.com';
 async function deleteEmail() {
@@ -12,6 +13,8 @@ async function deleteEmail() {
 
 describe('signup', () => {
     beforeAll(async () => {
+        await cache.connect();
+        await cache.flushAll();
         deleteEmail()
     });
 
@@ -49,6 +52,8 @@ describe('signup', () => {
 
     afterAll(async () => {
         deleteEmail()
+        await cache.flushAll();
+        await cache.disconnect();
     });
 })
 
@@ -62,6 +67,8 @@ describe('login', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -97,8 +104,8 @@ describe('login', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

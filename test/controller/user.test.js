@@ -1,5 +1,6 @@
 import { getByEmail, getUser, updateUser, deleteUser } from "../../controllers/user"
 import prisma from "../../util/prisma.js";
+import { redis as cache } from "../../app.js";
 
 describe('user getters', () => {
     let user;
@@ -12,6 +13,8 @@ describe('user getters', () => {
     const next = jest.fn()
 
     beforeAll(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -65,9 +68,9 @@ describe('user getters', () => {
     })
 
     afterAll(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -81,6 +84,8 @@ describe('delete user', () => {
     const next = jest.fn()
 
     beforeAll(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -117,9 +122,9 @@ describe('delete user', () => {
     })
 
     afterAll(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -134,6 +139,8 @@ describe('update user', () => {
     const next = jest.fn()
 
     beforeAll(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -175,8 +182,8 @@ describe('update user', () => {
     })
 
     afterAll(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
