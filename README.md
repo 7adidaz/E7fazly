@@ -1,8 +1,8 @@
-E7fazly - أحفظلي 
+# E7fazly - أحفظلي 
 
 E7fazly is an Arabic word that means "save it for me", which this backend does! E7fazly is a backend that helps users save their bookmarks into folders, which can be nested inside other folders, which itself can be saved inside folders -the sky is the limit, jk. it's actually the storage:)- 
 
-typical workflow if you are a frontend and wanna work on this project: 
+### Workflow
 
 - when a user creates an account an implicit folder (base_directory) is created as its base directory; no other users are allowed to be granted access to this folder, this folder also works for "unlabeled" bookmarks. 
 - a user can create as many folders as he can, nested or flat. 
@@ -13,7 +13,7 @@ typical workflow if you are a frontend and wanna work on this project:
 
 
 
-The backend does: 
+## What the backend supports
 - Authentication using JWT 
 - Authorization 
 - Validation using JOI 
