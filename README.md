@@ -9,7 +9,6 @@ typical workflow if you are a frontend and wanna work on this project:
 - the user can also add as many bookmarks as he wants to his folders. 
 - these bookmarks can be photos or links, which can be tagged with tags (duh). 
 - a user can have a list of the tags used to tag the bookmark and also can get bookmarks that are tagged with a specific tag. 
-
 - user can grant access (to view or to edit) to a folder, the granted access user can view all bookmarks under the folder as well as all the nested folders and their content. 
 
 
@@ -19,12 +18,12 @@ The backend does:
 - Authorization 
 - Validation using JOI 
 - Caching using Redis 
-- Databases using Prisma + Postgresql (look at [here](./docs/Database.md))
+- [Database](./docs/Database.md) using Prisma + Postgresql. 
 - A TON of testing using JEST 
 
 ---
 Project TODOs: 
 
-- [ ] add support for image upload ( no s3:( )
+- [ ] add support for image upload -no s3:(-
 - [ ] email verification routes (links through emails not codes or both)
 - [ ] add notes for bookmarks, and support text search in them 
