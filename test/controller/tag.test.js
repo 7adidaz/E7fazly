@@ -1,5 +1,6 @@
 import prisma from "../../util/prisma.js";
 import { addTagForBookmark, getTagsForBookmark, getTagsForUser, removeTagFromBookmark, updateTagName } from "../../controllers/tag.js";
+import { redis as cache } from "../../app.js";
 
 describe('add a tag', () => {
     let user, dir, anotherDir, bkmrk1, bkmrk2, tag;
@@ -11,6 +12,8 @@ describe('add a tag', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -148,9 +151,9 @@ describe('add a tag', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -164,6 +167,8 @@ describe('remove a tag', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -293,9 +298,9 @@ describe('remove a tag', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -309,6 +314,8 @@ describe('remove a tag', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+                await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -451,9 +458,9 @@ describe('remove a tag', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -467,6 +474,8 @@ describe('update a tag', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -547,7 +556,7 @@ describe('update a tag', () => {
             body: {
                 value: {
                     tagId: tag.id,
-                    newName: 'newName' //TODO: add regex when implementing validator
+                    newName: 'newName'
                 }
             }
         }
@@ -565,8 +574,8 @@ describe('update a tag', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

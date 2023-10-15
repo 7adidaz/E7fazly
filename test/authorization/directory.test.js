@@ -6,7 +6,7 @@ import {
 } from "../../authorization/directory.js"
 
 import { AuthorizationError } from "../../util/error.js";
-
+import { redis as cache } from "../../app";
 import prisma from "../../util/prisma.js"
 
 describe('check directory authorization', () => {
@@ -147,6 +147,8 @@ describe('check directory authorization', () => {
 
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         await prisma.user.createMany({
             data: [{
                 id: 1,
@@ -257,5 +259,7 @@ describe('check directory authorization', () => {
 
     afterEach(async () => {
         await prisma.user.deleteMany({ where: { id: { in: [1, 2, 3, 4] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

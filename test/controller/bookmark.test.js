@@ -1,5 +1,6 @@
 import { createBookmark, updateBookmarks, deleteBookmarks, getAllBookmarks, getBookmarkById, getBookmarksByTag } from "../../controllers/bookmark.js";
 import prisma from "../../util/prisma.js";
+import {redis as cache} from "../../app";
 
 describe('creating a bookmark', () => {
     let user, dirId, anotherDirId;
@@ -11,6 +12,8 @@ describe('creating a bookmark', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -107,9 +110,9 @@ describe('creating a bookmark', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -123,6 +126,8 @@ describe('delete bookmark', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -201,9 +206,9 @@ describe('delete bookmark', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -217,6 +222,8 @@ describe('bookmark getters', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -355,12 +362,12 @@ describe('bookmark getters', () => {
 
                 }])
             }))
-})
+    })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -374,6 +381,8 @@ describe('update bookmark', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -524,8 +533,8 @@ describe('update bookmark', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

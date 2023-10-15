@@ -1,7 +1,7 @@
 import request from "supertest"
 import jwt from "jsonwebtoken"
 
-import app from "../../app.js"
+import { server as app, redis as cache } from "../../app.js"
 import prisma from "../../util/prisma.js"
 import { HTTPStatusCode } from "../../util/error.js"
 
@@ -106,11 +106,8 @@ describe('directory routes', () => {
             .set('Authorization', token)
             .query({ ids: '[3]' })
 
-
-
-        console.log(response.body)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
-        const dir= await prisma.directory.findMany({
+        const dir = await prisma.directory.findMany({
             where: {
                 owner_id: user.id
             }
@@ -120,6 +117,8 @@ describe('directory routes', () => {
 
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         await prisma.user.deleteMany({ where: { email: { in: ["a@gmail.com", "b@gmail.com"] } } })
         user = await prisma.user.create({
             data: {
@@ -186,5 +185,6 @@ describe('directory routes', () => {
 
     afterEach(async () => {
         await prisma.user.deleteMany({ where: { id: { in: [1] } } })
+        await cache.disconnect();
     })
 })

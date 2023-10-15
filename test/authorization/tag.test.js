@@ -6,6 +6,7 @@ import {
 
 import { AuthorizationError } from "../../util/error";
 import prisma from "../../util/prisma";
+import { redis as cache } from "../../app";
 
 
 describe('check bookmark authorization', () => {
@@ -162,6 +163,8 @@ describe('check bookmark authorization', () => {
 
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         await prisma.user.createMany({
             data: [{
                 id: 1,
@@ -289,5 +292,7 @@ describe('check bookmark authorization', () => {
 
     afterEach(async () => {
         await prisma.user.deleteMany({ where: { id: { in: [1, 2, 3, 4] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

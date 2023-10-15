@@ -1,5 +1,6 @@
 import prisma from "../../util/prisma.js";
 import { revokeAccess, grantAccess} from "../../controllers/access.js";
+import { redis as cache } from "../../app.js";
 
 describe('grant access to a user', () => {
     let priv, norm, dir, anotherDir, anotherAnotherDir;
@@ -8,8 +9,6 @@ describe('grant access to a user', () => {
         json: jest.fn()
     };
     const next = jest.fn()
-
-
 
     test('revoke access rights from a dir without recursive', async () => {
         const request = {
@@ -65,6 +64,8 @@ describe('grant access to a user', () => {
     })
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         priv = await prisma.user.create({
             data: {
                 name: "priv",
@@ -131,9 +132,9 @@ describe('grant access to a user', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [priv.id, norm.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [priv.id, norm.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -178,6 +179,8 @@ describe('grant access to a user', () => {
     })
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         priv = await prisma.user.create({
             data: {
                 name: "priv",
@@ -229,8 +232,8 @@ describe('grant access to a user', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [priv.id, norm.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [priv.id, norm.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

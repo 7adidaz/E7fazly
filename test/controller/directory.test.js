@@ -1,5 +1,6 @@
 import { createDirectory, updateDirectoriesByIds, getAllDirectories, deleteDirectoriesByIds, contentByParent } from "../../controllers/directory.js";
 import prisma from "../../util/prisma.js";
+import { redis as cache } from "../../app.js";
 
 describe('creating directory', () => {
     let user, dir;
@@ -11,6 +12,8 @@ describe('creating directory', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -168,9 +171,9 @@ describe('creating directory', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -184,6 +187,8 @@ describe('directory delete', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -275,9 +280,9 @@ describe('directory delete', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -291,6 +296,8 @@ describe('directory getters', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -375,9 +382,9 @@ describe('directory getters', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })
 
@@ -391,6 +398,8 @@ describe('directory update', () => {
     const next = jest.fn()
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         user = await prisma.user.create({
             data: {
                 name: "abdo",
@@ -509,8 +518,8 @@ describe('directory update', () => {
     })
 
     afterEach(async () => {
-        await prisma.user.deleteMany({
-            where: { id: { in: [user.id] } }
-        })
+        await prisma.user.deleteMany({ where: { id: { in: [user.id] } } })
+        await cache.flushAll();
+        await cache.disconnect();
     })
 })

@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
+import cache from './util/cache.js';
+import prisma from './util/prisma.js';
 
 import userRoutes from './routes/user.js';
 import dirRoutes from './routes/directory.js';
@@ -10,20 +12,13 @@ import tagRoutes from './routes/tag.js';
 import accessRoutes from './routes/access.js';
 import authRoutes from './routes/auth.js';
 import authenticateToken from './util/auth.js';
-import { BaseError, AuthorizationError, ValidationError, APIError, ConflictError, NotFoundError } from './util/error.js';
+import { ErrorHandling } from './util/error.js';
 
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
-
-app.use((req, reply, next) => {
-    console.log('req.body', req.body);
-    console.log('req.params', req.params);
-    console.log('req.query', req.query);
-    next();
-})
 
 app.use(authRoutes);
 app.use('/api/v1/access', authenticateToken, accessRoutes)
@@ -37,47 +32,15 @@ app.use('/', (req, reply, next) => {
     reply.json({ message: "MAGIC BOX" });
 })
 
-app.use((err, req, reply, next) => {
-    if (err instanceof BaseError) {
-        if (err instanceof AuthorizationError) {
-            return reply
-                .status(err.statusCode)
-                .json({ message: "You are not authorized to perform this action." });
-        }
-
-        if (err instanceof ValidationError) {
-            return reply
-                .status(err.statusCode)
-                .json({
-                    message: "Error Validating the request data",
-                    error: err.errorObject
-                });
-        }
-
-        if (err instanceof APIError) {
-            return reply
-                .status(err.statusCode)
-                .json({ message: "Something went wrong with the database." });
-        }
-
-        if (err instanceof ConflictError) {
-            return reply
-                .status(err.statusCode)
-                .json({ message: "Data Conflict Error." });
-        }
-
-        if (err instanceof NotFoundError) {
-            return reply
-                .status(err.statusCode)
-                .json({ message: "Record/s Not Found." });
-        }
-    } else {
-        return reply.json({ message: "Something went wrong." });
-    }
-})
+app.use(ErrorHandling);
 
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(3000);
+    (async () => {
+        await cache.connect();
+        await cache.flushAll()
+        app.listen(3000);
+    })()
 }
 
-export default app;
+export const server = app;
+export const redis = cache;

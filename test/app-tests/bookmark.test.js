@@ -1,7 +1,7 @@
 import request from "supertest"
 import jwt from "jsonwebtoken"
 
-import app from "../../app.js"
+import { server as app, redis as cache } from "../../app.js"
 import prisma from "../../util/prisma.js"
 import { HTTPStatusCode } from "../../util/error.js"
 
@@ -80,7 +80,6 @@ describe('bookmark ', () => {
                 ]
             })
 
-        console.log(response.body)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.bookmarks.length).toBe(1)
     })
@@ -91,7 +90,6 @@ describe('bookmark ', () => {
             .set('Authorization', token)
             .query({ ids: '[1]' })
 
-        console.log(response.body)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
 
         const bookmarks = await prisma.bookmark.findMany({ where: { owner_id: 1 } })
@@ -100,6 +98,8 @@ describe('bookmark ', () => {
 
 
     beforeEach(async () => {
+        await cache.connect();
+        await cache.flushAll();
         await prisma.user.deleteMany({ where: { email: { in: ["a@gmail.com", "b@gmail.com"] } } })
         user = await prisma.user.create({
             data: {
@@ -165,5 +165,6 @@ describe('bookmark ', () => {
 
     afterEach(async () => {
         await prisma.user.deleteMany({ where: { id: { in: [1] } } })
+        await cache.disconnect();
     })
 })

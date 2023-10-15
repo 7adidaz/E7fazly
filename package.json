@@ -30,7 +30,8 @@
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "redis": "^4.6.10"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.15",
