@@ -18,7 +18,7 @@ E7fazly is an Arabic word that means "save it for me", which this backend does! 
 - Authorization 
 - Validation using JOI 
 - Caching using Redis 
-- [Database](./docs/Database.md) using Prisma + Postgresql. 
+- [Database](./server/docs/Database.md) using Prisma + Postgresql. 
 - A TON of testing using JEST 
 
 ---
