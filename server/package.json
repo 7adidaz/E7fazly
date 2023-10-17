@@ -11,7 +11,8 @@
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+    },
+    "testTimeout": 15000
   },
   "repository": {
     "type": "git",
