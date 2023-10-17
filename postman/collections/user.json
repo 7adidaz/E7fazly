@@ -1,0 +1,292 @@
+{
+	"info": {
+		"_postman_id": "04ef61a9-bf06-46e3-8df7-92a02719713c",
+		"name": "user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "27179822-04ef61a9-bf06-46e3-8df7-92a02719713c"
+	},
+	"item": [
+		{
+			"name": "get me",
+			"id": "ff58888f-1727-42d7-a480-d33fb134e29e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/user/me",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by email",
+			"id": "22a58f3a-b6a2-4d75-a727-160fc96de32f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/user/find/:emai",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"user",
+						"find",
+						":emai"
+					],
+					"variable": [
+						{
+							"key": "emai",
+							"value": "searchforme@abdo.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a user",
+			"id": "91795e8c-7826-4d07-82ac-2d5eb1de577f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"abody\",\n    \"email\": \"abody@abody.com\",\n    \"password\": \"newPass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/user",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a user",
+			"id": "eb00dd21-07fe-4cc1-800b-4126dab40b31",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/user",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

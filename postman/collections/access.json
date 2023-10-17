@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "3899616d-a6be-401b-a46f-1e41a51c3d43",
+		"name": "access",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "27179822-3899616d-a6be-401b-a46f-1e41a51c3d43"
+	},
+	"item": [
+		{
+			"name": "grant access to a user",
+			"id": "775197ba-ea58-4896-96e6-f773b2ecb7e0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"directoryId\": 5639,\n    \"userId\": 1733,\n    \"accessRight\": \"view\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/access/grant",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"access",
+						"grant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get users that have access to a directory",
+			"id": "5c9a6deb-43f3-4758-823d-68858a5ecf31",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/access/:directoryId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"access",
+						":directoryId"
+					],
+					"variable": [
+						{
+							"key": "directoryId",
+							"value": "5639"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "revoke access from a user",
+			"id": "21ef266f-8f50-4f70-b8f0-5e29eea2c329",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"directoryId\": 5639,\n    \"userId\": 1733\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/access/revoke",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"access",
+						"revoke"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

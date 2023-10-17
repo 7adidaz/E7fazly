@@ -1,0 +1,377 @@
+{
+	"info": {
+		"_postman_id": "a1b6488c-1822-413d-b245-e4ca99533992",
+		"name": "tag",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "27179822-a1b6488c-1822-413d-b245-e4ca99533992"
+	},
+	"item": [
+		{
+			"name": "add tag for a bookmark",
+			"id": "79544aca-befc-4c97-aefb-e489045940d7",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"cs\",\n    \"bookmarkId\": 1972\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/tag/create",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"tag",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get tags for a bookmark",
+			"id": "f4ec434f-0edc-4f45-af4f-dd9efc3063b4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/tag/bkmrk/:bookmarkId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"tag",
+						"bkmrk",
+						":bookmarkId"
+					],
+					"variable": [
+						{
+							"key": "bookmarkId",
+							"value": "1972"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all bookmarks for a user",
+			"id": "98ef6b7c-5d40-4dab-a878-80e2866fc6eb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/tag/all",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"tag",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a tag name",
+			"id": "5b92babd-92a9-47fa-b01e-8b5fe72aff6c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"tagId\": 674, \n    \"newName\": \"NOT CS\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/tag",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"tag"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove a tag from a bookmark",
+			"id": "95056b31-ab76-4dd2-ba2d-9bf5a23ee183",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bookmarkId\": 1972, \n    \"tagId\": 674\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/tag",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"tag"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

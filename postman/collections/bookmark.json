@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "f5f284df-0c0a-472a-ba17-8ec7008f6337",
+		"name": "bookmark",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "27179822-f5f284df-0c0a-472a-ba17-8ec7008f6337"
+	},
+	"item": [
+		{
+			"name": "create a bookmark",
+			"id": "e5167e6b-5b88-444b-b186-a8492c0d94d7",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"link\": \"https://www.google.com\",\n    \"directoryId\": 5638,\n    \"type\": \"img\",\n    \"favorite\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk/create",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bookmark by id",
+			"id": "aa0cfd7d-b580-4245-a2d6-024177358489",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk/:id",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1972"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all",
+			"id": "c2edcf9e-22c3-4923-a01e-9bbf81e09424",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk/all",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get bookmarks by tagId",
+			"id": "9a1681ac-3321-4fb7-9ba3-3de4d86310bb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk/tag/:tagId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk",
+						"tag",
+						":tagId"
+					],
+					"variable": [
+						{
+							"key": "tagId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update  a bookmark list",
+			"id": "3b18bc64-0bac-44c6-a1c7-f14333903267",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"changes\": [\n        {\n            \"id\": 1972,\n            \"link\": \"https://www.updated.com\",\n            \"directoryId\": 5638,\n            \"type\": \"img\",\n            \"favorite\": true\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a list",
+			"id": "69acc0ff-c1f6-450a-96bd-17c65db8caa4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk?ids=[15]",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "[15]"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

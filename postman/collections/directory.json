@@ -1,0 +1,375 @@
+{
+	"info": {
+		"_postman_id": "cce361dd-0194-4b6e-82e5-5a5efba1c45c",
+		"name": "directory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "27179822-cce361dd-0194-4b6e-82e5-5a5efba1c45c"
+	},
+	"item": [
+		{
+			"name": "creating a dir",
+			"id": "abc2f369-778e-4368-ac0c-7024d63dec70",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"some directory\",\n    \"parentId\": 5637\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/dir/create",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"dir",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get the content by parent",
+			"id": "73e56bb1-aa86-4393-8202-c775fabbe412",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/dir/content/:parentId",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"dir",
+						"content",
+						":parentId"
+					],
+					"variable": [
+						{
+							"key": "parentId",
+							"value": "5637",
+							"description": "it's just the base dir for the user. "
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all directories",
+			"id": "bbc89f63-61af-4e11-b749-234ed18189b0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/dir/all",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"dir",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a directory list",
+			"id": "d3679832-dccb-4a6f-be3c-4026bdce5e93",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"changes\": [\n        {\n            \"id\": 5638,\n            \"icon\": \"updated icon\",\n            \"name\": \"updated name\",\n            \"parentId\": 5639\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/dir",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"dir"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a list of ids",
+			"id": "6f15fe60-5e5e-4082-a16e-32ccf2444864",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "jwt",
+					"jwt": [
+						{
+							"key": "payload",
+							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
+							"type": "string"
+						},
+						{
+							"key": "secret",
+							"value": "{{AUTH_SIGN}}",
+							"type": "string"
+						},
+						{
+							"key": "header",
+							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+							"type": "string"
+						},
+						{
+							"key": "isSecretBase64Encoded",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "headerPrefix",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "algorithm",
+							"value": "HS256",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "queryParamKey",
+							"value": "token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/dir?ids=[1]",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"dir"
+					],
+					"query": [
+						{
+							"key": "ids",
+							"value": "[1]"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
