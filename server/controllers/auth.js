@@ -18,13 +18,6 @@ export async function signup(req, reply, next) {
 
         if (found) throw new ConflictError();
 
-        /**
-         * //TODO: 
-         * Email verification 
-         * then redirection the /login
-         * maybe a new middleware. 
-         */
-
         const userCreationTransaction =
             await prisma.$transaction(async (tx) => {
                 const newUser = await tx.user.create({
@@ -64,7 +57,7 @@ export async function signup(req, reply, next) {
 
         if (!userCreationTransaction) throw new APIError();
 
-        reply.redirect('/login');
+        reply.json({ message: "SUCCESS" })
     } catch (err) {
         // console.log('err', err instanceof ConflictError, next)
         next(err);
@@ -96,9 +89,16 @@ export async function login(req, reply, next) {
                 info: "Email or Password is not valid."
             })
 
-        if (!user.is_verified) return reply.redirect('/verify')
+        if (!user.is_verified) return reply.json({ message: "VERIFY" })
 
         const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
+
+        reply.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 86400,
+            path: '/'
+        })
 
         return reply.json({
             message: "SUCCESS",
@@ -130,7 +130,7 @@ export async function verify(req, reply, next) {
                     is_verified: true
                 }
             })
-            return reply.redirect('/home')
+            return reply.json({ message: "SUCCESS" })
         }
         throw new APIError()
     } catch (err) {

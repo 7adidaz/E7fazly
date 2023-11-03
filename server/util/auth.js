@@ -2,10 +2,11 @@ import jwt from "jsonwebtoken";
 import { APIError, AuthorizationError } from "./error.js";
 import prisma from "../util/prisma.js";
 
-export default async function authenticateToken(req, reply, next) {
+export async function authenticateToken(req, reply, next) {
     try {
-        let token = req.headers['authorization']
+        let token = req.cookies.token;
         if (!token) throw new AuthorizationError();
+
 
         token = jwt.verify(token, process.env.TOKEN_SECRET)
         if (!token.issuerId) throw new AuthorizationError();
@@ -24,4 +25,11 @@ export default async function authenticateToken(req, reply, next) {
     } catch (err) {
         return next(err)
     }
+}
+
+
+export async function generateEmailVerificationLink(userId) {
+    //TODO:  something to generate a token + a random uuid 
+    // add this to the database 
+    // send the link to the user's email
 }

@@ -98,7 +98,7 @@ export async function deleteUser(req, reply, next) {
 
         if (!userDeletionResult) throw new APIError();
 
-        return reply.redirect('/signup');
+        return reply.json({ message: "SUCCESS"})
     } catch (err) {
         return next(err);
     }

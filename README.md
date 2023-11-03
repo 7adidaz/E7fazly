@@ -24,6 +24,7 @@ E7fazly is an Arabic word that means "save it for me", which this backend does! 
 ---
 Project TODOs: 
 
-- [ ] add support for image upload -no s3:(-
+- [ ] add support for image upload 
+- [ ] user's photo
 - [ ] email verification routes (links through emails not codes or both)
 - [ ] add notes for bookmarks, and support text search in them 

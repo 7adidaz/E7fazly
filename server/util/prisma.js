@@ -21,17 +21,11 @@ const prisma = new PrismaClient().$extends({
                         : ' ' || ' ');
                 const level2key = JSON.stringify(args);
 
-                // console.log(`lvl1 ${level1key} .. lvl2 ${level2key}`)
                 const cached = await cache.hGet(level1key, `${model}:${operation}:${level2key}`);
 
-                if (cached) {
-                    // console.log('hit')
-                    return JSON.parse(cached);
-                }
+                if (cached) { return JSON.parse(cached); }
 
-                // console.log('miss')
                 const result = await query(args);
-                // console.log(`lvl1 ${level1key} .. lvl2 ${level2key} .. res ${JSON.stringify(result)}`)
                 cache.hSet(level1key, `${model}:${operation}:${level2key}`, JSON.stringify(result));
 
                 return result;
