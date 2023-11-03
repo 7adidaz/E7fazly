@@ -13,51 +13,6 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "jwt",
-					"jwt": [
-						{
-							"key": "payload",
-							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
-							"type": "string"
-						},
-						{
-							"key": "secret",
-							"value": "{{AUTH_SIGN}}",
-							"type": "string"
-						},
-						{
-							"key": "header",
-							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
-							"type": "string"
-						},
-						{
-							"key": "isSecretBase64Encoded",
-							"value": false,
-							"type": "boolean"
-						},
-						{
-							"key": "headerPrefix",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "algorithm",
-							"value": "HS256",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "queryParamKey",
-							"value": "token",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -80,51 +35,6 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "jwt",
-					"jwt": [
-						{
-							"key": "payload",
-							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
-							"type": "string"
-						},
-						{
-							"key": "secret",
-							"value": "{{AUTH_SIGN}}",
-							"type": "string"
-						},
-						{
-							"key": "header",
-							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
-							"type": "string"
-						},
-						{
-							"key": "isSecretBase64Encoded",
-							"value": false,
-							"type": "boolean"
-						},
-						{
-							"key": "headerPrefix",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "algorithm",
-							"value": "HS256",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "queryParamKey",
-							"value": "token",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -154,51 +64,6 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "jwt",
-					"jwt": [
-						{
-							"key": "payload",
-							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
-							"type": "string"
-						},
-						{
-							"key": "secret",
-							"value": "{{AUTH_SIGN}}",
-							"type": "string"
-						},
-						{
-							"key": "header",
-							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
-							"type": "string"
-						},
-						{
-							"key": "isSecretBase64Encoded",
-							"value": false,
-							"type": "boolean"
-						},
-						{
-							"key": "headerPrefix",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "algorithm",
-							"value": "HS256",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "queryParamKey",
-							"value": "token",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PATCH",
 				"header": [],
 				"body": {
@@ -229,51 +94,6 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "jwt",
-					"jwt": [
-						{
-							"key": "payload",
-							"value": "{\n  \"issuerId\": {{USER_ID}}\n}",
-							"type": "string"
-						},
-						{
-							"key": "secret",
-							"value": "{{AUTH_SIGN}}",
-							"type": "string"
-						},
-						{
-							"key": "header",
-							"value": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
-							"type": "string"
-						},
-						{
-							"key": "isSecretBase64Encoded",
-							"value": false,
-							"type": "boolean"
-						},
-						{
-							"key": "headerPrefix",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "algorithm",
-							"value": "HS256",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
-						},
-						{
-							"key": "queryParamKey",
-							"value": "token",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
