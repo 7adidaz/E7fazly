@@ -25,7 +25,7 @@ export async function signup(req, reply, next) {
                         name: name,
                         email: email,
                         password: password,
-                        is_verified: false,
+                        is_verified: true,
                         verification_code: 0,
                         base_directory_id: null
                     }
