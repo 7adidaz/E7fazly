@@ -11,7 +11,7 @@ describe('tag routes', () => {
     test('add a new tag to a bookmark', async () => {
         const response = await request(app)
             .post('/api/v1/tag/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 bookmarkId: 1,
                 name: "cs"
@@ -26,7 +26,7 @@ describe('tag routes', () => {
     test('add a tag that already exists to a bookmark', async () => {
         const response = await request(app)
             .post('/api/v1/tag/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 bookmarkId: 1,
                 name: "tag"
@@ -41,7 +41,7 @@ describe('tag routes', () => {
     test('add a new tag to a bookmark with no access to', async () => {
         const response = await request(app)
             .post('/api/v1/tag/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 bookmarkId: 100,
                 name: "cs"
@@ -53,7 +53,7 @@ describe('tag routes', () => {
     test('get all tags for a bookmark', async () => {
         const response = await request(app)
             .get('/api/v1/tag/bkmrk/1')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.tags.length).toBe(1)
@@ -62,7 +62,7 @@ describe('tag routes', () => {
     test('get all tags for a user ', async () => {
         const response = await request(app)
             .get('/api/v1/tag/all')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.tags.length).toBe(1)
@@ -71,7 +71,7 @@ describe('tag routes', () => {
     test('update a tag name', async () => {
         const response = await request(app)
             .patch('/api/v1/tag')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 tagId: 1,
                 newName: "newName"
@@ -86,7 +86,7 @@ describe('tag routes', () => {
     test('delete a tag from a bookmark', async () => {
         const response = await request(app)
             .delete('/api/v1/tag')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 bookmarkId: 1,
                 tagId: 1

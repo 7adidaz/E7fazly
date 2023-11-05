@@ -11,7 +11,7 @@ describe('bookmark ', () => {
     test('create a bookmark', async () => {
         const response = await request(app)
             .post('/api/v1/bkmrk/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 link: "https://www.google.com",
                 directoryId: 2,
@@ -26,7 +26,7 @@ describe('bookmark ', () => {
     test('create a bookmark to a dir with no access to', async () => {
         const response = await request(app)
             .post('/api/v1/bkmrk/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 link: "https://www.google.com",
                 directoryId: 100,
@@ -40,7 +40,7 @@ describe('bookmark ', () => {
     test('get bookmark by id', async () => {
         const response = await request(app)
             .get('/api/v1/bkmrk/1')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.bookmark.link).toBe("https://www.google.com")
@@ -49,7 +49,7 @@ describe('bookmark ', () => {
     test('get all bookmarks', async () => {
         const response = await request(app)
             .get('/api/v1/bkmrk/all')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.bookmarks.length).toBe(1)
@@ -58,7 +58,7 @@ describe('bookmark ', () => {
     test('get all bookmarks by tag', async () => {
         const response = await request(app)
             .get('/api/v1/bkmrk/tag/1')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.bookmarks.length).toBe(0)
@@ -67,7 +67,7 @@ describe('bookmark ', () => {
     test('patch a list of bookmarks', async () => {
         const response = await request(app)
             .patch('/api/v1/bkmrk')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 changes: [
                     {
@@ -87,7 +87,7 @@ describe('bookmark ', () => {
     test('delete a list of bookmarks', async () => {
         const response = await request(app)
             .delete('/api/v1/bkmrk')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .query({ ids: '[1]' })
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)

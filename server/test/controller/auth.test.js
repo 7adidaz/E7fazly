@@ -29,7 +29,9 @@ describe('signup', () => {
         const next = jest.fn();
         await signup(request, response, next);
 
-        expect(response.redirect).toBeCalledWith('/login');
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "SUCCESS",
+        }));
         expect(next).not.toBeCalled();
 
         const isUserinDB = await prisma.user.findFirst({
@@ -62,7 +64,8 @@ describe('login', () => {
     const email = "aaaa@aa.com";
     const response = {
         redirect: jest.fn(),
-        json: jest.fn()
+        json: jest.fn(),
+        cookie: jest.fn()
     };
     const next = jest.fn()
 

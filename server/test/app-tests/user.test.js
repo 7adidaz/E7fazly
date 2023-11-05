@@ -11,7 +11,7 @@ describe('user routes', () => {
     test('get me', async () => {
         const response = await request(app)
             .get('/api/v1/user/me')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             
             expect(response.statusCode).toBe(HTTPStatusCode.OK)
     })
@@ -26,7 +26,7 @@ describe('user routes', () => {
     test('find by email', async () => {
         const response = await request(app)
             .get('/api/v1/user/find/b@gmail.com')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.user.email).toBe('b@gmail.com')
@@ -35,7 +35,7 @@ describe('user routes', () => {
     test('patch a user', async () => {
         const response = await request(app)
             .patch('/api/v1/user')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 name: "ax", 
                 email : "c@gmail.com",
@@ -51,7 +51,7 @@ describe('user routes', () => {
     test('patch a user with invalid data', async () => {
         const response = await request(app)
             .patch('/api/v1/user')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 name: "ax", 
                 email : "a", 
@@ -65,9 +65,9 @@ describe('user routes', () => {
     test('delete a user', async () => {
         const response = await request(app)
             .delete('/api/v1/user')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
 
-        expect(response.headers['location']).toBe('/signup')
+        expect(response.body).toEqual({ message: "SUCCESS" })
         const user  = await prisma.user.findFirst({ where: { email: {equals: "a@gmail.com"} } })
         expect(user).toBeNull()
     })

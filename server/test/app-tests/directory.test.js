@@ -11,7 +11,7 @@ describe('directory routes', () => {
     test('create a directory', async () => {
         const response = await request(app)
             .post('/api/v1/dir/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 name: "dir",
                 parentId: user.base_directory_id
@@ -25,7 +25,7 @@ describe('directory routes', () => {
     test('create a directory to a dir with no access to', async () => {
         const response = await request(app)
             .post('/api/v1/dir/create')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 name: "dir",
                 parentId: 100
@@ -37,7 +37,7 @@ describe('directory routes', () => {
     test('get content by parent', async () => {
         const response = await request(app)
             .get('/api/v1/dir/content/2')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.directories.length).toBe(1)
         expect(response.body.bookmarks.length).toBe(1)
@@ -46,14 +46,14 @@ describe('directory routes', () => {
     test('get content by parent with no access to', async () => {
         const response = await request(app)
             .get('/api/v1/dir/content/100')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
         expect(response.statusCode).toBe(HTTPStatusCode.UNAUTHORIZED)
     })
 
     test('get all directories', async () => {
         const response = await request(app)
             .get('/api/v1/dir/all')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.directories.length).toBe(2)
     })
@@ -61,7 +61,7 @@ describe('directory routes', () => {
     test('patch a list of directories', async () => {
         const response = await request(app)
             .patch('/api/v1/dir')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 changes: [
                     {
@@ -80,7 +80,7 @@ describe('directory routes', () => {
     test('patch a list of directories with mixed directories one have access to and don\'t', async () => {
         const response = await request(app)
             .patch('/api/v1/dir')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .send({
                 changes: [
                     {
@@ -103,7 +103,7 @@ describe('directory routes', () => {
     test('delete a list of directories', async () => {
         const response = await request(app)
             .delete('/api/v1/dir')
-            .set('Authorization', token)
+            .set('Cookie', `token=${token};`)
             .query({ ids: '[3]' })
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)

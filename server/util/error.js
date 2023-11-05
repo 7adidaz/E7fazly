@@ -109,7 +109,6 @@ export function ErrorHandling(err, req, reply, next) {
                 .json({ message: "Record/s Not Found." });
         }
     } else {
-        console.log( 'err', err)
         return reply.json({ message: "Something went wrong." });
     }
 }

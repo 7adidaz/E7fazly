@@ -103,7 +103,9 @@ describe('delete user', () => {
 
         await deleteUser(request, response, next);
 
-        expect(response.redirect).toBeCalledWith('/signup');
+        expect(response.json).toBeCalledWith(expect.objectContaining({
+            message: "SUCCESS"
+        }));
 
         const userInDB = await prisma.user.findFirst({
             where: {
