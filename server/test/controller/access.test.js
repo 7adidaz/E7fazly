@@ -25,7 +25,7 @@ describe('grant access to a user', () => {
         expect(next).not.toBeCalled()
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "REVOKED"
+            message: "SUCCESS"
         }))
 
         const accessRights = await prisma.user_directory_access.findMany({
@@ -51,7 +51,7 @@ describe('grant access to a user', () => {
         expect(next).not.toBeCalled()
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "REVOKED"
+            message: "SUCCESS"
         }))
 
         const accessRights = await prisma.user_directory_access.findMany({
@@ -161,7 +161,7 @@ describe('grant access to a user', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "GRANTED"
+            message: "SUCCESS"
         }))
 
         const access_rights = await prisma.user_directory_access.findMany({

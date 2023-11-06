@@ -81,7 +81,7 @@ export async function removeTagFromBookmark(req, reply, next) {
             })
             if (!deleted) throw APIError();
         }
-        return reply.json({ message: "DELETED" })
+        return reply.json({ message: "SUCCESS" })
     } catch (err) {
         return next(err);
     }
@@ -105,7 +105,7 @@ export async function updateTagName(req, reply, next) {
         if (!updated) throw new APIError();
 
         return reply.json({
-            message: "UPDATED"
+            message: "SUCCESS",
         })
     } catch (err) {
         return next(err);

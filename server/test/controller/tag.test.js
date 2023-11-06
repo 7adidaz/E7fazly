@@ -405,7 +405,7 @@ describe('remove a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "DELETED"
+            message: "SUCCESS"
         }))
 
         const bookmarkTagEntry = await prisma.bookmark_tag.findMany({
@@ -446,7 +446,7 @@ describe('remove a tag', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "DELETED"
+            message: "SUCCESS"
         }))
 
         const tagEntry = await prisma.tag.findFirst({

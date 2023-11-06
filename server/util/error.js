@@ -47,6 +47,12 @@ export class AuthorizationError extends BaseError {
     }
 }
 
+export class AuthenticationError extends BaseError {
+    constructor(errorObject) {
+        super("AuthN Error", HTTPStatusCode.UNAUTHENTICATED, errorObject, true)
+    }
+}
+
 export const HTTPStatusCode = {
     OK: 200,
     ACCEPTED_UPDATE_DELETED: 202,
@@ -56,7 +62,8 @@ export const HTTPStatusCode = {
     NOT_FOUND: 404,
     VALIDATION: 422,
     CONFLICT: 409,
-    UNAUTHORIZED: 401
+    UNAUTHORIZED: 401,
+    UNAUTHENTICATED: 403,
 }
 
 export class ErrorObject {
@@ -75,11 +82,18 @@ export class ErrorObject {
 
 
 export function ErrorHandling(err, req, reply, next) {
+    console.log(err);
     if (err instanceof BaseError) {
         if (err instanceof AuthorizationError) {
             return reply
                 .status(err.statusCode)
-                .json({ message: "You are not authorized to perform this action." });
+                .json({
+                    message: "FAILED", 
+                    error: {
+                        description: "Authorization error",
+                        data: {}
+                    }
+                });
         }
 
         if (err instanceof ValidationError) {
@@ -94,19 +108,46 @@ export function ErrorHandling(err, req, reply, next) {
         if (err instanceof APIError) {
             return reply
                 .status(err.statusCode)
-                .json({ message: "Something went wrong with the database." });
+                .json({
+                    message: "FAILED",
+                    error: {
+                        description: "API error",
+                        data: {}
+                    }
+                });
         }
 
         if (err instanceof ConflictError) {
             return reply
                 .status(err.statusCode)
-                .json({ message: "Data Conflict Error." });
+                .json({
+                    message: "FAILED",
+                    error: {
+                        description: "Data conflict error",
+                        data: {}
+                    }
+                });
         }
 
         if (err instanceof NotFoundError) {
             return reply
                 .status(err.statusCode)
-                .json({ message: "Record/s Not Found." });
+                .json({
+                    message: "FAILED",
+                    error: {
+                        description: "Record/s Not Found",
+                        data: {}
+                    }
+                });
+        }
+
+        if (err instanceof AuthenticationError) {
+            return reply
+                .status(err.statusCode)
+                .json({
+                    message: "Authentication Error.",
+                    error: err.errorObject
+                });
         }
     } else {
         return reply.json({ message: "Something went wrong." });

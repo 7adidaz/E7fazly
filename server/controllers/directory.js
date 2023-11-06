@@ -68,7 +68,11 @@ export async function contentByParent(req, reply, next) {
 
         response.bookmarks = bookmarks ? bookmarks : [];
 
-        return reply.json(response);
+        return reply.json({
+            message: "SUCCESS",
+            directories: response.directories,
+            bookmarks: response.bookmarks
+        });
     } catch (err) {
         return next(err);
     }

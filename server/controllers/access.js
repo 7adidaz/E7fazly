@@ -28,7 +28,7 @@ export async function grantAccess(req, reply, next) {
         if (!givenAccess) throw new APIError()
 
         return reply.json({
-            message: "GRANTED"
+            message: "SUCCESS"
         })
     } catch (err) {
         return next(err)
@@ -52,7 +52,7 @@ export async function revokeAccess(req, reply, next) {
         })
 
         return reply.json({
-            message: "REVOKED"
+            message: "SUCCESS"
         })
     } catch (err) {
         return next(err)
@@ -81,7 +81,7 @@ export async function getUsersWithAccess(req, reply, next) {
         if (!users) throw new APIError();
 
         return reply.json({
-            message: "OK",
+            message: "SUCCESS",
             users: users
         })
     } catch (err) {

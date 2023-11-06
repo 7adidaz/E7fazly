@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { APIError, ConflictError } from '../util/error.js';
+import { APIError, AuthenticationError, ErrorObject, ConflictError, HTTPStatusCode } from '../util/error.js';
 import prisma from '../util/prisma.js'
 
 export async function signup(req, reply, next) {
@@ -78,18 +78,23 @@ export async function login(req, reply, next) {
         })
 
         if (!user)
-            return reply.json({
-                message: "FAILED",
-                info: "Email is not in database."
-            })
+            throw new AuthenticationError(
+                new ErrorObject(
+                    "Could not authenticate user",
+                    { email: "Email is not registered" }
+                )
+            )
+
 
         if (user.password !== password)
-            return reply.json({
-                message: "FAILED",
-                info: "Email or Password is not valid."
-            })
+            throw new AuthenticationError(
+                new ErrorObject(
+                    "Could not authenticate user",
+                    { password: "Password is incorrect" }
+                )
+            )
 
-        if (!user.is_verified) return reply.json({ message: "VERIFY" })
+        if (!user.is_verified) return reply.status(HTTPStatusCode.UNAUTHORIZED).json({ message: "VERIFY" })
 
         const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
 
