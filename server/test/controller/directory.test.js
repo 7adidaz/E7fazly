@@ -261,7 +261,7 @@ describe('directory delete', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "DELETED"
+            message: "SUCCESS"
         }))
 
         const dir = await prisma.directory.findMany({
@@ -320,8 +320,16 @@ describe('directory getters', () => {
             }
         });
 
-        startId = zero.id;
+        user = await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                base_directory_id: zero.id
+            }
+        })
 
+        startId = zero.id;
         const one1 = await prisma.directory.create({
             data: {
                 parent_id: zero.id,
@@ -371,14 +379,19 @@ describe('directory getters', () => {
     })
 
     test('get all of the directories', async () => {
-        const request = { user: { id: user.id } }
+        const request = {
+            user: {
+                id: user.id,
+                base_directory_id: startId
+            }
+        }
 
         await getAllDirectories(request, response, next);
         expect(next).not.toBeCalled();
 
         const value = response.json.mock.calls[0][0];
         expect(value.directories).toEqual(expect.any(Array))
-        expect(value.directories.length).toEqual(3)
+        expect(value.directories.length).toEqual(2)
     })
 
     afterEach(async () => {

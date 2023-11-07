@@ -23,7 +23,8 @@ describe('signup', () => {
 
         const response = {
             redirect: jest.fn(),
-            json: jest.fn()
+            json: jest.fn(),
+        status: jest.fn()
         };
 
         const next = jest.fn();
@@ -65,7 +66,8 @@ describe('login', () => {
     const response = {
         redirect: jest.fn(),
         json: jest.fn(),
-        cookie: jest.fn()
+        cookie: jest.fn(),
+        status: jest.fn()
     };
     const next = jest.fn()
 

@@ -30,8 +30,8 @@ export class ValidationError extends BaseError {
     }
 }
 export class ConflictError extends BaseError {
-    constructor() {
-        super("Data conflict error", HTTPStatusCode.CONFLICT, {}, true)
+    constructor(errorObject) {
+        super("Data conflict error", HTTPStatusCode.CONFLICT, errorObject, true)
     }
 }
 
@@ -82,7 +82,6 @@ export class ErrorObject {
 
 
 export function ErrorHandling(err, req, reply, next) {
-    console.log(err);
     if (err instanceof BaseError) {
         if (err instanceof AuthorizationError) {
             return reply
@@ -122,10 +121,7 @@ export function ErrorHandling(err, req, reply, next) {
                 .status(err.statusCode)
                 .json({
                     message: "FAILED",
-                    error: {
-                        description: "Data conflict error",
-                        data: {}
-                    }
+                    error: err.errorObject
                 });
         }
 
@@ -145,7 +141,7 @@ export function ErrorHandling(err, req, reply, next) {
             return reply
                 .status(err.statusCode)
                 .json({
-                    message: "Authentication Error.",
+                    message: "FAILED",
                     error: err.errorObject
                 });
         }

@@ -84,14 +84,17 @@ export async function getAllDirectories(req, reply, next) {
 
         const directories = await prisma.directory.findMany({
             where: {
-                owner_id: userId
+                AND: [
+                    { owner_id: userId },
+                    { parent_id: req.user.base_directory_id }
+                ]
             }
         });
 
-        const response = {};
 
+        const response = {};
         response.directories = directories ? directories : [];
-        response.directories = response.directories.filter(dir => dir.parent_id !== req.user.base_directory_id)
+        response.directories = response.directories.filter(dir => dir.parent_id === req.user.base_directory_id)
 
         return reply.json({
             message: "SUCCESS",
@@ -158,9 +161,7 @@ export async function deleteDirectoriesByIds(req, reply, next) {
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
-            .json({
-                message: "DELETED"
-            })
+            .json({ message: "SUCCESS" })
     } catch (err) {
         return next(err);
     }

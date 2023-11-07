@@ -16,7 +16,12 @@ export async function signup(req, reply, next) {
             }
         });
 
-        if (found) throw new ConflictError();
+        if (found) throw new ConflictError(
+            new ErrorObject(
+                "User already exists",
+                { email: "Email is already registered" }
+            )
+        );
 
         const userCreationTransaction =
             await prisma.$transaction(async (tx) => {
@@ -101,7 +106,7 @@ export async function login(req, reply, next) {
         reply.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
-            maxAge: 86400,
+            maxAge: 999999999999,
             path: '/'
         })
 

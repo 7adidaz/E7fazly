@@ -114,7 +114,7 @@ export async function updateBookmarks(req, reply, next) {
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
             .json({
-                message: "UPDATED",
+                message: "SUCCESS",
                 bookmarks: updateTransation
             })
     } catch (err) {
@@ -131,9 +131,7 @@ export async function deleteBookmarks(req, reply, next) {
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)
-            .json({
-                message: "DELETED",
-            })
+            .json({ message: "SUCCESS", })
     } catch (err) {
         return next(err);
     }

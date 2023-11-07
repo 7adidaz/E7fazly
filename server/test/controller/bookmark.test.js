@@ -194,7 +194,7 @@ describe('delete bookmark', () => {
         expect(next).not.toBeCalled();
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "DELETED"
+            message: "SUCCESS",
         }))
 
         const items = await prisma.bookmark.findMany({
@@ -469,7 +469,7 @@ describe('update bookmark', () => {
         expect(next).not.toBeCalled()
 
         expect(response.json).toBeCalledWith(expect.objectContaining({
-            message: "UPDATED",
+            message: "SUCCESS",
             bookmarks: expect.arrayContaining([{
                 id: bkmrk1.id,
                 owner_id: user.id,

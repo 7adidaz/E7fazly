@@ -104,9 +104,7 @@ export async function updateTagName(req, reply, next) {
         })
         if (!updated) throw new APIError();
 
-        return reply.json({
-            message: "SUCCESS",
-        })
+        return reply.json({ message: "SUCCESS", })
     } catch (err) {
         return next(err);
     }

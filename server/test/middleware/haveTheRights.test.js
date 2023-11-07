@@ -166,7 +166,7 @@ describe('doesUserHaveAccessToDirectory', () => {
     });
 
     afterAll(async () => {
-        await prisma.user.deleteMany({ where: { id: { in: [user1.id, user2.id] } } });
+        await prisma.user.deleteMany({ where: { id: { in: [user1.id, user2.id, user3.id] } } });
         await cache.flushAll();
         await cache.disconnect();
     })
