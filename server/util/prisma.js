@@ -11,43 +11,44 @@ import cache from './cache.js'
  *      }
  */
 
-const prisma = new PrismaClient().$extends({
-    query: {
-        async $allOperations({ model, operation, args, query }) {
-            if (operation === 'findMany') {
-                const level1key = String(
-                    args.where ?
-                        args.where.ownerId ? args.where.ownerId : ' '
-                        : ' ' || ' ');
-                const level2key = JSON.stringify(args);
+const prisma = new PrismaClient()
+// .$extends({
+//     query: {
+//         async $allOperations({ model, operation, args, query }) {
+//             if (operation === 'findMany') {
+//                 const level1key = String(
+//                     args.where ?
+//                         args.where.ownerId ? args.where.ownerId : ' '
+//                         : ' ' || ' ');
+//                 const level2key = JSON.stringify(args);
 
-                const cached = await cache.hGet(level1key, `${model}:${operation}:${level2key}`);
+//                 const cached = await cache.hGet(level1key, `${model}:${operation}:${level2key}`);
 
-                if (cached) { return JSON.parse(cached); }
+//                 if (cached) { return JSON.parse(cached); }
 
-                const result = await query(args);
-                cache.hSet(level1key, `${model}:${operation}:${level2key}`, JSON.stringify(result));
+//                 const result = await query(args);
+//                 cache.hSet(level1key, `${model}:${operation}:${level2key}`, JSON.stringify(result));
 
-                return result;
-            }
+//                 return result;
+//             }
 
-            if (operation === 'update' ||
-                operation === 'upsert' ||
-                operation === 'delete' ||
-                operation === 'create' ||
-                operation === 'updateMany' ||
-                operation === 'deleteMany') {
+//             if (operation === 'update' ||
+//                 operation === 'upsert' ||
+//                 operation === 'delete' ||
+//                 operation === 'create' ||
+//                 operation === 'updateMany' ||
+//                 operation === 'deleteMany') {
 
-                const level1key = String(args.where ?
-                    args.where.ownerId ?
-                        args.where.ownerId : ' ' : ' ');
+//                 const level1key = String(args.where ?
+//                     args.where.ownerId ?
+//                         args.where.ownerId : ' ' : ' ');
 
-                await cache.del(level1key);
-            }
+//                 await cache.del(level1key);
+//             }
 
-            return query(args);
-        }
-    }
-})
+//             return query(args);
+//         }
+//     }
+// })
 
 export default prisma

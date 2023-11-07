@@ -55,9 +55,6 @@ describe('user getters', () => {
                     id: user.id,
                     name: user.name,
                     email: email,
-                    password: user.password,
-                    isVerified: false,
-                    verificationCode: 0,
                     baseDirectoryId: null,
                 })
             }));

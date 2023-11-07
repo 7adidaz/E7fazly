@@ -391,7 +391,7 @@ describe('directory getters', () => {
 
         const value = response.json.mock.calls[0][0];
         expect(value.directories).toEqual(expect.any(Array))
-        expect(value.directories.length).toEqual(2)
+        expect(value.directories.length).toEqual(3)
     })
 
     afterEach(async () => {

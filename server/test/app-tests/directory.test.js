@@ -55,7 +55,7 @@ describe('directory routes', () => {
             .get('/api/v1/dir/all')
             .set('Cookie', `token=${token};`)
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
-        expect(response.body.directories.length).toBe(1)
+        expect(response.body.directories.length).toBe(3)
     })
 
     test('patch a list of directories', async () => {
