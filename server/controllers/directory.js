@@ -84,21 +84,14 @@ export async function getAllDirectories(req, reply, next) {
 
         const directories = await prisma.directory.findMany({
             where: {
-                AND: [
-                    { ownerId: userId },
-                    { parentId: req.user.baseDirectoryId }
-                ]
+                ownerId: userId
             }
         });
-
-
-        const response = {};
-        response.directories = directories ? directories : [];
-        response.directories = response.directories.filter(dir => dir.parentId === req.user.baseDirectoryId)
+        if (!directories) throw new APIError();
 
         return reply.json({
             message: "SUCCESS",
-            directories: response.directories
+            directories: directories
         });
     } catch (err) {
         return next(err);
