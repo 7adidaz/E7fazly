@@ -19,7 +19,7 @@ describe('tag routes', () => {
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
 
-        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmark_id: 1 } })
+        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmarkId: 1 } })
         expect(bookmark_tag.length).toBe(2)
     })
 
@@ -34,7 +34,7 @@ describe('tag routes', () => {
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
 
-        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmark_id: 1 } })
+        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmarkId: 1 } })
         expect(bookmark_tag.length).toBe(1)
     })
 
@@ -94,7 +94,7 @@ describe('tag routes', () => {
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
 
-        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmark_id: 1 } })
+        const bookmark_tag = await prisma.bookmark_tag.findMany({ where: { bookmarkId: 1 } })
         expect(bookmark_tag.length).toBe(0)
         
         const tag = await prisma.tag.findFirst({ where: { id: 1 } })
@@ -111,9 +111,9 @@ describe('tag routes', () => {
                 email: "a@gmail.com",
                 password: "11111",
                 name: "a",
-                is_verified: true,
-                verification_code: 1,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 1,
+                baseDirectoryId: null,
             }
         })
         token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
@@ -123,14 +123,14 @@ describe('tag routes', () => {
                 id: 1,
                 icon: "default",
                 name: "root",
-                owner_id: user.id,
-                parent_id: null
+                ownerId: user.id,
+                parentId: null
             }
         })
 
         user = await prisma.user.update({
             where: { id: 1 },
-            data: { base_directory_id: 1 }
+            data: { baseDirectoryId: 1 }
         })
 
         // ---- create a dir under the base dir
@@ -139,8 +139,8 @@ describe('tag routes', () => {
                 id: 2,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 1
+                ownerId: user.id,
+                parentId: 1
             }
         })
 
@@ -150,8 +150,8 @@ describe('tag routes', () => {
                 id: 3,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 2
+                ownerId: user.id,
+                parentId: 2
             }
         })
 
@@ -161,8 +161,8 @@ describe('tag routes', () => {
                 link: "https://www.google.com",
                 favorite: false,
                 type: "link",
-                owner_id: user.id,
-                directory_id: 2
+                ownerId: user.id,
+                directoryId: 2
             }
         })
 
@@ -170,14 +170,14 @@ describe('tag routes', () => {
             data: {
                 id: 1,
                 name: "tag",
-                owner_id: user.id
+                ownerId: user.id
             }
         })
 
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: 1,
-                tag_id: 1
+                bookmarkId: 1,
+                tagId: 1
             }
         })
     })

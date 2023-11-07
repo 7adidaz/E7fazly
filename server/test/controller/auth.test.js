@@ -43,14 +43,14 @@ describe('signup', () => {
 
         expect(isUserinDB).not.toBeNull();
         expect(isUserinDB).not.toBeUndefined();
-        expect(isUserinDB.base_directory_id).not.toBeNull();
+        expect(isUserinDB.baseDirectoryId).not.toBeNull();
 
         const directory = await prisma.directory.findFirst({
-            where: { id: isUserinDB.base_directory_id }
+            where: { id: isUserinDB.baseDirectoryId }
         })
 
         expect(directory).not.toBeNull();
-        expect(directory.owner_id).toEqual(isUserinDB.id);
+        expect(directory.ownerId).toEqual(isUserinDB.id);
     });
 
     afterAll(async () => {
@@ -79,9 +79,9 @@ describe('login', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: true,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: true,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 

@@ -10,6 +10,12 @@ export async function getUser(req, reply, next) {
         const user = await prisma.user.findFirst({
             where: {
                 id: id
+            },
+            select: { //TODO: add picture after adding it to the db
+                id: true,
+                name: true,
+                email: true,
+                baseDirectoryId: true,
             }
         });
 

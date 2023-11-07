@@ -21,7 +21,7 @@ export async function getBookmarkByIdAuthorization(req, res, next) {
         const issuerId = req.user.id;
 
         const bookmark = await prisma.bookmark.findFirst({ where: { id: bookmarkId } })
-        const parentId = bookmark.directory_id;
+        const parentId = bookmark.directoryId;
 
         if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'view')) throw new AuthorizationError();
 
@@ -37,7 +37,7 @@ export async function getBookmarksByTagAuthorization(req, res, next) {
         const issuerId = req.user.id;
 
         const tag = await prisma.tag.findFirst({ where: { id: tagId } })
-        if (tag && (tag.owner_id !== issuerId)) throw new AuthorizationError();
+        if (tag && (tag.ownerId !== issuerId)) throw new AuthorizationError();
 
         next();
     } catch (err) {
@@ -56,7 +56,7 @@ export async function updateBookmarksAuthorization(req, res, next) {
             const id = change.id;
 
             const bookmark = await prisma.bookmark.findFirst({ where: { id: id } })
-            const parentId = bookmark.directory_id;
+            const parentId = bookmark.directoryId;
 
             if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'edit')) throw new AuthorizationError();
 
@@ -79,7 +79,7 @@ export async function deleteBookmarksAuthorization(req, res, next) {
 
         for (const id of ids) {
             const bookmark = await prisma.bookmark.findFirst({ where: { id: id } })
-            const parentId = bookmark.directory_id;
+            const parentId = bookmark.directoryId;
 
             if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'edit')) throw new AuthorizationError();
         }

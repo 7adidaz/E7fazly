@@ -11,18 +11,18 @@ export async function grantAccess(req, reply, next) {
 
         const givenAccess = await prisma.user_directory_access.upsert({
             where: {
-                user_id_directory_id: {
-                    directory_id: directoryId,
-                    user_id: userToHaveAccess
+                userId_directoryId: {
+                    directoryId: directoryId,
+                    userId: userToHaveAccess
                 }
             },
             create: {
-                directory_id: directoryId,
-                user_id: userToHaveAccess,
-                user_rights: accessRight
+                directoryId: directoryId,
+                userId: userToHaveAccess,
+                userRights: accessRight
             },
             update: {
-                user_rights: accessRight
+                userRights: accessRight
             }
         })
         if (!givenAccess) throw new APIError()
@@ -42,9 +42,9 @@ export async function revokeAccess(req, reply, next) {
 
         await prisma.user_directory_access.delete({
             where: {
-                user_id_directory_id: {
-                    directory_id: directoryId,
-                    user_id: userId
+                userId_directoryId: {
+                    directoryId: directoryId,
+                    userId: userId
                 }
             }
         })
@@ -62,10 +62,10 @@ export async function getUsersWithAccess(req, reply, next) {
 
         const users = await prisma.user_directory_access.findMany({
             where: {
-                directory_id: directoryId
+                directoryId: directoryId
             },
             select: {
-                user_rights: true,
+                userRights: true,
                 user: {
                     select: {
                         id: true,

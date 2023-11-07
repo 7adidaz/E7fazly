@@ -57,8 +57,8 @@ SET default_table_access_method = heap;
 CREATE TABLE public.bookmark (
     id integer NOT NULL,
     link text NOT NULL,
-    owner_id integer NOT NULL,
-    directory_id integer NOT NULL,
+    ownerId integer NOT NULL,
+    directoryId integer NOT NULL,
     type public.bookmark_type NOT NULL,
     favorite boolean NOT NULL
 );
@@ -68,10 +68,10 @@ ALTER TABLE public.bookmark OWNER TO abdallah;
 
 --
 -- TOC entry 221 (class 1259 OID 16639)
--- Name: bookmark_id_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
+-- Name: bookmarkId_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
 --
 
-CREATE SEQUENCE public.bookmark_id_seq
+CREATE SEQUENCE public.bookmarkId_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -80,15 +80,15 @@ CREATE SEQUENCE public.bookmark_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.bookmark_id_seq OWNER TO abdallah;
+ALTER TABLE public.bookmarkId_seq OWNER TO abdallah;
 
 --
 -- TOC entry 3541 (class 0 OID 0)
 -- Dependencies: 221
--- Name: bookmark_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
+-- Name: bookmarkId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
 --
 
-ALTER SEQUENCE public.bookmark_id_seq OWNED BY public.bookmark.id;
+ALTER SEQUENCE public.bookmarkId_seq OWNED BY public.bookmark.id;
 
 
 --
@@ -97,8 +97,8 @@ ALTER SEQUENCE public.bookmark_id_seq OWNED BY public.bookmark.id;
 --
 
 CREATE TABLE public.bookmark_tag (
-    bookmark_id integer NOT NULL,
-    tag_id integer NOT NULL
+    bookmarkId integer NOT NULL,
+    tagId integer NOT NULL
 );
 
 
@@ -111,10 +111,10 @@ ALTER TABLE public.bookmark_tag OWNER TO abdallah;
 
 CREATE TABLE public.directory (
     id integer NOT NULL,
-    parent_id integer,
+    parentId integer,
     name character varying(255) NOT NULL,
     icon text NOT NULL,
-    owner_id integer NOT NULL
+    ownerId integer NOT NULL
 );
 
 
@@ -122,10 +122,10 @@ ALTER TABLE public.directory OWNER TO abdallah;
 
 --
 -- TOC entry 219 (class 1259 OID 16619)
--- Name: directory_id_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
+-- Name: directoryId_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
 --
 
-CREATE SEQUENCE public.directory_id_seq
+CREATE SEQUENCE public.directoryId_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -134,15 +134,15 @@ CREATE SEQUENCE public.directory_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.directory_id_seq OWNER TO abdallah;
+ALTER TABLE public.directoryId_seq OWNER TO abdallah;
 
 --
 -- TOC entry 3542 (class 0 OID 0)
 -- Dependencies: 219
--- Name: directory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
+-- Name: directoryId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
 --
 
-ALTER SEQUENCE public.directory_id_seq OWNED BY public.directory.id;
+ALTER SEQUENCE public.directoryId_seq OWNED BY public.directory.id;
 
 
 --
@@ -153,7 +153,7 @@ ALTER SEQUENCE public.directory_id_seq OWNED BY public.directory.id;
 CREATE TABLE public.tag (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
-    owner_id integer NOT NULL
+    ownerId integer NOT NULL
 );
 
 
@@ -161,10 +161,10 @@ ALTER TABLE public.tag OWNER TO abdallah;
 
 --
 -- TOC entry 217 (class 1259 OID 16605)
--- Name: tag_id_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
+-- Name: tagId_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
 --
 
-CREATE SEQUENCE public.tag_id_seq
+CREATE SEQUENCE public.tagId_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -173,15 +173,15 @@ CREATE SEQUENCE public.tag_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tag_id_seq OWNER TO abdallah;
+ALTER TABLE public.tagId_seq OWNER TO abdallah;
 
 --
 -- TOC entry 3543 (class 0 OID 0)
 -- Dependencies: 217
--- Name: tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
+-- Name: tagId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
 --
 
-ALTER SEQUENCE public.tag_id_seq OWNED BY public.tag.id;
+ALTER SEQUENCE public.tagId_seq OWNED BY public.tag.id;
 
 
 --
@@ -194,9 +194,9 @@ CREATE TABLE public."user" (
     name character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
-    base_directory_id integer NOT NULL,
-    is_verified boolean NOT NULL,
-    verification_code integer NOT NULL
+    baseDirectoryId integer NOT NULL,
+    isVerified boolean NOT NULL,
+    verificationCode integer NOT NULL
 );
 
 
@@ -208,9 +208,9 @@ ALTER TABLE public."user" OWNER TO abdallah;
 --
 
 CREATE TABLE public.user_directory_access (
-    directory_id integer NOT NULL,
-    user_id integer NOT NULL,
-    user_rights public.access_rights NOT NULL
+    directoryId integer NOT NULL,
+    userId integer NOT NULL,
+    userRights public.access_rights NOT NULL
 );
 
 
@@ -218,10 +218,10 @@ ALTER TABLE public.user_directory_access OWNER TO abdallah;
 
 --
 -- TOC entry 215 (class 1259 OID 16436)
--- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
+-- Name: userId_seq; Type: SEQUENCE; Schema: public; Owner: abdallah
 --
 
-CREATE SEQUENCE public.user_id_seq
+CREATE SEQUENCE public.userId_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -230,15 +230,15 @@ CREATE SEQUENCE public.user_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.user_id_seq OWNER TO abdallah;
+ALTER TABLE public.userId_seq OWNER TO abdallah;
 
 --
 -- TOC entry 3544 (class 0 OID 0)
 -- Dependencies: 215
--- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
+-- Name: userId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: abdallah
 --
 
-ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
+ALTER SEQUENCE public.userId_seq OWNED BY public."user".id;
 
 
 --
@@ -246,7 +246,7 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 -- Name: bookmark id; Type: DEFAULT; Schema: public; Owner: abdallah
 --
 
-ALTER TABLE ONLY public.bookmark ALTER COLUMN id SET DEFAULT nextval('public.bookmark_id_seq'::regclass);
+ALTER TABLE ONLY public.bookmark ALTER COLUMN id SET DEFAULT nextval('public.bookmarkId_seq'::regclass);
 
 
 --
@@ -254,7 +254,7 @@ ALTER TABLE ONLY public.bookmark ALTER COLUMN id SET DEFAULT nextval('public.boo
 -- Name: directory id; Type: DEFAULT; Schema: public; Owner: abdallah
 --
 
-ALTER TABLE ONLY public.directory ALTER COLUMN id SET DEFAULT nextval('public.directory_id_seq'::regclass);
+ALTER TABLE ONLY public.directory ALTER COLUMN id SET DEFAULT nextval('public.directoryId_seq'::regclass);
 
 
 --
@@ -262,7 +262,7 @@ ALTER TABLE ONLY public.directory ALTER COLUMN id SET DEFAULT nextval('public.di
 -- Name: tag id; Type: DEFAULT; Schema: public; Owner: abdallah
 --
 
-ALTER TABLE ONLY public.tag ALTER COLUMN id SET DEFAULT nextval('public.tag_id_seq'::regclass);
+ALTER TABLE ONLY public.tag ALTER COLUMN id SET DEFAULT nextval('public.tagId_seq'::regclass);
 
 
 --
@@ -270,7 +270,7 @@ ALTER TABLE ONLY public.tag ALTER COLUMN id SET DEFAULT nextval('public.tag_id_s
 -- Name: user id; Type: DEFAULT; Schema: public; Owner: abdallah
 --
 
-ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.userId_seq'::regclass);
 
 
 --
@@ -288,7 +288,7 @@ ALTER TABLE ONLY public.bookmark
 --
 
 ALTER TABLE ONLY public.bookmark_tag
-    ADD CONSTRAINT bookmark_tag_pkey PRIMARY KEY (bookmark_id, tag_id);
+    ADD CONSTRAINT bookmark_tag_pkey PRIMARY KEY (bookmarkId, tagId);
 
 
 --
@@ -315,7 +315,7 @@ ALTER TABLE ONLY public.tag
 --
 
 ALTER TABLE ONLY public.user_directory_access
-    ADD CONSTRAINT user_directory_access_pkey PRIMARY KEY (user_id, directory_id);
+    ADD CONSTRAINT user_directory_access_pkey PRIMARY KEY (userId, directoryId);
 
 
 --
@@ -329,83 +329,83 @@ ALTER TABLE ONLY public."user"
 
 --
 -- TOC entry 3388 (class 2606 OID 16643)
--- Name: bookmark bookmark_directory_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: bookmark bookmark_directoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.bookmark
-    ADD CONSTRAINT bookmark_directory_id_fkey FOREIGN KEY (directory_id) REFERENCES public.directory(id) ON DELETE CASCADE;
+    ADD CONSTRAINT bookmark_directoryId_fkey FOREIGN KEY (directoryId) REFERENCES public.directory(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3389 (class 2606 OID 16648)
--- Name: bookmark bookmark_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: bookmark bookmark_ownerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.bookmark
-    ADD CONSTRAINT bookmark_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+    ADD CONSTRAINT bookmark_ownerId_fkey FOREIGN KEY (ownerId) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3390 (class 2606 OID 16658)
--- Name: bookmark_tag bookmark_tag_bookmark_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: bookmark_tag bookmark_tag_bookmarkId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.bookmark_tag
-    ADD CONSTRAINT bookmark_tag_bookmark_id_fkey FOREIGN KEY (bookmark_id) REFERENCES public.bookmark(id) ON DELETE CASCADE;
+    ADD CONSTRAINT bookmark_tag_bookmarkId_fkey FOREIGN KEY (bookmarkId) REFERENCES public.bookmark(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3391 (class 2606 OID 16663)
--- Name: bookmark_tag bookmark_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: bookmark_tag bookmark_tag_tagId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.bookmark_tag
-    ADD CONSTRAINT bookmark_tag_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tag(id) ON DELETE CASCADE;
+    ADD CONSTRAINT bookmark_tag_tagId_fkey FOREIGN KEY (tagId) REFERENCES public.tag(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3387 (class 2606 OID 16623)
--- Name: directory directory_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: directory directory_ownerId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.directory
-    ADD CONSTRAINT directory_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+    ADD CONSTRAINT directory_ownerId_fkey FOREIGN KEY (ownerId) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3385 (class 2606 OID 16683)
--- Name: user fk_base_directory_id; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: user fk_baseDirectoryId; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public."user"
-    ADD CONSTRAINT fk_base_directory_id FOREIGN KEY (base_directory_id) REFERENCES public.directory(id) ON DELETE CASCADE NOT VALID;
+    ADD CONSTRAINT fk_baseDirectoryId FOREIGN KEY (baseDirectoryId) REFERENCES public.directory(id) ON DELETE CASCADE NOT VALID;
 
 
 --
 -- TOC entry 3386 (class 2606 OID 16609)
--- Name: tag owner_id; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: tag ownerId; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.tag
-    ADD CONSTRAINT owner_id FOREIGN KEY (owner_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+    ADD CONSTRAINT ownerId FOREIGN KEY (ownerId) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3392 (class 2606 OID 16673)
--- Name: user_directory_access user_directory_access_directory_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: user_directory_access user_directory_access_directoryId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.user_directory_access
-    ADD CONSTRAINT user_directory_access_directory_id_fkey FOREIGN KEY (directory_id) REFERENCES public.directory(id) ON DELETE CASCADE;
+    ADD CONSTRAINT user_directory_access_directoryId_fkey FOREIGN KEY (directoryId) REFERENCES public.directory(id) ON DELETE CASCADE;
 
 
 --
 -- TOC entry 3393 (class 2606 OID 16678)
--- Name: user_directory_access user_directory_access_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
+-- Name: user_directory_access user_directory_access_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: abdallah
 --
 
 ALTER TABLE ONLY public.user_directory_access
-    ADD CONSTRAINT user_directory_access_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+    ADD CONSTRAINT user_directory_access_userId_fkey FOREIGN KEY (userId) REFERENCES public."user"(id) ON DELETE CASCADE;
 
 
 -- Completed on 2023-09-14 12:46:13 EEST

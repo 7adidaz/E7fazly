@@ -19,18 +19,18 @@ describe('creating directory', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         dir = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
 
@@ -60,8 +60,8 @@ describe('creating directory', () => {
                 icon: "default",
                 id: expect.any(Number),
                 name: "to_delete",
-                owner_id: expect.any(Number),
-                parent_id: dir.id
+                ownerId: expect.any(Number),
+                parentId: dir.id
             })
         }));
 
@@ -70,12 +70,12 @@ describe('creating directory', () => {
                 .directory
                 .findMany({
                     where: {
-                        owner_id: user.id
+                        ownerId: user.id
                     }
                 })
 
         expect(directoryInDB[0]).not.toBeNull();
-        expect(directoryInDB[0].parent_id).toBeNull();
+        expect(directoryInDB[0].parentId).toBeNull();
     })
 
     test('creating multiple directories under one directory', async () => {
@@ -98,15 +98,15 @@ describe('creating directory', () => {
                     icon: "default",
                     id: expect.any(Number),
                     name: expect.any(String),
-                    owner_id: user.id,
-                    parent_id: parentId
+                    ownerId: user.id,
+                    parentId: parentId
                 })
             }));
         }
 
         const directories = await prisma.directory.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
 
@@ -114,12 +114,12 @@ describe('creating directory', () => {
 
         const dirInLevel1 = await prisma.directory.findMany({
             where: {
-                parent_id: response.json.mock.calls[0][0].directory.id
+                parentId: response.json.mock.calls[0][0].directory.id
             }
         })
 
         expect(dirInLevel1.length).toEqual(9);
-        expect(dirInLevel1[0].owner_id).toEqual(user.id);
+        expect(dirInLevel1[0].ownerId).toEqual(user.id);
     })
 
     test('create 50 nested directories', async () => {
@@ -146,15 +146,15 @@ describe('creating directory', () => {
                     icon: "default",
                     id: expect.any(Number),
                     name: expect.any(String),
-                    owner_id: expect.any(Number),
-                    parent_id: parentId
+                    ownerId: expect.any(Number),
+                    parentId: parentId
                 })
             }));
         }
 
         const directoriesInDB = await prisma.directory.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(directoriesInDB.length).toEqual(51);
@@ -162,7 +162,7 @@ describe('creating directory', () => {
         // for (let i = startValue; i < startValue + 50 - 1; i++) {
         //     const dir = await prisma.directory.findMany({
         //         where: {
-        //             parent_id: i
+        //             parentId: i
         //         }
         //     })
 
@@ -194,36 +194,36 @@ describe('directory delete', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
 
         const one1 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         firstId = one1.id;
         const one2 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         secondId = one2.id;
@@ -231,8 +231,8 @@ describe('directory delete', () => {
         await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: one2.id,
+                ownerId: user.id,
+                directoryId: one2.id,
                 type: 'link',
                 favorite: true
             }
@@ -240,8 +240,8 @@ describe('directory delete', () => {
         await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: one1.id,
+                ownerId: user.id,
+                directoryId: one1.id,
                 type: 'link',
                 favorite: true
             }
@@ -266,14 +266,14 @@ describe('directory delete', () => {
 
         const dir = await prisma.directory.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(dir.length).toEqual(1); // rootone 
 
         const bookmarks = await prisma.bookmark.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(bookmarks.length).toEqual(0);
@@ -303,9 +303,9 @@ describe('directory getters', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
@@ -313,10 +313,10 @@ describe('directory getters', () => {
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
 
@@ -325,26 +325,26 @@ describe('directory getters', () => {
                 id: user.id
             },
             data: {
-                base_directory_id: zero.id
+                baseDirectoryId: zero.id
             }
         })
 
         startId = zero.id;
         const one1 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
 
         const one2 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
 
@@ -352,8 +352,8 @@ describe('directory getters', () => {
         const bookmark1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: zero.id,
+                ownerId: user.id,
+                directoryId: zero.id,
                 type: 'link',
                 favorite: true
             }
@@ -382,7 +382,7 @@ describe('directory getters', () => {
         const request = {
             user: {
                 id: user.id,
-                base_directory_id: startId
+                baseDirectoryId: startId
             }
         }
 
@@ -418,9 +418,9 @@ describe('directory update', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
@@ -428,40 +428,40 @@ describe('directory update', () => {
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         firstId = zero.id;
 
         const one1 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         secondId = one1.id;
 
         const one2 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         thirdId = one2.id;
 
         const one3 = await prisma.directory.create({
             data: {
-                parent_id: zero.id,
+                parentId: zero.id,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         lastdId = one3.id;
@@ -469,8 +469,8 @@ describe('directory update', () => {
         const bookmark1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: zero.id,
+                ownerId: user.id,
+                directoryId: zero.id,
                 type: 'link',
                 favorite: true
             }
@@ -484,7 +484,7 @@ describe('directory update', () => {
                 name: 'updated',
                 parentId: firstId,
                 icon: 'updated',
-                // owner_id: expect.any(Number),
+                // ownerId: expect.any(Number),
             },
             {
                 id: thirdId,
@@ -512,7 +512,7 @@ describe('directory update', () => {
 
         const expectedArray = expected.map((i) => ({
             ...i,
-            owner_id: user.id,
+            ownerId: user.id,
         }))
 
         expect(response.json).toBeCalledWith(expect.objectContaining({

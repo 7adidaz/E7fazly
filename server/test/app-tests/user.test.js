@@ -83,9 +83,9 @@ describe('user routes', () => {
                 email: "a@gmail.com",
                 password: "11111",
                 name: "a",
-                is_verified: true,
-                verification_code: 1,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 1,
+                baseDirectoryId: null,
             }
         })
 
@@ -97,9 +97,9 @@ describe('user routes', () => {
                 email: "b@gmail.com",
                 password: "11111",
                 name: "a",
-                is_verified: true,
-                verification_code: 1,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 1,
+                baseDirectoryId: null,
             }
         })
     })

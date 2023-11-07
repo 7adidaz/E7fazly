@@ -55,7 +55,7 @@
 - GET bkmrk:/id
 - GET bkmrk:/prntdir_id→ for bkmrks for the parent dir' id. 
 - GET bkmrk/all 
-- GET bkmrk_\tag:/tag_id → get bkmrks for a specific tag.
+- GET bkmrk_\tag:/tagId → get bkmrks for a specific tag.
 - PATCH bkmrk:/id → update to fav, update title, tags, etc. 
 - ~~DELETE bkmrk:/id~~-- should propagate to its content (tags). lower is sufficient. 
 - DELETE bkmrk:/ids -- same as above.
@@ -76,7 +76,7 @@
 - GET \tag/all → this is typically for a specific user. 
 - PATCH \tag:/id → enables renaming a tag through tags' menu.
 - DELETE \tag:/id -> through tags' menu also. 
-- DELETE \tag/:tag_id/:bkmrk_id -> delete a tag from a post edit or smth
+- DELETE \tag/:tagId/:bkmrk_id -> delete a tag from a post edit or smth
 
 
 --- 

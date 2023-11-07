@@ -10,33 +10,33 @@ datasource db {
 model bookmark {
   id           Int            @id @default(autoincrement())
   link         String
-  owner_id     Int
-  directory_id Int
+  ownerId     Int
+  directoryId Int
   type         bookmark_type
   favorite     Boolean
-  directory    directory      @relation(fields: [directory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         user           @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  directory    directory      @relation(fields: [directoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         user           @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   bookmark_tag bookmark_tag[]
 }
 
 model bookmark_tag {
-  bookmark_id Int
-  tag_id      Int
-  bookmark    bookmark @relation(fields: [bookmark_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  tag         tag      @relation(fields: [tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  bookmarkId Int
+  tagId      Int
+  bookmark    bookmark @relation(fields: [bookmarkId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tag         tag      @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([bookmark_id, tag_id])
+  @@id([bookmarkId, tagId])
 }
 
 model directory {
   id                    Int                     @id @default(autoincrement())
-  parent_id             Int?
+  parentId             Int?
   name                  String                  @db.VarChar(255)
   icon                  String
-  owner_id              Int
+  ownerId              Int
   bookmark              bookmark[]
-  user                  user                    @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  directory             directory?              @relation("directoryTodirectory", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user                  user                    @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  directory             directory?              @relation("directoryTodirectory", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   other_directory       directory[]             @relation("directoryTodirectory")
   user_directory_access user_directory_access[]
 }
@@ -44,9 +44,9 @@ model directory {
 model tag {
   id           Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
-  owner_id     Int
+  ownerId     Int
   bookmark_tag bookmark_tag[]
-  user         user           @relation(fields: [owner_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "owner_id")
+  user         user           @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ownerId")
 }
 
 model user {
@@ -61,13 +61,13 @@ model user {
 }
 
 model user_directory_access {
-  directory_id Int
-  user_id      Int
-  user_rights  access_rights
-  directory    directory     @relation(fields: [directory_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         user          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  directoryId Int
+  userId      Int
+  userRights  access_rights
+  directory    directory     @relation(fields: [directoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         user          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([user_id, directory_id])
+  @@id([userId, directoryId])
 }
 
 enum access_rights {

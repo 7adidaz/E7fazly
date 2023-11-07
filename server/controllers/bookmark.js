@@ -13,13 +13,13 @@ export async function createBookmark(req, reply, next) {
         const directory = await prisma.directory.findFirst({ where: { id: directoryId, } });
         if (!directory) throw new APIError();
 
-        const ownerId = directory.owner_id;
+        const ownerId = directory.ownerId;
 
         const bookmark = await prisma.bookmark.create({
             data: {
                 link: link,
-                owner_id: ownerId,
-                directory_id: directoryId,
+                ownerId: ownerId,
+                directoryId: directoryId,
                 type: type,
                 favorite: favorite
             }
@@ -57,7 +57,7 @@ export async function getBookmarkById(req, reply, next) {
 export async function getAllBookmarks(req, reply, next) {
     try {
         const userId = req.user.id;
-        const bookmarks = await prisma.bookmark.findMany({ where: { owner_id: userId } });
+        const bookmarks = await prisma.bookmark.findMany({ where: { ownerId: userId } });
         if (!bookmarks) throw new APIError();
 
         return reply.json({
@@ -75,7 +75,7 @@ export async function getBookmarksByTag(req, reply, next) {
         const tagId = value.tagId;
 
         const bookmarks = await prisma.bookmark.findMany({
-            where: { bookmark_tag: { some: { tag_id: tagId } } }
+            where: { bookmark_tag: { some: { tagId: tagId } } }
         })
         if (!bookmarks) throw new APIError();
 
@@ -101,7 +101,7 @@ export async function updateBookmarks(req, reply, next) {
                 },
                 data: {
                     link: element.link,
-                    directory_id: element.directory_id,
+                    directoryId: element.directoryId,
                     favorite: element.favorite
                 }
             })

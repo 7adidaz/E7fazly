@@ -30,7 +30,7 @@ describe('grant access to a user', () => {
 
         const accessRights = await prisma.user_directory_access.findMany({
             where: {
-                user_id: priv.id
+                userId: priv.id
             }
         })
 
@@ -56,7 +56,7 @@ describe('grant access to a user', () => {
 
         const accessRights = await prisma.user_directory_access.findMany({
             where: {
-                user_id: priv.id
+                userId: priv.id
             }
         })
 
@@ -71,9 +71,9 @@ describe('grant access to a user', () => {
                 name: "priv",
                 email: 'priv@user.com',
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
@@ -82,51 +82,51 @@ describe('grant access to a user', () => {
                 name: "norm",
                 email: 'norm@user.com',
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         dir = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
 
         anotherDir = await prisma.directory.create({
             data: {
-                parent_id: dir.id,
+                parentId: dir.id,
                 name: '0',
                 icon: 'default 1',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
 
         anotherAnotherDir = await prisma.directory.create({
             data: {
-                parent_id: anotherDir.id,
+                parentId: anotherDir.id,
                 name: '0',
                 icon: 'default 1',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
 
         await prisma.user_directory_access.create({
             data: {
-                user_id: priv.id,
-                directory_id: dir.id,
-                user_rights: 'edit'
+                userId: priv.id,
+                directoryId: dir.id,
+                userRights: 'edit'
             }
         })
         await prisma.user_directory_access.create({
             data: {
-                user_id: priv.id,
-                directory_id: anotherDir.id,
-                user_rights: 'edit'
+                userId: priv.id,
+                directoryId: anotherDir.id,
+                userRights: 'edit'
             }
         })
     })
@@ -166,15 +166,15 @@ describe('grant access to a user', () => {
 
         const access_rights = await prisma.user_directory_access.findMany({
             where: {
-                user_id: priv.id
+                userId: priv.id
             }
         })
 
         expect(access_rights.length).toEqual(1);
         expect(access_rights).toEqual(expect.arrayContaining([{
-            user_id: priv.id,
-            directory_id: dir.id,
-            user_rights: 'edit'
+            userId: priv.id,
+            directoryId: dir.id,
+            userRights: 'edit'
         } ]))
     })
 
@@ -186,9 +186,9 @@ describe('grant access to a user', () => {
                 name: "priv",
                 email: 'priv@user.com',
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
@@ -197,36 +197,36 @@ describe('grant access to a user', () => {
                 name: "norm",
                 email: 'norm@user.com',
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         dir = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
 
         anotherDir = await prisma.directory.create({
             data: {
-                parent_id: dir.id,
+                parentId: dir.id,
                 name: '0',
                 icon: 'default 1',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
 
         anotherAnotherDir = await prisma.directory.create({
             data: {
-                parent_id: anotherDir.id,
+                parentId: anotherDir.id,
                 name: '0',
                 icon: 'default 1',
-                owner_id: norm.id
+                ownerId: norm.id
             }
         });
     })

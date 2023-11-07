@@ -17,10 +17,10 @@ export async function createDirectory(req, reply, next) {
 
         const newDirectory = await prisma.directory.create({
             data: {
-                parent_id: directoryParentId,
+                parentId: directoryParentId,
                 name: directoryName,
                 icon: "default",
-                owner_id: parentDirectory.owner_id
+                ownerId: parentDirectory.ownerId
             }
         });
         if (!newDirectory) throw new APIError();
@@ -55,14 +55,14 @@ export async function contentByParent(req, reply, next) {
 
         const nestedDirectories = await prisma.directory.findMany({
             where: {
-                parent_id: parentId
+                parentId: parentId
             }
         });
         response.directories = nestedDirectories ? nestedDirectories : [];
 
         const bookmarks = await prisma.bookmark.findMany({
             where: {
-                directory_id: parentId
+                directoryId: parentId
             }
         });
 
@@ -85,8 +85,8 @@ export async function getAllDirectories(req, reply, next) {
         const directories = await prisma.directory.findMany({
             where: {
                 AND: [
-                    { owner_id: userId },
-                    { parent_id: req.user.base_directory_id }
+                    { ownerId: userId },
+                    { parentId: req.user.baseDirectoryId }
                 ]
             }
         });
@@ -94,7 +94,7 @@ export async function getAllDirectories(req, reply, next) {
 
         const response = {};
         response.directories = directories ? directories : [];
-        response.directories = response.directories.filter(dir => dir.parent_id === req.user.base_directory_id)
+        response.directories = response.directories.filter(dir => dir.parentId === req.user.baseDirectoryId)
 
         return reply.json({
             message: "SUCCESS",
@@ -122,7 +122,7 @@ export async function updateDirectoriesByIds(req, reply, next) {
                 },
                 data: {
                     name: directoryName,
-                    parent_id: parentId,
+                    parentId: parentId,
                     icon: icon
                 }
             });
@@ -134,10 +134,6 @@ export async function updateDirectoriesByIds(req, reply, next) {
             await prisma.$transaction(updatedDirectories)
 
         if (!updatedDirectoriesTransaction) throw new APIError()
-        updatedDirectoriesTransaction.forEach(e => {
-            e.parentId = e.parent_id
-            delete e.parent_id
-        })
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)

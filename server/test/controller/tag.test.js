@@ -19,28 +19,28 @@ describe('add a tag', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -48,8 +48,8 @@ describe('add a tag', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -57,8 +57,8 @@ describe('add a tag', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -66,15 +66,15 @@ describe('add a tag', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'cs',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         // add the tag to the first dir
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk2.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk2.id,
+                tagId: tag.id
             }
         });
 
@@ -101,13 +101,13 @@ describe('add a tag', () => {
             tag: expect.objectContaining({
                 id: expect.any(Number),
                 name: 'notcs',
-                owner_id: user.id
+                ownerId: user.id
             })
         }))
 
         const tagCount = await prisma.tag.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(tagCount.length).toEqual(2);
@@ -135,13 +135,13 @@ describe('add a tag', () => {
             tag: expect.objectContaining({
                 id: expect.any(Number),
                 name: 'cs',
-                owner_id: user.id
+                ownerId: user.id
             })
         }))
 
         const tagCount = await prisma.tag.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(tagCount.length).toEqual(1);
@@ -174,28 +174,28 @@ describe('remove a tag', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -203,8 +203,8 @@ describe('remove a tag', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -212,8 +212,8 @@ describe('remove a tag', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -221,28 +221,28 @@ describe('remove a tag', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'cs',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
         // add the tag to the first dir
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk1.id,
+                tagId: tag.id
             }
         });
 
         tag = await prisma.tag.create({
             data: {
                 name: 'css',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk2.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk2.id,
+                tagId: tag.id
             }
         });
 
@@ -268,7 +268,7 @@ describe('remove a tag', () => {
                 expect.objectContaining({
                     id: tag.id,
                     name: tag.name,
-                    owner_id: tag.owner_id
+                    ownerId: tag.ownerId
                 })
             ])
         })
@@ -286,12 +286,12 @@ describe('remove a tag', () => {
                 expect.objectContaining({
                     id: expect.any(Number),
                     name: 'css',
-                    owner_id: user.id
+                    ownerId: user.id
                 }),
                 expect.objectContaining({
                     id: expect.any(Number),
                     name: 'cs',
-                    owner_id: user.id
+                    ownerId: user.id
                 })
             ])
         })
@@ -321,28 +321,28 @@ describe('remove a tag', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -350,8 +350,8 @@ describe('remove a tag', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -359,8 +359,8 @@ describe('remove a tag', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -368,22 +368,22 @@ describe('remove a tag', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'cs',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         // add the tag to the first dir
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk1.id,
+                tagId: tag.id
             }
         });
 
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk2.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk2.id,
+                tagId: tag.id
             }
         });
 
@@ -410,14 +410,14 @@ describe('remove a tag', () => {
 
         const bookmarkTagEntry = await prisma.bookmark_tag.findMany({
             where: {
-                tag_id: tag.id
+                tagId: tag.id
             }
         })
         expect(bookmarkTagEntry.length).toEqual(1);
 
         const tagEntry = await prisma.tag.findFirst({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(tagEntry).not.toBeNull();
@@ -427,8 +427,8 @@ describe('remove a tag', () => {
         const request = {
             body: {
                 value: {
-                    tag_id: tag.id,
-                    bookmark_id: bkmrk1.id
+                    tagId: tag.id,
+                    bookmarkId: bkmrk1.id
                 }
             }
         }
@@ -436,8 +436,8 @@ describe('remove a tag', () => {
         await prisma.bookmark_tag.deleteMany({
             where: {
                 AND: [
-                    { bookmark_id: bkmrk2.id },
-                    {tag_id: tag.id}
+                    { bookmarkId: bkmrk2.id },
+                    {tagId: tag.id}
                 ]
             }
         })
@@ -451,7 +451,7 @@ describe('remove a tag', () => {
 
         const tagEntry = await prisma.tag.findFirst({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         expect(tagEntry).toBeNull();
@@ -481,28 +481,28 @@ describe('update a tag', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -510,8 +510,8 @@ describe('update a tag', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -519,8 +519,8 @@ describe('update a tag', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -528,22 +528,22 @@ describe('update a tag', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'xxxxxx_12345',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         // add the tag to the first dir
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk1.id,
+                tagId: tag.id
             }
         });
 
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk2.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk2.id,
+                tagId: tag.id
             }
         });
 

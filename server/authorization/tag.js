@@ -9,7 +9,7 @@ export async function addTagToBookmarkAuthorizor(req, res, next) {
 
         const bookmark = await prisma.bookmark.findFirst({ where: { id: bookmarkId } })
         if(!bookmark) throw new AuthorizationError();
-        const parentId = bookmark.directory_id;
+        const parentId = bookmark.directoryId;
 
         if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'edit')) throw new AuthorizationError();
 
@@ -26,7 +26,7 @@ export async function removeTagFromBookmarkAuthorizor(req, res, next) {
 
         const bookmark = await prisma.bookmark.findFirst({ where: { id: bookmarkId } })
         if(!bookmark) throw new AuthorizationError();
-        const parentId = bookmark.directory_id;
+        const parentId = bookmark.directoryId;
 
         if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'edit')) throw new AuthorizationError();
 
@@ -42,7 +42,7 @@ export async function updateTagNameAuthorizor(req, res, next) {
         const issuerId = req.user.id;
 
         const tag = await prisma.tag.findFirst({ where: { id: tagId } })
-        if (tag && (tag.owner_id !== issuerId)) throw new AuthorizationError();
+        if (tag && (tag.ownerId !== issuerId)) throw new AuthorizationError();
 
         next();
     } catch (err) {
@@ -57,7 +57,7 @@ export async function getTagsForBookmarkAuthorizor(req, res, next) {
 
         const bookmark = await prisma.bookmark.findFirst({ where: { id: bookmarkId } })
         if(!bookmark) throw new AuthorizationError();
-        const parentId = bookmark.directory_id;
+        const parentId = bookmark.directoryId;
 
         if (!await doesUserHaveAccessToDirectory(issuerId, parentId, 'view')) throw new AuthorizationError();
 

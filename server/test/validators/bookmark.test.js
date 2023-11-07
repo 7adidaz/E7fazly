@@ -118,7 +118,7 @@ describe('updateBookmarkDataValidator', () => {
     });
 
     it('should call next with an error if validation fails', () => {
-        const req = { body: { changes: [{ id: '1', link: 'google', directory_id: 1, type: 'tag', favorite: true }] } };
+        const req = { body: { changes: [{ id: '1', link: 'google', directoryId: 1, type: 'tag', favorite: true }] } };
         const reply = {};
         const next = jest.fn();
 

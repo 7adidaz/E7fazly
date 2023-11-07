@@ -65,7 +65,7 @@ describe('create a user and login', () => {
 
         await prisma.user.update({
             where: { id: user.id },
-            data: { is_verified: true }
+            data: { isVerified: true }
         })
 
         const response = await request(app)
@@ -92,9 +92,9 @@ describe('create a user and login', () => {
                 email: "abody@abody.com",
                 password: "123565",
                 name: "a",
-                base_directory_id: null,
-                is_verified: true,
-                verification_code: 1
+                baseDirectoryId: null,
+                isVerified: true,
+                verificationCode: 1
             }
         })
     })

@@ -10,69 +10,69 @@ datasource db {
 model bookmark {
   id           Int            @id @default(autoincrement())
   link         String
-  owner_id     Int
-  directory_id Int
+  ownerId      Int
+  directoryId  Int
   type         bookmark_type
   favorite     Boolean
-  directory    directory      @relation(fields: [directory_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user         user           @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  directory    directory      @relation(fields: [directoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmark_directoryId_fkey")
+  user         user           @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmark_ownerId_fkey")
   bookmark_tag bookmark_tag[]
 }
 
 model bookmark_tag {
-  bookmark_id Int
-  tag_id      Int
-  bookmark    bookmark @relation(fields: [bookmark_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  tag         tag      @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  bookmarkId Int
+  tagId      Int
+  bookmark   bookmark @relation(fields: [bookmarkId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmark_tag_bookmarkId_fkey")
+  tag        tag      @relation(fields: [tagId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "bookmark_tag_tagId_fkey")
 
-  @@id([bookmark_id, tag_id])
+  @@id([bookmarkId, tagId])
 }
 
 model directory {
-  id                                     Int                     @id @default(autoincrement())
-  parent_id                              Int?
-  name                                   String                  @db.VarChar(255)
-  icon                                   String
-  owner_id                               Int
-  bookmark                               bookmark[]
-  user                                   user                    @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  directory                              directory?              @relation("directoryTodirectory", fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  other_directory                        directory[]             @relation("directoryTodirectory")
-  user_user_base_directory_idTodirectory user[]                  @relation("user_base_directory_idTodirectory")
-  user_directory_access                  user_directory_access[]
+  id                                   Int                     @id @default(autoincrement())
+  parentId                             Int?
+  name                                 String                  @db.VarChar(255)
+  icon                                 String
+  ownerId                              Int
+  bookmark                             bookmark[]
+  user_directory_ownerIdTouser         user                    @relation("directory_ownerIdTouser", fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directory_ownerId_fkey")
+  directory                            directory?              @relation("directoryTodirectory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directory_parentId_fkey")
+  other_directory                      directory[]             @relation("directoryTodirectory")
+  user_user_baseDirectoryIdTodirectory user[]                  @relation("user_baseDirectoryIdTodirectory")
+  user_directory_access                user_directory_access[]
 }
 
 model tag {
   id           Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
-  owner_id     Int
+  ownerId      Int
   bookmark_tag bookmark_tag[]
-  user         user           @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "owner_id")
+  user         user           @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ownerId")
 }
 
 model user {
-  id                                          Int                     @id @default(autoincrement())
-  name                                        String                  @db.VarChar(255)
-  email                                       String                  @db.VarChar(255)
-  password                                    String                  @db.VarChar(255)
-  base_directory_id                           Int?
-  is_verified                                 Boolean
-  verification_code                           Int
-  bookmark                                    bookmark[]
-  directory                                   directory[]
-  tag                                         tag[]
-  directory_user_base_directory_idTodirectory directory?              @relation("user_base_directory_idTodirectory", fields: [base_directory_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_base_directory_id")
-  user_directory_access                       user_directory_access[]
+  id                                        Int                     @id @default(autoincrement())
+  name                                      String                  @db.VarChar(255)
+  email                                     String                  @db.VarChar(255)
+  password                                  String                  @db.VarChar(255)
+  baseDirectoryId                           Int?
+  isVerified                                Boolean
+  verificationCode                          Int
+  bookmark                                  bookmark[]
+  directory_directory_ownerIdTouser         directory[]             @relation("directory_ownerIdTouser")
+  tag                                       tag[]
+  directory_user_baseDirectoryIdTodirectory directory?              @relation("user_baseDirectoryIdTodirectory", fields: [baseDirectoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_baseDirectoryId")
+  user_directory_access                     user_directory_access[]
 }
 
 model user_directory_access {
-  directory_id Int
-  user_id      Int
-  user_rights  access_rights
-  directory    directory     @relation(fields: [directory_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user         user          @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  directoryId Int
+  userId      Int
+  userRights  access_rights
+  directory   directory     @relation(fields: [directoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_directory_access_directoryId_fkey")
+  user        user          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_directory_access_userId_fkey")
 
-  @@id([user_id, directory_id])
+  @@id([userId, directoryId])
 }
 
 enum access_rights {

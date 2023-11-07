@@ -92,7 +92,7 @@ describe('bookmark ', () => {
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
 
-        const bookmarks = await prisma.bookmark.findMany({ where: { owner_id: 1 } })
+        const bookmarks = await prisma.bookmark.findMany({ where: { ownerId: 1 } })
         expect(bookmarks.length).toBe(0)
     })
 
@@ -107,9 +107,9 @@ describe('bookmark ', () => {
                 email: "a@gmail.com",
                 password: "11111",
                 name: "a",
-                is_verified: true,
-                verification_code: 1,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 1,
+                baseDirectoryId: null,
             }
         })
         token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
@@ -119,14 +119,14 @@ describe('bookmark ', () => {
                 id: 1,
                 icon: "default",
                 name: "root",
-                owner_id: user.id,
-                parent_id: null
+                ownerId: user.id,
+                parentId: null
             }
         })
 
         user = await prisma.user.update({
             where: { id: 1 },
-            data: { base_directory_id: 1 }
+            data: { baseDirectoryId: 1 }
         })
 
         // ---- create a dir under the base dir
@@ -135,8 +135,8 @@ describe('bookmark ', () => {
                 id: 2,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 1
+                ownerId: user.id,
+                parentId: 1
             }
         })
 
@@ -146,8 +146,8 @@ describe('bookmark ', () => {
                 id: 3,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 2
+                ownerId: user.id,
+                parentId: 2
             }
         })
 
@@ -157,8 +157,8 @@ describe('bookmark ', () => {
                 link: "https://www.google.com",
                 favorite: false,
                 type: "link",
-                owner_id: user.id,
-                directory_id: 2
+                ownerId: user.id,
+                directoryId: 2
             }
         })
     })

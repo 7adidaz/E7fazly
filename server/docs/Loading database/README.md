@@ -19,46 +19,46 @@ CREATE TABLE "user" (
 
 CREATE TABLE "directory" (
   "id" SERIAL PRIMARY KEY ,
-  "parent_id" INT,
+  "parentId" INT,
   "name" VARCHAR(255),
   "icon" TEXT, 
-  "owner_id" INT,
-  FOREIGN KEY ("owner_id") REFERENCES "user"("id"),
-  FOREIGN KEY ("directory_parent_id") REFERENCES "directory"("id")
+  "ownerId" INT,
+  FOREIGN KEY ("ownerId") REFERENCES "user"("id"),
+  FOREIGN KEY ("directory_parentId") REFERENCES "directory"("id")
 );
 
 CREATE TABLE "bookmark" (
   "id" SERIAL PRIMARY KEY,
   "link" TEXT,
-  "owner_id" INT,
-  "directory_id" INT,
+  "ownerId" INT,
+  "directoryId" INT,
   "type" bookmark_type,
   "favorite" boolean,
-  FOREIGN KEY ("owner_id") REFERENCES "user"("id"),
-  FOREIGN KEY ("directory_id") REFERENCES "directory"("id")
+  FOREIGN KEY ("ownerId") REFERENCES "user"("id"),
+  FOREIGN KEY ("directoryId") REFERENCES "directory"("id")
 );
 
 CREATE TABLE "user_directory_access" (
-	"directory_id" INT,
-	"user_id" INT,
-	"user_rights" access_rights, 
-	PRIMARY KEY ("user_id", "directory_id"),
-	FOREIGN KEY ("user_id") REFERENCES "user"("id"),
-	FOREIGN KEY ("directory_id") REFERENCES "directory"("id")
+	"directoryId" INT,
+	"userId" INT,
+	"userRights" access_rights, 
+	PRIMARY KEY ("userId", "directoryId"),
+	FOREIGN KEY ("userId") REFERENCES "user"("id"),
+	FOREIGN KEY ("directoryId") REFERENCES "directory"("id")
 );
 CREATE TABLE "tag" (
 	"id" SERIAL PRIMARY KEY,
 	"name" VARCHAR(255),
-    "owner_id" INT,
-  FOREIGN KEY ("owner_id") REFERENCES "user"("id"),
+    "ownerId" INT,
+  FOREIGN KEY ("ownerId") REFERENCES "user"("id"),
 );
 
 CREATE TABLE "bookmark_tag" (
-    "bookmark_id" INT NOT NULL,
-    "tag_id" INT NOT NULL,
-    PRIMARY KEY ("bookmark_id", "tag_id"),
-    FOREIGN KEY ("bookmark_id") REFERENCES "bookmark" ("id"),
-    FOREIGN KEY ("tag_id") REFERENCES "tag" ("id")
+    "bookmarkId" INT NOT NULL,
+    "tagId" INT NOT NULL,
+    PRIMARY KEY ("bookmarkId", "tagId"),
+    FOREIGN KEY ("bookmarkId") REFERENCES "bookmark" ("id"),
+    FOREIGN KEY ("tagId") REFERENCES "tag" ("id")
 );
 
 ```

@@ -20,9 +20,9 @@ describe('user getters', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
     })
@@ -38,10 +38,7 @@ describe('user getters', () => {
                     id: user.id,
                     name: user.name,
                     email: email,
-                    password: user.password,
-                    is_verified: false,
-                    verification_code: 0,
-                    base_directory_id: null,
+                    baseDirectoryId: null,
                 })
             }));
         expect(next).not.toBeCalled();
@@ -59,9 +56,9 @@ describe('user getters', () => {
                     name: user.name,
                     email: email,
                     password: user.password,
-                    is_verified: false,
-                    verification_code: 0,
-                    base_directory_id: null,
+                    isVerified: false,
+                    verificationCode: 0,
+                    baseDirectoryId: null,
                 })
             }));
         expect(next).not.toBeCalled();
@@ -91,9 +88,9 @@ describe('delete user', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: true,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: true,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
     })
@@ -115,7 +112,7 @@ describe('delete user', () => {
 
         const baseDirectory = await prisma.directory.findFirst({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
 
@@ -148,9 +145,9 @@ describe('update user', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
     })
@@ -176,9 +173,9 @@ describe('update user', () => {
                     name: "updated",
                     email: "updated@updated.com",
                     password: "updated",
-                    is_verified: false,
-                    verification_code: 0,
-                    base_directory_id: null,
+                    isVerified: false,
+                    verificationCode: 0,
+                    baseDirectoryId: null,
                 })
             }));
     })

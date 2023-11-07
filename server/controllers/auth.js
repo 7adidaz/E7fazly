@@ -30,19 +30,19 @@ export async function signup(req, reply, next) {
                         name: name,
                         email: email,
                         password: password,
-                        is_verified: true,
-                        verification_code: 0,
-                        base_directory_id: null
+                        isVerified: true,
+                        verificationCode: 0,
+                        baseDirectoryId: null
                     }
                 });
                 if (!newUser) throw new APIError();
 
                 const base_directory = await tx.directory.create({
                     data: {
-                        parent_id: null,
+                        parentId: null,
                         name: "ROOT",
                         icon: "DEFAULT",
-                        owner_id: newUser.id,
+                        ownerId: newUser.id,
                     }
                 });
                 if (!base_directory) throw new APIError();
@@ -52,7 +52,7 @@ export async function signup(req, reply, next) {
                         id: newUser.id
                     },
                     data: {
-                        base_directory_id: base_directory.id
+                        baseDirectoryId: base_directory.id
                     }
                 });
                 if (!updatedUser) throw new APIError();
@@ -99,7 +99,7 @@ export async function login(req, reply, next) {
                 )
             )
 
-        if (!user.is_verified) return reply.status(HTTPStatusCode.UNAUTHORIZED).json({ message: "VERIFY" })
+        if (!user.isVerified) return reply.status(HTTPStatusCode.UNAUTHORIZED).json({ message: "VERIFY" })
 
         const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
 
@@ -129,15 +129,15 @@ export async function verify(req, reply, next) {
         const user = await prisma.user.findFirst({
             where: userId
         })
-        if (!user || user.is_verified) throw new APIError()
+        if (!user || user.isVerified) throw new APIError()
 
-        if (code === user.verification_code) {
+        if (code === user.verificationCode) {
             await prisma.user.update({
                 where: {
                     id: userId
                 },
                 data: {
-                    is_verified: true
+                    isVerified: true
                 }
             })
             return reply.json({ message: "SUCCESS" })

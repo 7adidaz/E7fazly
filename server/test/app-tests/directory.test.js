@@ -14,12 +14,12 @@ describe('directory routes', () => {
             .set('Cookie', `token=${token};`)
             .send({
                 name: "dir",
-                parentId: user.base_directory_id
+                parentId: user.baseDirectoryId
             })
 
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         expect(response.body.directory.name).toBe('dir')
-        expect(response.body.directory.parent_id).toBe(user.base_directory_id)
+        expect(response.body.directory.parentId).toBe(user.baseDirectoryId)
     })
 
     test('create a directory to a dir with no access to', async () => {
@@ -109,7 +109,7 @@ describe('directory routes', () => {
         expect(response.statusCode).toBe(HTTPStatusCode.OK)
         const dir = await prisma.directory.findMany({
             where: {
-                owner_id: user.id
+                ownerId: user.id
             }
         })
         expect(dir.length).toBe(2)
@@ -126,9 +126,9 @@ describe('directory routes', () => {
                 email: "a@gmail.com",
                 password: "11111",
                 name: "a",
-                is_verified: true,
-                verification_code: 1,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 1,
+                baseDirectoryId: null,
             }
         })
         token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
@@ -138,14 +138,14 @@ describe('directory routes', () => {
                 id: 1,
                 icon: "default",
                 name: "root",
-                owner_id: user.id,
-                parent_id: null
+                ownerId: user.id,
+                parentId: null
             }
         })
 
         user = await prisma.user.update({
             where: { id: 1 },
-            data: { base_directory_id: 1 }
+            data: { baseDirectoryId: 1 }
         })
 
         // ---- create a dir under the base dir
@@ -155,8 +155,8 @@ describe('directory routes', () => {
                 id: 2,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 1
+                ownerId: user.id,
+                parentId: 1
             }
         })
 
@@ -166,8 +166,8 @@ describe('directory routes', () => {
                 id: 3,
                 icon: "default",
                 name: "dir",
-                owner_id: user.id,
-                parent_id: 2
+                ownerId: user.id,
+                parentId: 2
             }
         })
 
@@ -177,8 +177,8 @@ describe('directory routes', () => {
                 link: "https://www.google.com",
                 favorite: false,
                 type: "link",
-                owner_id: user.id,
-                directory_id: 2
+                ownerId: user.id,
+                directoryId: 2
             }
         })
     })

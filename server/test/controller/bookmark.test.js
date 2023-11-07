@@ -19,28 +19,28 @@ describe('creating a bookmark', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dirId = zero.id;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDirId = another.id;
@@ -51,7 +51,7 @@ describe('creating a bookmark', () => {
             body: {
                 value: {
                     link: 'someLink.com',
-                    // owner_id: user.id,
+                    // ownerId: user.id,
                     directoryId: dirId,
                     type: 'img',
                     favorite: true
@@ -67,10 +67,10 @@ describe('creating a bookmark', () => {
             bookmark: {
                 id: expect.any(Number),
                 link: 'someLink.com',
-                directory_id: dirId,
+                directoryId: dirId,
                 type: 'img',
                 favorite: true,
-                owner_id: user.id,
+                ownerId: user.id,
             }
         }))
     })
@@ -81,7 +81,7 @@ describe('creating a bookmark', () => {
                 body: {
                     value: {
                         link: 'someLink.com',
-                        // owner_id: user.id,
+                        // ownerId: user.id,
                         directoryId: i % 2 === 0 ? dirId : anotherDirId,
                         type: 'img',
                         favorite: true
@@ -95,13 +95,13 @@ describe('creating a bookmark', () => {
 
         const dir1Content = await prisma.bookmark.findMany({
             where: {
-                directory_id: dirId
+                directoryId: dirId
             }
         })
 
         const dir2Content = await prisma.bookmark.findMany({
             where: {
-                directory_id: anotherDirId
+                directoryId: anotherDirId
             }
         })
 
@@ -133,28 +133,28 @@ describe('delete bookmark', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -162,8 +162,8 @@ describe('delete bookmark', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -171,8 +171,8 @@ describe('delete bookmark', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -198,7 +198,7 @@ describe('delete bookmark', () => {
         }))
 
         const items = await prisma.bookmark.findMany({
-            where: { owner_id: user.id }
+            where: { ownerId: user.id }
         })
 
         expect(items.length).toEqual(1);
@@ -229,28 +229,28 @@ describe('bookmark getters', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -258,8 +258,8 @@ describe('bookmark getters', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -267,8 +267,8 @@ describe('bookmark getters', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -277,14 +277,14 @@ describe('bookmark getters', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'cs',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         const bookmarkTagEntry = await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk1.id,
+                tagId: tag.id
             }
         })
 
@@ -303,11 +303,11 @@ describe('bookmark getters', () => {
                 message: "SUCCESS",
                 bookmark: expect.objectContaining({
                     id: bkmrk1.id,
-                    owner_id: user.id,
+                    ownerId: user.id,
                     link: expect.any(String),
                     favorite: expect.any(Boolean),
                     type: expect.any(String),
-                    directory_id: dir.id
+                    directoryId: dir.id
                 })
             })
         )
@@ -322,18 +322,18 @@ describe('bookmark getters', () => {
         const expected = [
             {
                 id: bkmrk1.id,
-                owner_id: user.id,
+                ownerId: user.id,
                 link: expect.any(String),
                 favorite: expect.any(Boolean),
                 type: expect.any(String),
-                directory_id: dir.id
+                directoryId: dir.id
             }, {
                 id: bkmrk2.id,
-                owner_id: user.id,
+                ownerId: user.id,
                 link: expect.any(String),
                 favorite: expect.any(Boolean),
                 type: expect.any(String),
-                directory_id: anotherDir.id
+                directoryId: anotherDir.id
             }]
 
         expect(response.json).toBeCalledWith(
@@ -354,11 +354,11 @@ describe('bookmark getters', () => {
                 message: "SUCCESS",
                 bookmarks: expect.arrayContaining([{
                     id: bkmrk1.id,
-                    owner_id: user.id,
+                    ownerId: user.id,
                     link: expect.any(String),
                     favorite: expect.any(Boolean),
                     type: expect.any(String),
-                    directory_id: dir.id
+                    directoryId: dir.id
 
                 }])
             }))
@@ -388,28 +388,28 @@ describe('update bookmark', () => {
                 name: "abdo",
                 email: email,
                 password: "12345",
-                is_verified: false,
-                verification_code: 0,
-                base_directory_id: null
+                isVerified: false,
+                verificationCode: 0,
+                baseDirectoryId: null
             }
         })
 
         const zero = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         dir = zero;
 
         const another = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: '0',
                 icon: 'default 1',
-                owner_id: user.id
+                ownerId: user.id
             }
         });
         anotherDir = another;
@@ -417,8 +417,8 @@ describe('update bookmark', () => {
         bkmrk1 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: dir.id,
+                ownerId: user.id,
+                directoryId: dir.id,
                 type: 'link',
                 favorite: true
             }
@@ -426,8 +426,8 @@ describe('update bookmark', () => {
         bkmrk2 = await prisma.bookmark.create({
             data: {
                 link: 'link',
-                owner_id: user.id,
-                directory_id: anotherDir.id,
+                ownerId: user.id,
+                directoryId: anotherDir.id,
                 type: 'link',
                 favorite: true
             }
@@ -436,14 +436,14 @@ describe('update bookmark', () => {
         tag = await prisma.tag.create({
             data: {
                 name: 'cs',
-                owner_id: user.id,
+                ownerId: user.id,
             }
         });
 
         await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bkmrk1.id,
-                tag_id: tag.id
+                bookmarkId: bkmrk1.id,
+                tagId: tag.id
             }
         })
 
@@ -457,7 +457,7 @@ describe('update bookmark', () => {
                 value: {
                     changes: [{
                         id: bkmrk1.id,
-                        directory_id: anotherDir.id,
+                        directoryId: anotherDir.id,
                         link: "updated link",
                         favorite: false,
                     }]
@@ -472,24 +472,24 @@ describe('update bookmark', () => {
             message: "SUCCESS",
             bookmarks: expect.arrayContaining([{
                 id: bkmrk1.id,
-                owner_id: user.id,
+                ownerId: user.id,
                 link: "updated link",
                 favorite: false,
                 type: expect.any(String),
-                directory_id: anotherDir.id
+                directoryId: anotherDir.id
             }])
         }));
 
         const bookmarksUnderTheFirstDir = await prisma.bookmark.findMany({
             where: {
-                directory_id: dir.id
+                directoryId: dir.id
             }
         })
         expect(bookmarksUnderTheFirstDir.length).toEqual(0);
 
         const bookmarksUnderTheSecondDir = await prisma.bookmark.findMany({
             where: {
-                directory_id: anotherDir.id
+                directoryId: anotherDir.id
             }
         })
         expect(bookmarksUnderTheSecondDir.length).toEqual(2);
@@ -501,12 +501,12 @@ describe('update bookmark', () => {
                 value: {
                     changes: [{
                         id: bkmrk1.id,
-                        directory_id: anotherDir.id,
+                        directoryId: anotherDir.id,
                         link: "updated link",
                         favorite: false,
                     }, {
                         id: bkmrk2.id,
-                        directory_id: dir.id,
+                        directoryId: dir.id,
                         link: "updated link",
                         favorite: false,
                     }]
@@ -519,14 +519,14 @@ describe('update bookmark', () => {
 
         const bookmarksUnderTheFirstDir = await prisma.bookmark.findMany({
             where: {
-                directory_id: dir.id
+                directoryId: dir.id
             }
         })
         expect(bookmarksUnderTheFirstDir.length).toEqual(1);
 
         const bookmarksUnderTheSecondDir = await prisma.bookmark.findMany({
             where: {
-                directory_id: anotherDir.id
+                directoryId: anotherDir.id
             }
         })
         expect(bookmarksUnderTheSecondDir.length).toEqual(1);

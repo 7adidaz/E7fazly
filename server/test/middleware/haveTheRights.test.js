@@ -42,7 +42,7 @@ describe('doesUserHaveAccessToDirectory', () => {
 
     it('should return false if the user does not have access to the directory', async () => {
         expect(await doesUserHaveAccessToDirectory(user2.id, base.id, 'edit')).toEqual(false);
-        expect(await doesUserHaveAccessToDirectory(user2.id, base.parent_id, 'edit')).toEqual(false); // access to null. 
+        expect(await doesUserHaveAccessToDirectory(user2.id, base.parentId, 'edit')).toEqual(false); // access to null. 
 
         // does not have access to dir1User2
         expect(await doesUserHaveAccessToDirectory(user1.id, dir1User2.id, 'edit')).toEqual(false);
@@ -63,9 +63,9 @@ describe('doesUserHaveAccessToDirectory', () => {
                 password: "password1",
                 email: "email1",
                 name: "name1",
-                is_verified: true,
-                verification_code: 111,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 111,
+                baseDirectoryId: null,
             }
         });
         user2 = await prisma.user.create({
@@ -73,9 +73,9 @@ describe('doesUserHaveAccessToDirectory', () => {
                 password: "password2",
                 email: "email2",
                 name: "name2",
-                is_verified: true,
-                verification_code: 111,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 111,
+                baseDirectoryId: null,
             }
         });
 
@@ -84,83 +84,83 @@ describe('doesUserHaveAccessToDirectory', () => {
                 password: "password2",
                 email: "email3",
                 name: "name2",
-                is_verified: true,
-                verification_code: 111,
-                base_directory_id: null,
+                isVerified: true,
+                verificationCode: 111,
+                baseDirectoryId: null,
             }
         });
 
         base = await prisma.directory.create({
             data:
             {
-                parent_id: null,
+                parentId: null,
                 name: "dir1",
                 icon: "default",
-                owner_id: user1.id
+                ownerId: user1.id
             },
         })
 
         dir1 = await prisma.directory.create({
             data:
             {
-                parent_id: base.id,
+                parentId: base.id,
                 name: "dir1",
                 icon: "default",
-                owner_id: user1.id
+                ownerId: user1.id
             },
         })
         dir2 = await prisma.directory.create({
             data:
             {
-                parent_id: dir1.id,
+                parentId: dir1.id,
                 name: "dir1",
                 icon: "default",
-                owner_id: user1.id
+                ownerId: user1.id
             },
         })
         dir3 = await prisma.directory.create({
             data:
             {
-                parent_id: dir2.id,
+                parentId: dir2.id,
                 name: "dir1",
                 icon: "default",
-                owner_id: user1.id
+                ownerId: user1.id
             },
         })
 
         await prisma.user_directory_access.create({
             data: {
-                directory_id: dir1.id,
-                user_id: user2.id,
-                user_rights: 'edit'
+                directoryId: dir1.id,
+                userId: user2.id,
+                userRights: 'edit'
             }
         });
 
         // give view rights to user 3 to dir1
         await prisma.user_directory_access.create({
             data: {
-                directory_id: dir1.id,
-                user_id: user3.id,
-                user_rights: 'view'
+                directoryId: dir1.id,
+                userId: user3.id,
+                userRights: 'view'
             }
         });
 
         //----------------------//
         dir1User2 = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: "dir1",
                 icon: "default",
-                owner_id: user2.id
+                ownerId: user2.id
             }
         });
 
         dir2User2 = await prisma.directory.create({
             data: {
-                parent_id: dir1User2.id,
+                parentId: dir1User2.id,
                 name: "dir2",
                 icon: "default",
-                owner_id: user2.id
+                ownerId: user2.id
             }
         });
     });

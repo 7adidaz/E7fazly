@@ -18,8 +18,8 @@
 A new table introduced to host the Relation between **User** and the access rights to other folders. 
 
 #### Design decision: 
-- having an access_id as PK and reference the user_id and the directory_id as FK.
-- having user_id and directory_id as compound key. Which is better? 
+- having an access_id as PK and reference the userId and the directoryId as FK.
+- having userId and directoryId as compound key. Which is better? 
 
 Since the access rights to for a use to a certain table is unique, having the compound key is better because, it will simplify the data retrieval, where join are not necessary, which is also applicable for the bookmark_tags table. 
 

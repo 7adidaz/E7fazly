@@ -11,13 +11,13 @@ export async function addTagForBookmark(req, reply, next) {
         const bookmarkInstance = await prisma.bookmark.findFirst({ where: { id: bookmarkId } });
         if (!bookmarkInstance) throw new APIError();
 
-        const ownerId = bookmarkInstance.owner_id;
+        const ownerId = bookmarkInstance.ownerId;
 
         let tagInstance = await prisma.tag.findFirst({
             where: {
                 AND: [
                     { name: tagName },
-                    { owner_id: ownerId }
+                    { ownerId: ownerId }
                 ]
             }
         });
@@ -26,7 +26,7 @@ export async function addTagForBookmark(req, reply, next) {
             tagInstance = await prisma.tag.create({
                 data: {
                     name: tagName,
-                    owner_id: ownerId
+                    ownerId: ownerId
                 }
             })
             if (!tagInstance) throw new APIError();
@@ -34,8 +34,8 @@ export async function addTagForBookmark(req, reply, next) {
 
         const link = await prisma.bookmark_tag.create({
             data: {
-                bookmark_id: bookmarkId,
-                tag_id: tagInstance.id
+                bookmarkId: bookmarkId,
+                tagId: tagInstance.id
             }
         })
         if (!link) throw new APIError();
@@ -58,7 +58,7 @@ export async function removeTagFromBookmark(req, reply, next) {
 
         const tagInstanceCount = await prisma.bookmark_tag.findMany({
             where: {
-                tag_id: tagId
+                tagId: tagId
             }
         })
         if (!tagInstanceCount) throw APIError()
@@ -74,8 +74,8 @@ export async function removeTagFromBookmark(req, reply, next) {
             const deleted = await prisma.bookmark_tag.deleteMany({
                 where: {
                     AND: [
-                        { tag_id: tagId },
-                        { bookmark_id: bookmarkId }
+                        { tagId: tagId },
+                        { bookmarkId: bookmarkId }
                     ]
                 }
             })
@@ -119,7 +119,7 @@ export async function getTagsForBookmark(req, reply, next) {
             where: {
                 bookmark_tag: {
                     some: {
-                        bookmark_id: bookmarkId
+                        bookmarkId: bookmarkId
                     }
                 }
             }
@@ -140,7 +140,7 @@ export async function getTagsForUser(req, reply, next) {
 
         const tags = await prisma.tag.findMany({
             where: {
-                owner_id: userId
+                ownerId: userId
             }
         })
         if (!tags) throw new APIError();

@@ -17,7 +17,7 @@ export async function authenticateToken(req, reply, next) {
             }
         });
         if (!user) throw new APIError();
-        if (!user.is_verified) return reply.redirect('/verify');
+        if (!user.isVerified) return reply.redirect('/verify');
 
         req.user = user;
 

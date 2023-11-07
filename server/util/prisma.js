@@ -5,7 +5,7 @@ import cache from './cache.js'
  * cacheing strategy: 
  * 
  * 
- *      owner_id: {
+ *      ownerId: {
  *          model:operation:query_agruments: result1
  *          model:operation:query_agruments2: result2
  *      }
@@ -17,7 +17,7 @@ const prisma = new PrismaClient().$extends({
             if (operation === 'findMany') {
                 const level1key = String(
                     args.where ?
-                        args.where.owner_id ? args.where.owner_id : ' '
+                        args.where.ownerId ? args.where.ownerId : ' '
                         : ' ' || ' ');
                 const level2key = JSON.stringify(args);
 
@@ -39,8 +39,8 @@ const prisma = new PrismaClient().$extends({
                 operation === 'deleteMany') {
 
                 const level1key = String(args.where ?
-                    args.where.owner_id ?
-                        args.where.owner_id : ' ' : ' ');
+                    args.where.ownerId ?
+                        args.where.ownerId : ' ' : ' ');
 
                 await cache.del(level1key);
             }

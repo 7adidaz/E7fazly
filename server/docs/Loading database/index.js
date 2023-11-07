@@ -26,14 +26,14 @@ async function random_users_directory(count) {
         let name = faker.animal.bird();
         let icon = faker.internet.domainName();
 
-        const user_id = 1 + Math.floor(Math.random() * 10000);
+        const userId = 1 + Math.floor(Math.random() * 10000);
 
         const directory = await prisma.directory.create({
             data: {
-                parent_id: null,
+                parentId: null,
                 name: name,
                 icon: icon,
-                owner_id: user_id,
+                ownerId: userId,
             }
         })
 
@@ -50,10 +50,10 @@ async function random_bookmarks(count) {
 
     let total = 0;
     for (let i = 0; i < count; i++) {
-        const user_id = 1 + Math.floor(Math.random() * 10000);
+        const userId = 1 + Math.floor(Math.random() * 10000);
         const userDirectories = await prisma.directory.findMany({
             where: {
-                owner_id: user_id
+                ownerId: userId
             }
         })
         const subset = Math.floor(Math.random() * userDirectories.length);
@@ -68,8 +68,8 @@ async function random_bookmarks(count) {
             await prisma.bookmark.create({
                 data: {
                     link: link,
-                    owner_id: user_id,
-                    directory_id: userDirectories[j].id,
+                    ownerId: userId,
+                    directoryId: userDirectories[j].id,
                     type: bookmark_type[type_index],
                     favorite: fav ? true : false
                 }
@@ -84,7 +84,7 @@ async function random_tags(count) {
     const bookmarkCount = await prisma.bookmark.count();
 
     for (let i = 0; i < count; i++) {
-        const bookmark_id = Math.floor(Math.random() * bookmarkCount);
+        const bookmarkId = Math.floor(Math.random() * bookmarkCount);
         const tagWord = faker.lorem.word({ length: { max: 7, min: 2 } });
 
         const tag = await prisma.tag.create({
@@ -95,8 +95,8 @@ async function random_tags(count) {
 
         await prisma.bookmark_tag.create({
             data: {
-                tag_id: tag.id,
-                bookmark_id: bookmark_id
+                tagId: tag.id,
+                bookmarkId: bookmarkId
             }
         })
     }
@@ -128,20 +128,20 @@ async function random_access_rights(count) {
         // fetch a random number of directories from user1 
         const userDirectories = await prisma.directory.findMany({
             where: {
-                owner_id: user1
+                ownerId: user1
             }
         });
 
         const subset = Math.floor(Math.random() * userDirectories.length);
-        const user_rights = ['edit', 'view'];
+        const userRights = ['edit', 'view'];
 
         for (let j = 0; j < subset; j++) {
             const right_index = Math.round(Math.random());
             await prisma.user_directory_access.create({
                 data: {
-                    directory_id: userDirectories[j].id,
-                    user_id: user2,
-                    user_rights: user_rights[right_index]
+                    directoryId: userDirectories[j].id,
+                    userId: user2,
+                    userRights: userRights[right_index]
                 }
             });
             total += subset;
@@ -150,22 +150,22 @@ async function random_access_rights(count) {
     console.log(`inserted ${total} user access rights`);
 }
 
-async function getAllDirectoriesBookmarksAndTags(user_id) {
+async function getAllDirectoriesBookmarksAndTags(userId) {
     const directories = await prisma.bookmark.findMany({
         where: {
-            owner_id: user_id
+            ownerId: userId
         }
     });
 
     const bookmarks = await prisma.bookmark.findMany({
         where: {
-            owner_id: user_id
+            ownerId: userId
         }
     });
 
     const tags = await prisma.tag.findMany({
         where: {
-            owner_id: user_id
+            ownerId: userId
         }
     })
 }
@@ -191,7 +191,7 @@ async function updateTagUserid() {
         const new_tag = await prisma.tag.update({
             where: { id: tag[i].id },
             data: {
-                owner_id: parseInt(tag[i].bookmark_tag[0].bookmark.user.id)
+                ownerId: parseInt(tag[i].bookmark_tag[0].bookmark.user.id)
             }
         });
         set.add(tag[i].bookmark_tag[0].bookmark.user.id);
