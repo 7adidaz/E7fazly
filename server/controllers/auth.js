@@ -99,10 +99,7 @@ export async function login(req, reply, next) {
                 )
             )
 
-        if (!user.isVerified) return reply.status(HTTPStatusCode.UNAUTHORIZED).json({ message: "VERIFY" })
-
         const token = jwt.sign({ issuerId: user.id }, process.env.TOKEN_SECRET, { expiresIn: 86400 })
-
         reply.cookie('token', token, {
             httpOnly: true,
             sameSite: 'strict',
@@ -110,6 +107,7 @@ export async function login(req, reply, next) {
             path: '/'
         })
 
+        if (!user.isVerified) return reply.status(HTTPStatusCode.UNAUTHORIZED).json({ message: "VERIFY" })
         return reply.json({
             message: "SUCCESS",
             token: token
