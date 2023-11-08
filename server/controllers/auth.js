@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { APIError, AuthenticationError, ErrorObject, ConflictError, HTTPStatusCode } from '../util/error.js';
 import prisma from '../util/prisma.js'
+import { generateEmailVerificationLink } from "../util/auth.js";
 
 export async function signup(req, reply, next) {
     try {
@@ -56,6 +57,10 @@ export async function signup(req, reply, next) {
                     }
                 });
                 if (!updatedUser) throw new APIError();
+
+                if (process.env.NODE_ENV !== "test"){
+                    await generateEmailVerificationLink(newUser.id, newUser.email);
+                }
 
                 return true;
             });
@@ -119,28 +124,21 @@ export async function login(req, reply, next) {
 
 export async function verify(req, reply, next) {
     try {
-        const value = req.body.value;
+        const value = req.params.code;
 
-        const code = value.verificationCode;
-        const userId = req.user.id;
+        const decoded = jwt.verify(value, process.env.TOKEN_SECRET);
+        const id = decoded.id;
 
-        const user = await prisma.user.findFirst({
-            where: userId
+        await prisma.user.update({
+            where: {
+                id: id
+            },
+            data: {
+                isVerified: true
+            }
         })
-        if (!user || user.isVerified) throw new APIError()
 
-        if (code === user.verificationCode) {
-            await prisma.user.update({
-                where: {
-                    id: userId
-                },
-                data: {
-                    isVerified: true
-                }
-            })
-            return reply.json({ message: "SUCCESS" })
-        }
-        throw new APIError()
+        reply.json({ message: "SUCCESS" })
     } catch (err) {
         return next(err)
     }

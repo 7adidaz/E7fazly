@@ -82,6 +82,7 @@ export class ErrorObject {
 
 
 export function ErrorHandling(err, req, reply, next) {
+    console.log(err);
     if (err instanceof BaseError) {
         if (err instanceof AuthorizationError) {
             return reply
