@@ -38,6 +38,63 @@
 			"response": []
 		},
 		{
+			"name": "fetch image",
+			"id": "d0f857c2-0c58-41a2-a06e-585c4e82b997",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/img/:link",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"img",
+						":link"
+					],
+					"variable": [
+						{
+							"key": "link",
+							"value": "https://www.google.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "scrape",
+			"id": "f0543098-6af3-4bf5-a478-f00487e76b0f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/bkmrk/scrape/:link",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"bkmrk",
+						"scrape",
+						":link"
+					],
+					"variable": [
+						{
+							"key": "link",
+							"value": "https://www.npmjs.com/package/metadata-scraper"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "bookmark by id",
 			"id": "aa0cfd7d-b580-4245-a2d6-024177358489",
 			"protocolProfileBehavior": {
