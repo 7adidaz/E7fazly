@@ -1,5 +1,6 @@
 import prisma from "../util/prisma.js";
 import { APIError } from "../util/error.js";
+import getMetaData from "metadata-scraper";
 
 export async function createBookmark(req, reply, next) {
     try {
@@ -33,6 +34,34 @@ export async function createBookmark(req, reply, next) {
                 bookmark: bookmark
             });
     } catch (err) {
+        return next(err);
+    }
+}
+
+export async function metadataScraper(req, reply,next){
+    try{
+        const value = req.body.value;
+        const link = value.link;
+        const data = await getMetaData(link)
+
+        if(!data.image){
+            // take screenshot & save to images folder.
+
+        }
+
+        //TODO: save image to images folder.
+
+        return reply.json({
+            message: "SUCCESS",
+            data: {
+                title: data.title,
+                description: data.description,
+                image: data.image,
+                url: data.url,
+                icon: data.icon,
+            } 
+        })
+    } catch (err){
         return next(err);
     }
 }

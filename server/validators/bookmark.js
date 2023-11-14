@@ -28,12 +28,25 @@ function validateUrl(value, helpers) {
 };
 
 const idValidation = Joi.number().required();
+const urlValidation = Joi.string().required().custom(validateUrl, 'url validation');
 
 export function createBookmarkDataValidator(req, reply, next) {
     try {
         const value = objectValidator(createBookmarkValidation, req.body);
 
         req.body = { value: value }
+        next()
+    } catch (err) {
+        return next(err);
+    }
+}
+
+export function metaDataScraperValidation(req, reply, next) {
+    try {
+        const link = req.params[0];
+        const value = singleValidator(urlValidation, link);
+
+        req.body = { value: { link: value } }
         next()
     } catch (err) {
         return next(err);

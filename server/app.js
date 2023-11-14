@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cookieparse from 'cookie-parser';
+import fs from 'fs';
 
 import cache from './util/cache.js';
 
@@ -14,6 +15,7 @@ import accessRoutes from './routes/access.js';
 import authRoutes from './routes/auth.js';
 import { authenticateToken } from './util/auth.js';
 import { ErrorHandling } from './util/error.js';
+import { imageServer } from './util/imageServer.js';
 
 dotenv.config();
 const app = express()
@@ -30,9 +32,7 @@ app.use('/api/v1/dir', authenticateToken, dirRoutes)
 app.use('/api/v1/bkmrk', authenticateToken, bkmrkRoutes)
 app.use('/api/v1/tag', authenticateToken, tagRoutes)
 
-app.use('/', (req, reply, next) => {
-    reply.json({ message: "MAGIC BOX" });
-})
+app.use('/img/*', imageServer)
 
 app.use(ErrorHandling);
 
@@ -41,6 +41,7 @@ if (process.env.NODE_ENV !== 'test') {
         console.log('db url: ', process.env.DATABASE_URL);
         await cache.connect();
         await cache.flushAll()
+        if (!fs.existsSync('./images')) fs.mkdirSync('./images');
         app.listen(3000);
     })()
 }

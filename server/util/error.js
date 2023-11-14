@@ -82,7 +82,7 @@ export class ErrorObject {
 
 
 export function ErrorHandling(err, req, reply, next) {
-    console.log(err);
+    // console.log(err);
     if (err instanceof BaseError) {
         if (err instanceof AuthorizationError) {
             return reply
@@ -100,7 +100,7 @@ export function ErrorHandling(err, req, reply, next) {
             return reply
                 .status(err.statusCode)
                 .json({
-                    message: "Error Validating the request data",
+                    message: "FAILED",
                     error: err.errorObject
                 });
         }

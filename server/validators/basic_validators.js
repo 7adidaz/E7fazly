@@ -5,7 +5,7 @@ export function singleValidator(validator, variable) {
 
     if (error) throw new ValidationError(
         new ErrorObject(
-            "Request must contain a valid ID",
+            "Request must contain a valid data",
             error.details.map(err => err.message)
         ).toObject())
 

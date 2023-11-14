@@ -5,13 +5,15 @@ import {
     getBookmarkById,
     getBookmarksByTag,
     updateBookmarks,
-    deleteBookmarks
+    deleteBookmarks,
+    metadataScraper
 } from '../controllers/bookmark.js';
 
 import {
     bookmarkIdValidator,
     createBookmarkDataValidator,
     deleteBookmarkDataValidator,
+    metaDataScraperValidation,
     tagIdValidator,
     updateBookmarkDataValidator
 } from '../validators/bookmark.js';
@@ -27,6 +29,7 @@ const router = Router();
 
 router.post('/create', createBookmarkDataValidator, createBookmarkAuthorization, createBookmark);
 
+router.get('/scrape/*', metaDataScraperValidation, metadataScraper)
 router.get('/all', getAllBookmarks)
 router.get('/:id', bookmarkIdValidator, getBookmarkByIdAuthorization, getBookmarkById)
 router.get('/tag/:tagId', tagIdValidator, getBookmarksByTagAuthorization, getBookmarksByTag) // gets bkmrks under a specific tag. 
@@ -36,4 +39,3 @@ router.patch('', updateBookmarkDataValidator, updateBookmarksAuthorization, upda
 router.delete('', deleteBookmarkDataValidator, deleteBookmarkDataValidator, deleteBookmarks);
 
 export default router;
-//
