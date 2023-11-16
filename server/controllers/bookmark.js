@@ -10,41 +10,103 @@ export async function createBookmark(req, reply, next) {
         const directoryId = value.directoryId;
         const type = value.type;
         const favorite = value.favorite;
+        const title = value.title;
+        const description = value.description;
+        const tags = value.tags;
 
         const directory = await prisma.directory.findFirst({ where: { id: directoryId, } });
         if (!directory) throw new APIError();
 
         const ownerId = directory.ownerId;
 
-        const bookmark = await prisma.bookmark.create({
-            data: {
-                link: link,
-                ownerId: ownerId,
-                directoryId: directoryId,
-                type: type,
-                favorite: favorite
-            }
-        })
-        if (!bookmark) throw new APIError();
+        // transaction
+        const bookmarkTransaction =
+            await prisma.$transaction(async (tx) => {
+
+                console.log('Starting transaction...');
+                const bookmark = await tx.bookmark.create({
+                    data: {
+                        link: link,
+                        ownerId: ownerId,
+                        directoryId: directoryId,
+                        type: type,
+                        favorite: favorite,
+                        title: title,
+                        description: description,
+                        creationDate: new Date(),
+                    }
+                })
+                if (!bookmark) throw new APIError();
+                console.log('Bookmark created successfully.');
+
+                for (let i = 0; i < tags.length; i++) {
+                    const tagName = tags[i].toLowerCase();
+                    let tagInstance = await tx.tag.findFirst({
+                        where: {
+                            AND: [
+                                { name: tagName },
+                                { ownerId: ownerId }
+                            ]
+                        }
+                    });
+
+                    if (!tagInstance) {
+                        tagInstance = await tx.tag.create({
+                            data: {
+                                name: tagName,
+                                ownerId: ownerId
+                            }
+                        })
+                        if (!tagInstance) throw new APIError();
+                    }
+
+                    const link = await tx.bookmark_tag.create({
+                        data: {
+                            bookmarkId: bookmark.id,
+                            tagId: tagInstance.id
+                        }
+                    })
+                    if (!link) throw new APIError();
+                }
+
+                console.log('Tags processed successfully.');
+                let bookmarkTags = await tx.bookmark_tag.findMany({
+                    where: { bookmarkId: bookmark.id },
+                    select: {
+                        tag: {
+                            select: {
+                                name: true,
+                                id: true,
+                            }
+                        }
+                    }
+                });
+                bookmarkTags = bookmarkTags.map(tag => tag.tag);
+                bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+                bookmark.tags = bookmarkTags;
+                console.log('Transaction completed successfully.');
+                return bookmark;
+            })
+        if (!bookmarkTransaction) throw new APIError();
 
         return reply
             // .status(HTTPStatusCode.CREATED)
             .json({
                 message: "SUCCESS",
-                bookmark: bookmark
+                bookmark: bookmarkTransaction
             });
     } catch (err) {
         return next(err);
     }
 }
 
-export async function metadataScraper(req, reply,next){
-    try{
+export async function metadataScraper(req, reply, next) {
+    try {
         const value = req.body.value;
         const link = value.link;
         const data = await getMetaData(link)
 
-        if(!data.image){
+        if (!data.image) {
             // take screenshot & save to images folder.
 
         }
@@ -59,9 +121,9 @@ export async function metadataScraper(req, reply,next){
                 image: data.image,
                 url: data.url,
                 icon: data.icon,
-            } 
+            }
         })
-    } catch (err){
+    } catch (err) {
         return next(err);
     }
 }
@@ -74,6 +136,22 @@ export async function getBookmarkById(req, reply, next) {
         const bookmark = await prisma.bookmark.findFirst({ where: { id: id } });
         if (!bookmark) throw new APIError();
 
+        // get tags
+        let tags = await prisma.bookmark_tag.findMany({
+            where: { bookmarkId: bookmark.id },
+            select: {
+                tag: {
+                    select: {
+                        name: true,
+                        id: true,
+                    }
+                }
+            }
+        });
+
+        tags = tags.map(tag => tag.tag);
+        bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+        bookmark.tags = tags;
         return reply.json({
             message: "SUCCESS",
             bookmark: bookmark
@@ -88,6 +166,24 @@ export async function getAllBookmarks(req, reply, next) {
         const userId = req.user.id;
         const bookmarks = await prisma.bookmark.findMany({ where: { ownerId: userId } });
         if (!bookmarks) throw new APIError();
+
+        for (let i = 0; i < bookmarks.length; i++) {
+            const bookmark = bookmarks[i];
+            let tags = await prisma.bookmark_tag.findMany({
+                where: { bookmarkId: bookmark.id },
+                select: {
+                    tag: {
+                        select: {
+                            name: true,
+                            id: true,
+                        }
+                    }
+                }
+            });
+            tags = tags.map(tag => tag.tag);
+            bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+            bookmark.tags = tags;
+        }
 
         return reply.json({
             message: "SUCCESS",
@@ -107,6 +203,10 @@ export async function getBookmarksByTag(req, reply, next) {
             where: { bookmark_tag: { some: { tagId: tagId } } }
         })
         if (!bookmarks) throw new APIError();
+
+        bookmarks.forEach(bookmark => {
+            bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+        })
 
         return reply.json({
             message: "SUCCESS",
@@ -131,7 +231,9 @@ export async function updateBookmarks(req, reply, next) {
                 data: {
                     link: element.link,
                     directoryId: element.directoryId,
-                    favorite: element.favorite
+                    favorite: element.favorite,
+                    title: element.title,
+                    description: element.description,
                 }
             })
             updateList.push(tx);
@@ -139,6 +241,10 @@ export async function updateBookmarks(req, reply, next) {
 
         const updateTransation = await prisma.$transaction(updateList);
         if (!updateTransation) throw new APIError()
+
+        updateTransation.forEach(bookmark => {
+            bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+        })
 
         return reply
             // .status(HTTPStatusCode.ACCEPTED_UPDATE_DELETED)

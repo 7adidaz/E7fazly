@@ -66,6 +66,10 @@ export async function contentByParent(req, reply, next) {
             }
         });
 
+        bookmarks.forEach(bookmark => {
+            bookmark.image = `${process.env.SERVER_URL}/img/${bookmark.link}`
+        })
+
         response.bookmarks = bookmarks ? bookmarks : [];
 
         return reply.json({

@@ -7,7 +7,10 @@ const createBookmarkValidation = Joi.object({
     // ownerId: Joi.number().required(),
     directoryId: Joi.number().required(),
     type: Joi.string().valid('img', 'link', 'etc').required(),
-    favorite: Joi.boolean().required()
+    favorite: Joi.boolean().required(),
+    title: Joi.string().required(),
+    description: Joi.string().required(),
+    tags: Joi.array().items(Joi.string().optional()).required()
 })
 
 const updateBookmarkValidation = Joi.object({
@@ -15,7 +18,9 @@ const updateBookmarkValidation = Joi.object({
     link: Joi.string().required().custom(validateUrl, 'url validation'),
     directoryId: Joi.number().required(),
     type: Joi.string().valid('img', 'link', 'etc').required(),
-    favorite: Joi.boolean().required()
+    favorite: Joi.boolean().required(),
+    title: Joi.string().required(),
+    description: Joi.string().required(),
 })
 
 function validateUrl(value, helpers) {

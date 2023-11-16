@@ -80,3 +80,28 @@ function generateFileName(link) {
         throw err;
     }
 }
+
+
+//TODO: add support for diffrent links
+// ex: https://www.google.com
+//             www.google.com
+//                 google.com
+
+
+// function generateLinkForServer(link) {
+
+// }
+
+// function normalizeUrl(inputUrl) {
+//     try {
+//         if (!inputUrl.startsWith('http://') && !inputUrl.startsWith('https://')) {
+//             inputUrl = 'http://' + inputUrl;
+//         }
+
+//         const urlObject = new URL(inputUrl);
+//         const normalizedUrl = urlObject.href;
+//         return normalizedUrl;
+//     } catch (err) {
+//         throw err;
+//     }
+// }
