@@ -5,6 +5,17 @@ import Joi from 'joi';
 import { objectValidator } from '../validators/basic_validators.js';
 
 
+export const userPhoto = {
+    Red: 'https://i.imgur.com/bZ2lBZF.png',
+    Orange: 'https://i.imgur.com/eSTNTrz.png',
+    Yellow: 'https://i.imgur.com/gQsYTXm.png',
+    Green: 'https://i.imgur.com/2mb1Saq.png',
+    Torquay: 'https://i.imgur.com/juU2VMU.png',
+    Blue: 'https://i.imgur.com/FhyWYsq.png',
+    Purple: 'https://i.imgur.com/iWlk6Nq.png',
+    Cherry: 'https://i.imgur.com/HqhRSuQ.png'
+}
+
 export async function imageServer(req, res, next) {
     try {
         const link = req.params[0];
@@ -67,7 +78,7 @@ function generateFileName(link) {
      */
     try {
         //TODO: fix the regex.
-        const urlValidator =  Joi.string().required().uri();
+        const urlValidator = Joi.string().required().uri();
         const value = objectValidator(urlValidator, link);
 
         const url = new URL(value);

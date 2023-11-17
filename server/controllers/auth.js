@@ -95,7 +95,6 @@ export async function login(req, reply, next) {
                 )
             )
 
-
         if (user.password !== password)
             throw new AuthenticationError(
                 new ErrorObject(

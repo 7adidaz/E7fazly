@@ -1,5 +1,6 @@
 import prisma from '../util/prisma.js'
 import { ValidationError, APIError, ConflictError } from '../util/error.js';
+import { userPhoto } from '../util/imageServer.js';
 
 export async function getUser(req, reply, next) {
     try {
@@ -21,6 +22,7 @@ export async function getUser(req, reply, next) {
 
         if (!user) throw new ValidationError()
 
+        user.photo = getRandomColor();
         return reply.json({
             message: "SUCCESS",
             user: user
@@ -28,6 +30,16 @@ export async function getUser(req, reply, next) {
     } catch (err) {
         next(err)
     }
+}
+
+function getRandomColor() {
+    const keys = Object.keys(userPhoto);
+
+    const randomIndex = Math.floor(Math.random() * keys.length);
+    const randomKey = keys[randomIndex];
+
+    // Return the random key along with its corresponding value
+    return userPhoto[randomKey];
 }
 
 export async function getByEmail(req, reply, next) {
