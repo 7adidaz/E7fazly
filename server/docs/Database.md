@@ -23,7 +23,7 @@ A new table introduced to host the Relation between **User** and the access righ
 
 Since the access rights to for a use to a certain table is unique, having the compound key is better because, it will simplify the data retrieval, where join are not necessary, which is also applicable for the bookmark_tags table. 
 
-![schema](./Pictures/E7fazly%20Project.png) 
+![E7fazly Project (4)](https://github.com/7adidaz/E7fazly/assets/86894852/2231a855-a33b-4702-abf8-960d3c776e87)
 
 
 **Suggested**: 
