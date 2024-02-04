@@ -1,7 +1,7 @@
 ### What is the idea of the project?
-- Allow users to store different types of bookmarks, where he can organize these bookmarks into folders/directories. A bookmark can only belogin to one directory.
+- Allow users to store different types of bookmarks, where they can organize these bookmarks into folders/directories. A bookmark can only belong to one directory.
 - Every bookmark can be tagged with multiple tags. 
-- A user can share a folder/directory to another user, who can either view or edit the content of this folder. 
+- A user can share a folder/directory with another user, who can either view or edit the content of this folder. 
 
 ### Basic tables:
 - user 
@@ -15,13 +15,13 @@
 - A **Directory** can have multiple **Bookmark**s. 1 → M 
 - A **Directory** can have multiple **Directories**. 1 → M
 
-A new table introduced to host the Relation between **User** and the access rights to other folders. 
+A new table was introduced to host the Relation between **User** and the access rights to other folders. 
 
 #### Design decision: 
-- having an access_id as PK and reference the userId and the directoryId as FK.
-- having userId and directoryId as compound key. Which is better? 
+- having an access_id as PK and reference the userId and the directory as FK.
+- having userId and directoryId as compound keys. Which is better? 
 
-Since the access rights to for a use to a certain table is unique, having the compound key is better because, it will simplify the data retrieval, where join are not necessary, which is also applicable for the bookmark_tags table. 
+Since the access rights for a use to a certain table are unique, having the compound key is better because, it will simplify the data retrieval, where joins are not necessary, which is also applicable for the bookmark_tags table. 
 
 ![E7fazly Project (4)](https://github.com/7adidaz/E7fazly/assets/86894852/2231a855-a33b-4702-abf8-960d3c776e87)
 
