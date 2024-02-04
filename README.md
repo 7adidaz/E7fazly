@@ -1,6 +1,7 @@
 # E7fazly - أحفظلي 
 
-E7fazly is the Arabic word for “save for me”. It is a RESTful API that enables users to save and sort their bookmarks into folders, share these folders with others, and add tags to the bookmarks. E7fazly can handle any kind of bookmark. The only limitation is storage space. :)
+E7fazly is the Arabic word for “save for me”. E7fazly is an All-in-one bookmark manager web application 
+that enables users to save and sort their bookmarks into folders, share these folders with others, and add tags to the bookmarks. E7fazly can handle any kind of bookmark. The only limitation is storage space. :)
 
 Demo: 
 
