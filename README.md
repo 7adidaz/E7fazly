@@ -10,9 +10,10 @@ https://github.com/7adidaz/E7fazly/assets/86894852/6e8d94eb-9d38-4211-9463-f4d74
 ## What does the backend support?
 - Authentication using JWT.
 - Authorization.
+- Centralized error Handling.
 - Caching using [Redis](https://redis.io/).
-- Email verification using [Resend](https://resend.com)
 - Input data validation using [JOI](https://joi.dev/).
+- Email verification using [Resend](https://resend.com).
 - A ton of end-to-end and unit testing using [JEST](https://jestjs.io/).
 - Stateless image handling and serving using [Puppeteer](https://pptr.dev/).
 - Postgresql with Prisma ORM. Check out the [database scheme](./server/docs/Database.md).
